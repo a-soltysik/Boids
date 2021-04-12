@@ -1,8 +1,6 @@
 # Default ignored files
 /shelf/
 /workspace.xml
-# Datasource local storage ignored files
-/../../../../../../../../../../:\Users\Andrzej\Documents\Studia\PWR\II\Programowanie Obiektowe Projekt\Boids\.idea/dataSources/
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
