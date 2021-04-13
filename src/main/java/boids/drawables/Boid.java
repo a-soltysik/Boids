@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Boid implements Drawable{
-    private Vector2 velocity;
-    private Vector2 position;
-    private final Vector2[] vertices;
-    private float size;
-    private static final Random rnd = ThreadLocalRandom.current();
+public abstract class Boid implements Drawable{
+    protected Vector2 velocity;
+    protected Vector2 position;
+    protected final Vector2[] vertices;
+    protected float size;
 
     public Boid(float size, Vector2 position) {
         this.size = size;
@@ -33,19 +32,6 @@ public class Boid implements Drawable{
         vertices[3] = new Vector2(-0.5f * size, 1f * size);
 
     }
-
-    public static void addBoid(AnimationPanel panel, ArrayList<Drawable> objects){
-          var boid = new Boid(
-                  new Vector2((float) rnd.nextInt(panel.getWidth()),
-                          (float) rnd.nextInt(panel.getHeight())));
-
-          boid.velocity = new Vector2((float) (rnd.nextInt(40)-20 ), (float) (rnd.nextInt(40) - 20));
-
-          for (int i = 0; i < boid.vertices.length; i++) {
-              boid.vertices[i] = boid.vertices[i].add(boid.position);
-          }
-        objects.add(boid);
-      }
 
     @Override
     public void update(double frameTime) {
