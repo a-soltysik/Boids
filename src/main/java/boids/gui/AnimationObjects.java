@@ -1,5 +1,6 @@
 package boids.gui;
 
+import boids.drawables.Boid;
 import boids.drawables.Drawable;
 import boids.drawables.LowPolyBackground;
 import boids.drawables.Obstacle;
@@ -19,6 +20,9 @@ public class AnimationObjects {
         objects.add(background);
         for (int i = 0; i < 5; i++) {
             Obstacle.addObstacle(panel, objects);
+        }
+        for (int i = 0; i < 20; i++) {
+            Boid.addBoid(panel,objects);
         }
     }
     public ArrayList<Drawable> getList() {
