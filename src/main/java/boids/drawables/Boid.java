@@ -12,7 +12,7 @@ public class Boid implements Drawable{
     private Vector2 velocity;
     private Vector2 position;
     private final Vector2[] vertices;
-    float size;
+    private float size;
     private static final Random rnd = ThreadLocalRandom.current();
 
     public Boid(float size, Vector2 position) {
@@ -39,10 +39,10 @@ public class Boid implements Drawable{
                   new Vector2((float) rnd.nextInt(panel.getWidth()),
                           (float) rnd.nextInt(panel.getHeight())));
 
-          boid.velocity = new Vector2((float) (rnd.nextInt(30)-10 ), (float) (rnd.nextInt(30) - 10));
+          boid.velocity = new Vector2((float) (rnd.nextInt(40)-20 ), (float) (rnd.nextInt(40) - 20));
 
-          for (int i = 0; i < 4; i++) {
-              boid.vertices[i].add(boid.position);
+          for (int i = 0; i < boid.vertices.length; i++) {
+              boid.vertices[i] = boid.vertices[i].add(boid.position);
           }
         objects.add(boid);
       }
@@ -50,7 +50,7 @@ public class Boid implements Drawable{
     @Override
     public void update(double frameTime) {
         position = position.add(velocity.multiply(frameTime));
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < vertices.length; i++) {
            vertices[i] = vertices[i].add(velocity.multiply(frameTime));
         }
     }
