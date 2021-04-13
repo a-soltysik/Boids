@@ -12,7 +12,7 @@ public class Boid implements Drawable{
     private Vector2 velocity;
     private Vector2 position;
     private final Vector2[] vertices;
-    float size=5;
+    float size;
     private static final Random rnd = ThreadLocalRandom.current();
 
     public Boid(float size, Vector2 position) {
@@ -22,6 +22,9 @@ public class Boid implements Drawable{
         vertices = new Vector2[4];
         initializeShape();
     }
+    public Boid(Vector2 position) {
+        this(15f, position);
+    }
 
     private void initializeShape() {
         vertices[0] = new Vector2(0f, 0f);
@@ -30,11 +33,13 @@ public class Boid implements Drawable{
         vertices[3] = new Vector2(-0.5f * size, 1f * size);
 
     }
+
     public static void addBoid(AnimationPanel panel, ArrayList<Drawable> objects){
-          var boid = new Boid(5,
+          var boid = new Boid(
                   new Vector2((float) rnd.nextInt(panel.getWidth()),
                           (float) rnd.nextInt(panel.getHeight())));
-          boid.velocity = new Vector2((float) (rnd.nextInt(5) - 2.5), (float) (rnd.nextInt(5) - 2.5));
+
+          boid.velocity = new Vector2((float) (rnd.nextInt(30)-10 ), (float) (rnd.nextInt(30) - 10));
 
           for (int i = 0; i < 4; i++) {
               boid.vertices[i].add(boid.position);
@@ -44,7 +49,10 @@ public class Boid implements Drawable{
 
     @Override
     public void update(double frameTime) {
-        position.add(velocity);
+        position = position.add(velocity.multiply(frameTime));
+        for (int i = 0; i < 4; i++) {
+           vertices[i] = vertices[i].add(velocity.multiply(frameTime));
+        }
     }
 
     @Override
