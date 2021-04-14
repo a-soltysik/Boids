@@ -1,9 +1,6 @@
 package boids.gui;
 
-import boids.drawables.Boid;
-import boids.drawables.Drawable;
-import boids.drawables.LowPolyBackground;
-import boids.drawables.Obstacle;
+import boids.drawables.*;
 
 import java.util.ArrayList;
 
@@ -22,7 +19,7 @@ public class AnimationObjects {
             Obstacle.addObstacle(panel, objects);
         }
         for (int i = 0; i < 20; i++) {
-            Boid.addBoid(panel,objects);
+            Prey.addPrey(panel,objects);
         }
     }
     public ArrayList<Drawable> getList() {
