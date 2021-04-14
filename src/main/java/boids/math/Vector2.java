@@ -34,7 +34,7 @@ public class Vector2 {
     }
 
     public float magnitude() {
-        return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return (x * x) + (y * y);
     }
     public void normalize(){
         float mag = magnitude();
@@ -51,12 +51,12 @@ public class Vector2 {
         }
         else throw new IllegalArgumentException("Magnitude is 0");
     }
-    public double dot(Vector2 v) {
+    public float dot(Vector2 v) {
         return x * v.x + y * v.y;
     }
 
-    public static double angleBetween(Vector2 v1, Vector2 v2) {
-        return Math.acos(v1.dot(v2) / (v1.magnitude() * v2.magnitude()));
+    public static float angleBetween(Vector2 v1, Vector2 v2) {
+        return (float) Math.acos(v1.dot(v2) / (v1.magnitude() * v2.magnitude()));
     }
 
     public Vector2 divide(float a) {
