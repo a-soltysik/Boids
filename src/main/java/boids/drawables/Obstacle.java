@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Obstacle implements Drawable {
 
-    private static int obstacleNumber = 0;
+    private static final ArrayList<Integer> obstacles = new ArrayList<>();
 
     private final Vector2 position;
     private final Vector2[] vertices;
@@ -37,27 +37,32 @@ public class Obstacle implements Drawable {
         int current_tries = 0;
         var random = new Random();
         do {
+            intersects = false;
             current_tries++;
             var obstacle = new Obstacle(new Vector2(
                     random.nextInt(panel.getWidth()),
                     random.nextInt(panel.getHeight())
             ), 25f, 15);
 
-            intersects = objects
-                    .stream()
-                    .filter(o -> o instanceof Obstacle)
-                    .anyMatch(o -> ((Obstacle) o).boundingBox.intersects(obstacle.boundingBox))
-                    || !obstacle.boundingBox.isInside(panel.getRectangle());
+            for (var i : obstacles) {
+                if (obstacle.boundingBox.intersects(((Obstacle)objects.get(i)).boundingBox)) {
+                    intersects = true;
+                    break;
+                }
+            }
+            intersects = intersects || !obstacle.boundingBox.isInside(panel.getRectangle());
             if (!intersects) {
                 objects.add(obstacle);
-                obstacleNumber++;
+                obstacles.add(objects.size() - 1);
             }
         } while (intersects && current_tries <= max_tries);
     }
 
     public static void removeObstacle(ArrayList<Drawable> objects) {
-        objects.remove(obstacleNumber - 1);
-        obstacleNumber--;
+        if (obstacles.size() > 0) {
+            objects.remove((int) obstacles.get(obstacles.size() - 1));
+            obstacles.remove(obstacles.size() - 1);
+        }
     }
 
     private void initializeVertices() {
