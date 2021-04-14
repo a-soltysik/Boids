@@ -1,5 +1,6 @@
 package boids.drawables;
 
+import boids.gui.Animation;
 import boids.gui.AnimationPanel;
 import boids.math.OpenSimplex2F;
 import boids.math.Rectangle;
@@ -20,6 +21,8 @@ public class Obstacle implements Drawable {
     private final int resolution;
     private final float NOISE_RESOLUTION = 0.02f;
     private Rectangle boundingBox;
+
+    private int index;
 
     public Obstacle(Vector2 position, float radius, int resolution) {
         this.position = position;
@@ -114,7 +117,7 @@ public class Obstacle implements Drawable {
     }
 
     @Override
-    public void update(double frameTime) {
+    public void update(Animation animation, double frameTime) {
         //No update
     }
 

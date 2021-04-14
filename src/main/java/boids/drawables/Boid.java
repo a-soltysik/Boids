@@ -1,18 +1,17 @@
 package boids.drawables;
 
-import boids.gui.AnimationPanel;
+import boids.gui.Animation;
 import boids.math.Vector2;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Boid implements Drawable{
-    protected Vector2 velocity;
     protected Vector2 position;
+    protected Vector2 velocity;
+    protected Vector2 acceleration;
     protected final Vector2[] vertices;
     protected float size;
+    protected int index;
 
     public Boid(float size, Vector2 position) {
         this.size = size;
@@ -34,7 +33,7 @@ public abstract class Boid implements Drawable{
     }
 
     @Override
-    public void update(double frameTime) {
+    public void update(Animation animation, double frameTime) {
         position = position.add(velocity.multiply(frameTime));
         for (int i = 0; i < vertices.length; i++) {
            vertices[i] = vertices[i].add(velocity.multiply(frameTime));
@@ -44,5 +43,9 @@ public abstract class Boid implements Drawable{
     @Override
     public void render(Graphics2D g2d) {
         g2d.fill(Drawable.drawShape(vertices));
+    }
+
+    protected void setIndex(int index) {
+        this.index = index;
     }
 }
