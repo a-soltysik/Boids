@@ -34,7 +34,7 @@ public class Vector2 {
     }
 
     public float magnitude() {
-        return (x * x) + (y * y);
+        return (float) Math.sqrt((x * x) + (y * y));
     }
     public void normalize(){
         float mag = magnitude();
