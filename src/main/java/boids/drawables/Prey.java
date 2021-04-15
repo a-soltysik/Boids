@@ -15,8 +15,11 @@ public class Prey extends Boid{
     private static final ArrayList<Integer> preys = new ArrayList<>();
     private static final float maxSpeed = 50f;
     private static final float maxAcceleration = 10f;
-    private static final float fovRadius = 40f;
+    private static final float fovRadius = 60f;
     private static final float desiredSeparation = 30f;
+    public static double separationWeight = 2;
+    public static double alignmentWeight = 1.5;
+
 
     public Prey(Vector2 position) {
         super(position);
@@ -49,8 +52,37 @@ public class Prey extends Boid{
                 steer.limit(maxAcceleration);
             }
         }
+        steer = steer.multiply(separationWeight);
         return steer;
     }
+    private Vector2 alignment(ArrayList<Drawable> objects) {
+        Vector2 steer = Vector2.ZERO;
+        int count = 0;
+        for (var i : preys) {
+            if (i == index) {
+                continue;
+            }
+            Prey prey = (Prey) objects.get(i);
+            float distance = Vector2.distance(this.position, prey.position);
+            if (distance < fovRadius) {
+                steer = steer.add(this.velocity);
+                count++;
+            }
+        }
+            if (count > 0) {
+                steer = steer.divide(count);
+                if (steer.magnitude() > 0) {
+                    steer.normalize();
+                    steer = steer.multiply(maxSpeed);
+                    steer = steer.subtract(velocity);
+                    steer.limit(maxAcceleration);
+                }
+            }
+            steer = steer.multiply(alignmentWeight);
+            return steer;
+
+        }
+
 
     public static void addPrey(AnimationPanel panel, ArrayList<Drawable> objects){
         var prey = new Prey(
@@ -77,13 +109,17 @@ public class Prey extends Boid{
         }
     }
 
+
     @Override
     public void update(Animation animation, double frameTime) {
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separate(animation.getObjects()));
+        acceleration = acceleration.add(alignment(animation.getObjects()));
+
         velocity = velocity.add(acceleration.multiply(frameTime));
         velocity.limit(maxSpeed);
         super.update(animation, frameTime);
+
     }
 
     @Override
