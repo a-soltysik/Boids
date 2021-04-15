@@ -1,8 +1,12 @@
 package boids.gui;
 
+import boids.drawables.Drawable;
+import boids.math.Rectangle;
+
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class Animation {
     private AnimationPanel frame;
@@ -105,7 +109,7 @@ public class Animation {
 
 
     private void update() {
-        objects.getList().forEach(o -> o.update(frameTime));
+        objects.getList().forEach(o -> o.update(this, frameTime));
     }
 
     private void render() {
@@ -125,5 +129,12 @@ public class Animation {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+    public ArrayList<Drawable> getObjects() {
+        return objects.getList();
+    }
+
+    public Rectangle getDimensions() {
+        return frame.getRectangle();
     }
 }

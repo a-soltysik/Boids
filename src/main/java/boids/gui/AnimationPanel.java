@@ -1,7 +1,7 @@
 package boids.gui;
 
-import boids.math.Vector2;
 import boids.math.Rectangle;
+import boids.math.Vector2;
 
 import javax.swing.*;
 import java.awt.*;
