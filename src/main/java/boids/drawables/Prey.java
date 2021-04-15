@@ -16,9 +16,11 @@ public class Prey extends Boid{
     private static final float maxSpeed = 50f;
     private static final float maxAcceleration = 10f;
     private static final float fovRadius = 60f;
-    private static final float desiredSeparation = 30f;
-    public static float separationWeight = 1.5f;
-    public static float alignmentWeight = 1.5f;
+    private static final float desiredSeparation = 30f
+
+    public static double separationWeight = 2.5f;
+    public static double alignmentWeight = 1.5f;
+    public static double cohesionWeight = 1.5f;
 
 
     public Prey(Vector2 position) {
@@ -80,9 +82,38 @@ public class Prey extends Boid{
         }
         steer = steer.multiply(alignmentWeight);
         return steer;
-
     }
+    private Vector2 cohesion(ArrayList<Drawable> objects) {
 
+        Vector2 target = Vector2.ZERO;
+        int count = 0;
+
+        for (var i : preys) {
+            if (i == index) {
+                continue;
+            }
+            Prey prey = (Prey) objects.get(i);
+            float distance = Vector2.distance(this.position, prey.position);
+            if ((distance > 0) && (distance < fovRadius)) {
+                target = target.add(prey.position);
+                count++;
+            }
+        }
+
+        if (count == 0) return target;
+        else target = target.divide(count);
+
+        Prey prey = (Prey) this;
+        Vector2 steer = target.subtract(prey.position);
+        if (steer.magnitude() > 0) {
+            steer.normalize();
+            steer = steer.multiply(maxSpeed);
+            steer = steer.subtract(velocity);
+            steer.limit(maxAcceleration);
+        }
+        steer = steer.multiply(cohesionWeight);
+        return steer;
+    }
     public static void addPrey(AnimationPanel panel, ArrayList<Drawable> objects){
         var prey = new Prey(
                 new Vector2((float) rnd.nextInt(panel.getWidth()),
@@ -114,7 +145,7 @@ public class Prey extends Boid{
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separate(animation.getObjects()));
         acceleration = acceleration.add(alignment(animation.getObjects()));
-
+        acceleration = acceleration.add(cohesion(animation.getObjects()));
         velocity = velocity.add(acceleration.multiply(frameTime));
         velocity.limit(maxSpeed);
         super.update(animation, frameTime);
