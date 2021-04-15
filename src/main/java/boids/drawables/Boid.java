@@ -32,12 +32,27 @@ public abstract class Boid implements Drawable{
 
     }
 
+    private void rotate() {
+        if (velocity.magnitude() == 0) {
+            return;
+        }
+        Vector2 direction = position.subtract(vertices[2]).normalized();
+        Vector2 newDirection = velocity.normalized();
+
+        float angle = direction.directAngle(newDirection);
+
+        for (int i=1; i<vertices.length; i++) {
+            vertices[i] = vertices[i].rotated(position, angle);
+        }
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
         position = position.add(velocity.multiply(frameTime));
         for (int i = 0; i < vertices.length; i++) {
            vertices[i] = vertices[i].add(velocity.multiply(frameTime));
         }
+        rotate();
     }
 
     @Override
