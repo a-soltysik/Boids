@@ -91,7 +91,10 @@ public class Vector2 {
         if (v1.isZero() || v2.isZero()) {
             throw new ArithmeticException("Angle between zero vectors in undefined");
         }
-        return (float) Math.acos(Math.min(1f, v1.dot(v2) / (v1.magnitude() * v2.magnitude())));
+        float value = v1.dot(v2) / (v1.magnitude() * v2.magnitude());
+        value = Math.max(value, -1f);
+        value = Math.min(value, 1f);
+        return (float) Math.acos(value);
     }
 
     public float directAngle(Vector2 vec) {
