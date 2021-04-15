@@ -6,9 +6,7 @@ import boids.math.Vector2;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Prey extends Boid{
@@ -19,11 +17,8 @@ public class Prey extends Boid{
     private static final float maxAcceleration = 10f;
     private static final float fovRadius = 60f;
     private static final float desiredSeparation = 30f;
-    private static final float desiredAlignment=60f;
-    private static final float desiredCohesion = 60f;
     public static double separationWeight = 2;
     public static double alignmentWeight = 1.5;
-    public static double cohesionWeight = 1.3;
 
 
     public Prey(Vector2 position) {
@@ -69,17 +64,19 @@ public class Prey extends Boid{
             }
             Prey prey = (Prey) objects.get(i);
             float distance = Vector2.distance(this.position, prey.position);
-            if (distance < desiredAlignment) {
+            if (distance < fovRadius) {
                 steer = steer.add(this.velocity);
                 count++;
             }
         }
             if (count > 0) {
                 steer = steer.divide(count);
-                steer.normalize();
-                steer = steer.multiply(maxSpeed);
-                steer = steer.subtract(velocity);
-                steer.limit(maxAcceleration);
+                if (steer.magnitude() > 0) {
+                    steer.normalize();
+                    steer = steer.multiply(maxSpeed);
+                    steer = steer.subtract(velocity);
+                    steer.limit(maxAcceleration);
+                }
             }
             steer = steer.multiply(alignmentWeight);
             return steer;
