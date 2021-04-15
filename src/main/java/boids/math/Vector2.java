@@ -91,7 +91,22 @@ public class Vector2 {
         if (v1.isZero() || v2.isZero()) {
             throw new ArithmeticException("Angle between zero vectors in undefined");
         }
-        return (float) Math.acos(v1.dot(v2) / (v1.magnitude() * v2.magnitude()));
+        return (float) Math.acos(Math.min(1f, v1.dot(v2) / (v1.magnitude() * v2.magnitude())));
+    }
+
+    public float directAngle(Vector2 vec) {
+        return (float) (Math.atan2(x, y) - (Math.atan2(vec.x, vec.y)));
+    }
+
+    public Vector2 rotated(Vector2 point, float angle) {
+        float dx = x - point.x;
+        float dy = y - point.y;
+        float cos = (float) Math.cos(angle);
+        float sin = (float) Math.sin(angle);
+        return new Vector2(
+                point.x + (dx * cos - dy * sin),
+                point.y + (dx * sin + dy * cos)
+        );
     }
 
     public static float distance(Vector2 v1, Vector2 v2) {
