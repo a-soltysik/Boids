@@ -1,6 +1,7 @@
 package boids.gui;
 
 import boids.drawables.Drawable;
+import boids.math.Rectangle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -131,5 +132,9 @@ public class Animation {
     }
     public ArrayList<Drawable> getObjects() {
         return objects.getList();
+    }
+
+    public Rectangle getDimensions() {
+        return frame.getRectangle();
     }
 }

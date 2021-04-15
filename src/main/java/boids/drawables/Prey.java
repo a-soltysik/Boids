@@ -15,7 +15,8 @@ public class Prey extends Boid{
     private static final ArrayList<Integer> preys = new ArrayList<>();
     private static final float maxSpeed = 50f;
     private static final float maxAcceleration = 10f;
-    private static final float fovRadius = 30;
+    private static final float fovRadius = 40f;
+    private static final float desiredSeparation = 30f;
 
     public Prey(Vector2 position) {
         super(position);
@@ -30,9 +31,11 @@ public class Prey extends Boid{
             }
             Prey prey = (Prey) objects.get(i);
             float distance = Vector2.distance(this.position, prey.position);
-            if (distance < fovRadius) {
+            if (distance < desiredSeparation) {
                 Vector2 diff = this.position.subtract(prey.position);
-                diff = diff.divide(distance * distance);
+                if (distance > 0) {
+                    diff = diff.divide(distance * distance);
+                }
                 steer = steer.add(diff);
                 count++;
             }
@@ -43,10 +46,7 @@ public class Prey extends Boid{
                 steer.normalize();
                 steer = steer.multiply(maxSpeed);
                 steer = steer.subtract(this.velocity);
-                if (steer.magnitude() > maxAcceleration) {
-                    steer.normalize();
-                    steer = steer.multiply(maxAcceleration);
-                }
+                steer.limit(maxAcceleration);
             }
         }
         return steer;
@@ -57,7 +57,10 @@ public class Prey extends Boid{
                 new Vector2((float) rnd.nextInt(panel.getWidth()),
                         (float) rnd.nextInt(panel.getHeight())));
 
-        prey.velocity = new Vector2((float) (rnd.nextInt(40)-20 ), (float) (rnd.nextInt(40) - 20));
+        prey.velocity = new Vector2(
+                (float) (rnd.nextInt(40) - 20),
+                (float) (rnd.nextInt(40) - 20)
+        );
 
         for (int i = 0; i < prey.vertices.length; i++) {
             prey.vertices[i] = prey.vertices[i].add(prey.position);
@@ -79,10 +82,7 @@ public class Prey extends Boid{
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separate(animation.getObjects()));
         velocity = velocity.add(acceleration.multiply(frameTime));
-        if (velocity.magnitude() > maxSpeed) {
-            velocity.normalize();
-            velocity = velocity.multiply(maxSpeed);
-        }
+        velocity.limit(maxSpeed);
         super.update(animation, frameTime);
     }
 

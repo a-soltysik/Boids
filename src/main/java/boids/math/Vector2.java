@@ -16,6 +16,11 @@ public class Vector2 {
         this(xy, xy);
     }
 
+    public Vector2(Vector2 vec) {
+        x = vec.x;
+        y = vec.y;
+    }
+
     public Vector2() {
         this(0f, 0f);
     }
@@ -33,9 +38,36 @@ public class Vector2 {
         return new Vector2((float) (x * a), (float) (y * a));
     }
 
+    public boolean isZero() {
+        return x == 0 && y == 0;
+    }
+
     public float magnitude() {
         return (float) Math.sqrt((x * x) + (y * y));
     }
+
+    public void limit(float newMagnitude) {
+        float mag = magnitude();
+        if (mag != 0) {
+            if (mag > newMagnitude) {
+                normalize();
+                x *= newMagnitude;
+                y *= newMagnitude;
+            }
+        } else throw new ArithmeticException("Magnitude is 0");
+    }
+
+    public Vector2 limited(float magnitude) {
+        float mag = magnitude();
+        if (mag != 0) {
+            if (mag > magnitude) {
+                return this.normalized().multiply(magnitude);
+            } else {
+                return new Vector2(this);
+            }
+        } else throw new ArithmeticException("Magnitude is 0");
+    }
+
     public void normalize(){
         float mag = magnitude();
         if (mag != 0) {
@@ -56,6 +88,9 @@ public class Vector2 {
     }
 
     public static float angleBetween(Vector2 v1, Vector2 v2) {
+        if (v1.isZero() || v2.isZero()) {
+            throw new ArithmeticException("Angle between zero vectors in undefined");
+        }
         return (float) Math.acos(v1.dot(v2) / (v1.magnitude() * v2.magnitude()));
     }
 
@@ -65,7 +100,7 @@ public class Vector2 {
 
     public Vector2 divide(float a) {
         if (a == 0) {
-            throw new IllegalArgumentException("Divisor is 0");
+            throw new ArithmeticException("Divisor is 0");
         }
         return new Vector2(x / a, y / a);
     }
