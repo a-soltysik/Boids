@@ -16,10 +16,12 @@ public class Prey extends Boid{
     private static final float maxSpeed = 50f;
     private static final float maxAcceleration = 10f;
     private static final float fovRadius = 60f;
-    private static final float desiredSeparation = 30f;
+    private static final float desiredSeparation = 30f
+
     public static double separationWeight = 2.5f;
     public static double alignmentWeight = 1.5f;
     public static double cohesionWeight = 1.5f;
+
 
     public Prey(Vector2 position) {
         super(position);
@@ -69,19 +71,18 @@ public class Prey extends Boid{
                 count++;
             }
         }
-            if (count > 0) {
-                steer = steer.divide(count);
-                if (steer.magnitude() > 0) {
-                    steer.normalize();
-                    steer = steer.multiply(maxSpeed);
-                    steer = steer.subtract(velocity);
-                    steer.limit(maxAcceleration);
-                }
+        if (count > 0) {
+            steer = steer.divide(count);
+            if (steer.magnitude() > 0) {
+                steer.normalize();
+                steer = steer.multiply(maxSpeed);
+                steer = steer.subtract(velocity);
+                steer.limit(maxAcceleration);
             }
-            steer = steer.multiply(alignmentWeight);
-            return steer;
-
         }
+        steer = steer.multiply(alignmentWeight);
+        return steer;
+    }
     private Vector2 cohesion(ArrayList<Drawable> objects) {
 
         Vector2 target = Vector2.ZERO;
@@ -113,8 +114,6 @@ public class Prey extends Boid{
         steer = steer.multiply(cohesionWeight);
         return steer;
     }
-
-
     public static void addPrey(AnimationPanel panel, ArrayList<Drawable> objects){
         var prey = new Prey(
                 new Vector2((float) rnd.nextInt(panel.getWidth()),
