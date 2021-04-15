@@ -1,6 +1,7 @@
 package boids.drawables;
 
 import boids.gui.Animation;
+import boids.math.Rectangle;
 import boids.math.Vector2;
 
 import java.awt.*;
@@ -46,18 +47,42 @@ public abstract class Boid implements Drawable{
         }
     }
 
+    private void remainOnScreen(Rectangle frame) {
+        Vector2 oldPosition = new Vector2(position);
+        if (position.x > frame.max.x) {
+            position.x = frame.min.x;
+        } else if (position.x < frame.min.x) {
+            position.x = frame.max.x;
+        }
+        if (position.y > frame.max.y) {
+            position.y = frame.min.y;
+        } else if (position.y < frame.min.y) {
+            position.y = frame.max.y;
+        }
+        if (!position.equals(oldPosition)) {
+            for (int i = 0; i < vertices.length; i++) {
+                vertices[i] = vertices[i].add(position.subtract(oldPosition));
+            }
+        }
+
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
+
         position = position.add(velocity.multiply(frameTime));
         for (int i = 0; i < vertices.length; i++) {
            vertices[i] = vertices[i].add(velocity.multiply(frameTime));
         }
+        remainOnScreen(animation.getDimensions());
         rotate();
+
     }
 
     @Override
     public void render(Graphics2D g2d) {
         g2d.fill(Drawable.drawShape(vertices));
+        //new DLine(position, position.add(velocity), Color.darkGray).render(g2d);
     }
 
     protected void setIndex(int index) {

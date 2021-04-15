@@ -17,8 +17,8 @@ public class Prey extends Boid{
     private static final float maxAcceleration = 10f;
     private static final float fovRadius = 60f;
     private static final float desiredSeparation = 30f;
-    public static double separationWeight = 2;
-    public static double alignmentWeight = 1.5;
+    public static float separationWeight = 1.5f;
+    public static float alignmentWeight = 1.5f;
 
 
     public Prey(Vector2 position) {
@@ -65,24 +65,23 @@ public class Prey extends Boid{
             Prey prey = (Prey) objects.get(i);
             float distance = Vector2.distance(this.position, prey.position);
             if (distance < fovRadius) {
-                steer = steer.add(this.velocity);
+                steer = steer.add(prey.velocity);
                 count++;
             }
         }
-            if (count > 0) {
-                steer = steer.divide(count);
-                if (steer.magnitude() > 0) {
-                    steer.normalize();
-                    steer = steer.multiply(maxSpeed);
-                    steer = steer.subtract(velocity);
-                    steer.limit(maxAcceleration);
-                }
+        if (count > 0) {
+            steer = steer.divide(count);
+            if (steer.magnitude() > 0) {
+                steer.normalize();
+                steer = steer.multiply(maxSpeed);
+                steer = steer.subtract(velocity);
+                steer.limit(maxAcceleration);
             }
-            steer = steer.multiply(alignmentWeight);
-            return steer;
-
         }
+        steer = steer.multiply(alignmentWeight);
+        return steer;
 
+    }
 
     public static void addPrey(AnimationPanel panel, ArrayList<Drawable> objects){
         var prey = new Prey(
