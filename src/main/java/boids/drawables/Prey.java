@@ -17,9 +17,9 @@ public class Prey extends Boid{
     private static final float maxAcceleration = 10f;
     private static final float fovRadius = 60f;
     private static final float desiredSeparation = 30f;
-    public static double separationWeight = 2.5;
-    public static double alignmentWeight = 1.5;
-    public static double cohesionWeight = 1.5;
+    public static double separationWeight = 2.5f;
+    public static double alignmentWeight = 1.5f;
+    public static double cohesionWeight = 1.5f;
 
     public Prey(Vector2 position) {
         super(position);
@@ -94,20 +94,22 @@ public class Prey extends Boid{
             Prey prey = (Prey) objects.get(i);
             float distance = Vector2.distance(this.position, prey.position);
             if ((distance > 0) && (distance < fovRadius)) {
-                target= target.add(prey.position);
+                target = target.add(prey.position);
                 count++;
             }
         }
 
-        if(count == 0) return target;
+        if (count == 0) return target;
         else target = target.divide(count);
 
-        Prey prey = (Prey) objects.get(index);
+        Prey prey = (Prey) this;
         Vector2 steer = target.subtract(prey.position);
-        steer.normalize();
-        steer= steer.multiply(maxSpeed);
-        steer=steer.subtract(velocity);
-        steer.limit(maxAcceleration);
+        if (steer.magnitude() > 0) {
+            steer.normalize();
+            steer = steer.multiply(maxSpeed);
+            steer = steer.subtract(velocity);
+            steer.limit(maxAcceleration);
+        }
         steer = steer.multiply(cohesionWeight);
         return steer;
     }
