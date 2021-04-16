@@ -100,7 +100,7 @@ public class Vector2 {
     }
 
     public float directAngle(Vector2 vec) {
-        return (float) (Math.atan2(x, y) - (Math.atan2(vec.x, vec.y)));
+        return (float) Math.atan2(x * vec.y - vec.x * y, x * vec.x + y * vec.y);
     }
 
     public Vector2 rotated(Vector2 point, float angle) {

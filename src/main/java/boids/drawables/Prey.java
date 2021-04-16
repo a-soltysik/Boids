@@ -16,12 +16,11 @@ public class Prey extends Boid{
     private static final float maxSpeed = 50f;
     private static final float maxAcceleration = 10f;
     private static final float fovRadius = 60f;
-    private static final float desiredSeparation = 30f
+    private static final float desiredSeparation = 20f;
 
-    public static double separationWeight = 2.5f;
-    public static double alignmentWeight = 1.5f;
-    public static double cohesionWeight = 1.5f;
-
+    public static float separationWeight = 2f;
+    public static float alignmentWeight = 1.5f;
+    public static float cohesionWeight = 1.5f;
 
     public Prey(Vector2 position) {
         super(position);
@@ -38,7 +37,7 @@ public class Prey extends Boid{
             float distance = Vector2.distance(this.position, prey.position);
             if (distance < desiredSeparation) {
                 Vector2 diff = this.position.subtract(prey.position);
-                if (distance > 0) {
+                if (distance * distance > 0) {
                     diff = diff.divide(distance * distance);
                 }
                 steer = steer.add(diff);
@@ -50,7 +49,9 @@ public class Prey extends Boid{
             if (steer.magnitude() > 0) {
                 steer.normalize();
                 steer = steer.multiply(maxSpeed);
-                steer = steer.subtract(this.velocity);
+            }
+            steer = steer.subtract(this.velocity);
+            if (steer.magnitude() > 0) {
                 steer.limit(maxAcceleration);
             }
         }
@@ -76,7 +77,9 @@ public class Prey extends Boid{
             if (steer.magnitude() > 0) {
                 steer.normalize();
                 steer = steer.multiply(maxSpeed);
-                steer = steer.subtract(velocity);
+            }
+            steer = steer.subtract(velocity);
+            if (steer.magnitude() > 0) {
                 steer.limit(maxAcceleration);
             }
         }
@@ -85,7 +88,7 @@ public class Prey extends Boid{
     }
     private Vector2 cohesion(ArrayList<Drawable> objects) {
 
-        Vector2 target = Vector2.ZERO;
+        Vector2 steer = Vector2.ZERO;
         int count = 0;
 
         for (var i : preys) {
@@ -94,39 +97,42 @@ public class Prey extends Boid{
             }
             Prey prey = (Prey) objects.get(i);
             float distance = Vector2.distance(this.position, prey.position);
-            if ((distance > 0) && (distance < fovRadius)) {
-                target = target.add(prey.position);
+            if (distance < fovRadius) {
+                steer = steer.add(prey.position);
                 count++;
             }
         }
 
-        if (count == 0) return target;
-        else target = target.divide(count);
-
-        Prey prey = (Prey) this;
-        Vector2 steer = target.subtract(prey.position);
-        if (steer.magnitude() > 0) {
-            steer.normalize();
-            steer = steer.multiply(maxSpeed);
+        if (count > 0) {
+            steer = steer.divide(count);
+            steer = steer.subtract(position);
+            if (steer.magnitude() > 0) {
+                steer.normalize();
+                steer = steer.multiply(maxSpeed);
+            }
             steer = steer.subtract(velocity);
-            steer.limit(maxAcceleration);
+            if (steer.magnitude() > 0) {
+                steer.limit(maxAcceleration);
+            }
         }
         steer = steer.multiply(cohesionWeight);
         return steer;
     }
     public static void addPrey(AnimationPanel panel, ArrayList<Drawable> objects){
-        var prey = new Prey(
-                new Vector2((float) rnd.nextInt(panel.getWidth()),
-                        (float) rnd.nextInt(panel.getHeight())));
+        var prey = new Prey(new Vector2(
+                (float) rnd.nextInt(panel.getWidth()),
+                (float) rnd.nextInt(panel.getHeight())
+        ));
 
         prey.velocity = new Vector2(
-                (float) (rnd.nextInt(40) - 20),
-                (float) (rnd.nextInt(40) - 20)
+                (float) rnd.nextInt(40),
+                (float) rnd.nextInt(40)
         );
 
         for (int i = 0; i < prey.vertices.length; i++) {
             prey.vertices[i] = prey.vertices[i].add(prey.position);
         }
+
         objects.add(prey);
         preys.add(objects.size() - 1);
         prey.setIndex(objects.size() - 1);
@@ -147,7 +153,9 @@ public class Prey extends Boid{
         acceleration = acceleration.add(alignment(animation.getObjects()));
         acceleration = acceleration.add(cohesion(animation.getObjects()));
         velocity = velocity.add(acceleration.multiply(frameTime));
-        velocity.limit(maxSpeed);
+        if (velocity.magnitude() > 0) {
+            velocity.limit(maxSpeed);
+        }
         super.update(animation, frameTime);
 
     }

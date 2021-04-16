@@ -22,7 +22,7 @@ public abstract class Boid implements Drawable{
         initializeShape();
     }
     public Boid(Vector2 position) {
-        this(15f, position);
+        this(5f, position);
     }
 
     private void initializeShape() {
@@ -30,15 +30,14 @@ public abstract class Boid implements Drawable{
         vertices[1] = new Vector2(0.5f * size, 1f * size);
         vertices[2] = new Vector2(0f, 0.75f * size);
         vertices[3] = new Vector2(-0.5f * size, 1f * size);
-
     }
 
     private void rotate() {
         if (velocity.magnitude() == 0) {
             return;
         }
-        Vector2 direction = position.subtract(vertices[2]).normalized();
-        Vector2 newDirection = velocity.normalized();
+        Vector2 direction = position.subtract(vertices[2]);
+        Vector2 newDirection = velocity;
 
         float angle = direction.directAngle(newDirection);
 
@@ -49,6 +48,7 @@ public abstract class Boid implements Drawable{
 
     private void remainOnScreen(Rectangle frame) {
         Vector2 oldPosition = new Vector2(position);
+
         if (position.x > frame.max.x) {
             position.x = frame.min.x;
         } else if (position.x < frame.min.x) {
@@ -59,17 +59,16 @@ public abstract class Boid implements Drawable{
         } else if (position.y < frame.min.y) {
             position.y = frame.max.y;
         }
+
         if (!position.equals(oldPosition)) {
             for (int i = 0; i < vertices.length; i++) {
                 vertices[i] = vertices[i].add(position.subtract(oldPosition));
             }
         }
-
     }
 
     @Override
     public void update(Animation animation, double frameTime) {
-
         position = position.add(velocity.multiply(frameTime));
         for (int i = 0; i < vertices.length; i++) {
            vertices[i] = vertices[i].add(velocity.multiply(frameTime));
@@ -82,7 +81,6 @@ public abstract class Boid implements Drawable{
     @Override
     public void render(Graphics2D g2d) {
         g2d.fill(Drawable.drawShape(vertices));
-        //new DLine(position, position.add(velocity), Color.darkGray).render(g2d);
     }
 
     protected void setIndex(int index) {
