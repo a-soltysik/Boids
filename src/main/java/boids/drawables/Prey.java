@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Prey extends Boid{
 
     private static final Random rnd = ThreadLocalRandom.current();
-    private static final ArrayList<Integer> preys = new ArrayList<>();
+    protected static final ArrayList<Integer> preys = new ArrayList<>();
     private static final float maxSpeed = 50f;
     private static final float maxAcceleration = 10f;
     private static final float fovRadius = 60f;
