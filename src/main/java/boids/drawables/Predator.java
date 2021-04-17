@@ -13,7 +13,7 @@ import static boids.drawables.Prey.preys;
 
 public class Predator extends Boid {
     private static final Random rnd = ThreadLocalRandom.current();
-    private static final ArrayList<Integer> predators = new ArrayList<>();
+    protected static final ArrayList<Integer> predators = new ArrayList<>();
     private static final float desiredSeparation = 20f;
     private static final float maxSpeed = 30f;
     private static final float maxAcceleration = 8f;
@@ -26,28 +26,30 @@ public class Predator extends Boid {
 
     private Vector2 attraction(ArrayList<Drawable> objects) {
 
-        Vector2 target = Vector2.ZERO;
+        Vector2 steer = Vector2.ZERO;
         int count = 0;
 
         for(var i : preys) {
             Prey prey = (Prey) objects.get(i);
             float distance = Vector2.distance(this.position, prey.position);
             if (distance < fovRadius ) {
-               target = target.add(prey.position);
+               steer = steer.add(prey.position);
                 count++;
             }
         }
 
-        if(count > 0) target = target.divide(count);
+        if(count > 0) {
+            steer = steer.divide(count);
 
-        Vector2 steer = target.subtract(this.position);
-        if (steer.magnitude() > 0) {
-            steer.normalize();
-            steer = steer.multiply(maxSpeed);
-        }
-        steer = steer.subtract(velocity);
-        if (steer.magnitude() > 0) {
-            steer.limit(maxAcceleration);
+            steer = steer.subtract(this.position);
+            if (steer.magnitude() > 0) {
+                steer.normalize();
+                steer = steer.multiply(maxSpeed);
+            }
+            steer = steer.subtract(velocity);
+            if (steer.magnitude() > 0) {
+                steer.limit(maxAcceleration);
+            }
         }
         return steer;
     }
