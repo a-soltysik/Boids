@@ -56,7 +56,7 @@ public class Vector2 {
                 x *= newMagnitude;
                 y *= newMagnitude;
             }
-        } else throw new ArithmeticException("Magnitude is 0");
+        }
     }
 
     public Vector2 limited(float magnitude) {
@@ -67,7 +67,8 @@ public class Vector2 {
             } else {
                 return new Vector2(this);
             }
-        } else throw new ArithmeticException("Magnitude is 0");
+        }
+        return Vector2.ZERO;
     }
 
     public void normalize(){
@@ -100,7 +101,15 @@ public class Vector2 {
     }
 
     public float directAngle(Vector2 vec) {
-        return (float) Math.atan2(x * vec.y - vec.x * y, x * vec.x + y * vec.y);
+        if (this.isZero() || vec.isZero()) {
+            throw new ArithmeticException("Angle between zero vectors in undefined");
+        }
+        float angle = (float) Math.atan2(x * vec.y - vec.x * y, x * vec.x + y * vec.y);
+        if (angle >= 0) {
+            return angle;
+        } else {
+            return (float) (2 * Math.PI + angle);
+        }
     }
 
     public Vector2 rotated(Vector2 point, float angle) {
