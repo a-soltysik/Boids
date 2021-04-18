@@ -124,7 +124,7 @@ public class Animation {
         objects.getList().forEach(o -> o.render(g2d));
         g2d.setColor(Color.GREEN);
         g2d.drawString("FPS: " + fps + "", 5, 15);
-        g2d.drawString("Liczba obiektów: " + objects.getList().size(), 5, 75);
+        g2d.drawString("Liczba obiektów: " + objects.getList().size(), 5, 30);
     }
 
     public void setPaused(boolean paused) {

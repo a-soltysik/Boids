@@ -19,9 +19,8 @@ public class Predator extends Boid {
     private static final float maxAcceleration = 8f;
     private static final float fovRadius = 100f;
 
-
     public Predator(Vector2 position){
-        super(10f,position);
+        super(20f,position, Color.orange);
     }
 
     private Vector2 attraction(ArrayList<Drawable> objects) {

@@ -7,6 +7,7 @@ import boids.math.Vector2;
 import java.awt.*;
 
 public abstract class Boid implements Drawable{
+    protected Color color;
     protected Vector2 position;
     protected Vector2 velocity;
     protected Vector2 acceleration;
@@ -14,15 +15,13 @@ public abstract class Boid implements Drawable{
     protected float size;
     protected int index;
 
-    public Boid(float size, Vector2 position) {
+    public Boid(float size, Vector2 position, Color color) {
         this.size = size;
         this.position = position;
+        this.color = color;
         velocity = Vector2.ZERO;
         vertices = new Vector2[4];
         initializeShape();
-    }
-    public Boid(Vector2 position) {
-        this(5f, position);
     }
 
     private void initializeShape() {
@@ -75,11 +74,11 @@ public abstract class Boid implements Drawable{
         }
         remainOnScreen(animation.getDimensions());
         rotate();
-
     }
 
     @Override
     public void render(Graphics2D g2d) {
+        g2d.setColor(color);
         g2d.fill(Drawable.drawShape(vertices));
     }
 
