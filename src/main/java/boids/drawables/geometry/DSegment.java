@@ -7,13 +7,13 @@ import boids.math.Vector2;
 import java.awt.*;
 import java.awt.geom.Line2D;
 
-public class DLine implements Drawable {
+public class DSegment implements Drawable {
 
     private final Vector2 start;
     private final Vector2 end;
     private final Color color;
 
-    public DLine(Vector2 start, Vector2 end, Color color) {
+    public DSegment(Vector2 start, Vector2 end, Color color) {
         this.start = start;
         this.end = end;
         this.color = color;
