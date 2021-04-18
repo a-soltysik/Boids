@@ -21,9 +21,10 @@ public class Prey extends Boid{
     public static float separationWeight = 2f;
     public static float alignmentWeight = 1.5f;
     public static float cohesionWeight = 1.5f;
+    public static float escapeWeight = 5f;
 
     public Prey(Vector2 position) {
-        super(position);
+        super(10f, position, Color.darkGray);
     }
 
     private Vector2 separate(ArrayList<Drawable> objects) {
@@ -118,6 +119,38 @@ public class Prey extends Boid{
         steer = steer.multiply(cohesionWeight);
         return steer;
     }
+    private Vector2 escape(ArrayList<Drawable> objects) {
+        Vector2 steer = Vector2.ZERO;
+        int count = 0;
+        for (var i : Predator.predators) {
+            if (i == index) {
+                continue;
+            }
+            Predator predator = (Predator) objects.get(i);
+            float distance = Vector2.distance(this.position, predator.position);
+            if (distance < fovRadius) {
+                Vector2 diff = this.position.subtract(predator.position);
+                if (distance * distance > 0) {
+                    diff = diff.divide(distance * distance);
+                }
+                steer = steer.add(diff);
+                count++;
+            }
+        }
+        if (count > 0) {
+            steer = steer.divide(count);
+            if (steer.magnitude() > 0) {
+                steer.normalize();
+                steer = steer.multiply(maxSpeed);
+            }
+            steer = steer.subtract(this.velocity);
+            if (steer.magnitude() > 0) {
+                steer.limit(maxAcceleration);
+            }
+        }
+        steer = steer.multiply(escapeWeight);
+        return steer;
+    }
     public static void addPrey(AnimationPanel panel, ArrayList<Drawable> objects){
         var prey = new Prey(new Vector2(
                 (float) rnd.nextInt(panel.getWidth()),
@@ -145,19 +178,18 @@ public class Prey extends Boid{
         }
     }
 
-
     @Override
     public void update(Animation animation, double frameTime) {
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separate(animation.getObjects()));
         acceleration = acceleration.add(alignment(animation.getObjects()));
         acceleration = acceleration.add(cohesion(animation.getObjects()));
+        acceleration = acceleration.add(escape(animation.getObjects()));
         velocity = velocity.add(acceleration.multiply(frameTime));
         if (velocity.magnitude() > 0) {
             velocity.limit(maxSpeed);
         }
         super.update(animation, frameTime);
-
     }
 
     @Override
