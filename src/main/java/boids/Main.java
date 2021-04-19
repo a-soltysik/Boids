@@ -2,9 +2,14 @@ package boids;
 
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
+import boids.write_to_file.WriteToCSVFile;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -20,7 +25,10 @@ public class Main {
         frame.setIgnoreRepaint(true);
         frame.pack();
         frame.setVisible(true);
+        WriteToCSVFile write = new WriteToCSVFile();
+        write.addHeading();
 
         panel.startAnimation(Animation.UNLIMITED_FPS);
+
     }
 }

@@ -1,12 +1,17 @@
 package boids.gui;
 
+import boids.write_to_file.WriteToCSVFile;
 import boids.drawables.Drawable;
+import boids.drawables.Predator;
+import boids.drawables.Prey;
 import boids.math.Rectangle;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Animation {
     private AnimationPanel frame;
@@ -16,6 +21,8 @@ public class Animation {
     private final int TIME_SCALE = 1_000_000_000;
     private final boolean running = true;
     private AnimationObjects objects;
+    public static List<String[]> dataLines = new ArrayList<>();
+    private  WriteToCSVFile write = new WriteToCSVFile();
 
     private volatile boolean paused = false;
 
@@ -52,12 +59,25 @@ public class Animation {
         long time = 0;
         long frameTimeNanos;
         int current_fps = 0;
+        int i=0;
 
         while (running) {
             if (!paused) {
                 update();
                 render();
+                dataLines.add(new String[]
+                        {Prey.getAverageVelocity(getObjects()),
+                        Predator.getAverageVelocity(getObjects())});
+                if(i%100==0){
+                    try {
+                        write.writeToFile(dataLines);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
+            i++;
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
             previousTime = currentTime;
