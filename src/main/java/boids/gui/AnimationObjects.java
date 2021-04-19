@@ -21,7 +21,7 @@ public class AnimationObjects {
         for (int i = 0; i < 500; i++) {
             Prey.addPrey(panel,objects);
         }
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             Predator.addPredator(panel,objects);
         }
     }

@@ -14,55 +14,54 @@ import static boids.drawables.Prey.preys;
 public class Predator extends Boid {
     private static final Random rnd = ThreadLocalRandom.current();
     protected static final ArrayList<Integer> predators = new ArrayList<>();
-    private static final float desiredSeparation = 20f;
+    private static final float desiredSeparation = 80f;
     private static final float maxSpeed = 30f;
     private static final float maxAcceleration = 8f;
-    private static final float fovRadius = 100f;
+    public static float separationWeight = 2f;
+    public static float attractionWeight = 5f;
 
     public Predator(Vector2 position){
-        super(20f,position, Color.orange);
+        super(20f,position,
+                new FOV(90, 100f, 10),
+                Color.orange
+        );
     }
 
     private Vector2 attraction(ArrayList<Drawable> objects) {
-
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
         for(var i : preys) {
             Prey prey = (Prey) objects.get(i);
-            float distance = Vector2.distance(this.position, prey.position);
-            if (distance < fovRadius ) {
+            if (fov.isIntersecting(prey.position)) {
                steer = steer.add(prey.position);
                 count++;
             }
         }
-
         if(count > 0) {
             steer = steer.divide(count);
-
             steer = steer.subtract(this.position);
             if (steer.magnitude() > 0) {
                 steer.normalize();
                 steer = steer.multiply(maxSpeed);
             }
             steer = steer.subtract(velocity);
-            if (steer.magnitude() > 0) {
-                steer.limit(maxAcceleration);
-            }
+            steer.limit(maxAcceleration);
         }
-        return steer;
+        return steer.multiply(attractionWeight);
     }
 
     private Vector2 separate(ArrayList<Drawable> objects) {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
+
         for (var i : predators) {
             if (i == index) {
                 continue;
             }
             Predator predator = (Predator) objects.get(i);
-            float distance = Vector2.distance(this.position, predator.position);
-            if (distance < desiredSeparation) {
+            if (fov.isIntersecting(predator.position, desiredSeparation)) {
+                float distance = Vector2.distance(this.position, predator.position);
                 Vector2 diff = this.position.subtract(predator.position);
                 if (distance * distance > 0) {
                     diff = diff.divide(distance * distance);
@@ -78,13 +77,10 @@ public class Predator extends Boid {
                 steer = steer.multiply(maxSpeed);
             }
             steer = steer.subtract(this.velocity);
-            if (steer.magnitude() > 0) {
-                steer.limit(maxAcceleration);
-            }
+            steer.limit(maxAcceleration);
         }
-        return steer;
+        return steer.multiply(separationWeight);
     }
-
 
     public static void addPredator(AnimationPanel panel, ArrayList<Drawable> objects){
         var predator = new Predator(new Vector2(
@@ -128,7 +124,6 @@ public class Predator extends Boid {
     public void render(Graphics2D g2d) {
         super.render(g2d);
     }
-
 }
 
 

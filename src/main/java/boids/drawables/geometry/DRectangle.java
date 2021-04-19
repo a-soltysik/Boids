@@ -9,14 +9,14 @@ import java.awt.*;
 
 public class DRectangle implements Drawable {
 
-    private final DLine[] lines;
+    private final DSegment[] lines;
 
     public DRectangle(Rectangle rectangle, Color color) {
-        lines = new DLine[4];
-        lines[0] = new DLine(rectangle.min, new Vector2(rectangle.max.x, rectangle.min.y), color);
-        lines[1] = new DLine(lines[0].getEnd(), rectangle.max, color);
-        lines[2] = new DLine(lines[1].getEnd(),new Vector2(rectangle.min.x, rectangle.max.y), color);
-        lines[3] = new DLine(lines[2].getEnd(), lines[0].getStart(), color);
+        lines = new DSegment[4];
+        lines[0] = new DSegment(rectangle.min, new Vector2(rectangle.max.x, rectangle.min.y), color);
+        lines[1] = new DSegment(lines[0].getEnd(), rectangle.max, color);
+        lines[2] = new DSegment(lines[1].getEnd(),new Vector2(rectangle.min.x, rectangle.max.y), color);
+        lines[3] = new DSegment(lines[2].getEnd(), lines[0].getStart(), color);
     }
 
     @Override

@@ -30,6 +30,14 @@ public class AnimationPanel extends JPanel {
         animation.render(g2d);
     }
 
+    public void pauseAnimation() {
+        animation.setPaused(true);
+    }
+
+    public void resumeAnimation() {
+        animation.setPaused(false);
+    }
+
     public Rectangle getRectangle() {
         return rectangle;
     }
