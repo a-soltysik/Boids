@@ -177,7 +177,7 @@ public class Prey extends Boid {
             preys.remove(preys.size() - 1);
         }
     }
-    public static String getAverageVelocity(ArrayList<Drawable> objects){
+    public static Float getAverageVelocity(ArrayList<Drawable> objects){
         Float averageVelocity = Float.valueOf(0);
         int count = 0;
         for (var i : preys) {
@@ -188,7 +188,7 @@ public class Prey extends Boid {
         if (count > 0) {
             averageVelocity /= count;
         }
-        return averageVelocity.toString();
+        return averageVelocity;
     }
     @Override
     public void update(Animation animation, double frameTime) {

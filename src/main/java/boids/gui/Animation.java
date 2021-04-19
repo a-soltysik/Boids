@@ -1,6 +1,6 @@
 package boids.gui;
 
-import boids.write_to_file.WriteToCSVFile;
+import boids.write_to_file.CSVWriter;
 import boids.drawables.Drawable;
 import boids.drawables.Predator;
 import boids.drawables.Prey;
@@ -13,6 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class Animation {
     private AnimationPanel frame;
     private double frameTime;
@@ -20,9 +22,12 @@ public class Animation {
     private final int preferredFps;
     private final int TIME_SCALE = 1_000_000_000;
     private final boolean running = true;
-    private AnimationObjects objects;
+    private static String fileName = "target/generated-sources/test.csv";
+    private static int bufferSize=100;
     public static List<String[]> dataLines = new ArrayList<>();
-    private  WriteToCSVFile write = new WriteToCSVFile();
+    private AnimationObjects objects;
+    private CSVWriter write = new CSVWriter(fileName,bufferSize);
+    private int count =0;
 
     private volatile boolean paused = false;
 
@@ -59,25 +64,15 @@ public class Animation {
         long time = 0;
         long frameTimeNanos;
         int current_fps = 0;
-        int i=0;
-
+        write.addHeader();
         while (running) {
             if (!paused) {
                 update();
                 render();
-                dataLines.add(new String[]
-                        {Prey.getAverageVelocity(getObjects()),
-                        Predator.getAverageVelocity(getObjects())});
-                if(i%100==0){
-                    try {
-                        write.writeToFile(dataLines);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
+                count++;
+                write();
             }
-            i++;
+
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
             previousTime = currentTime;
@@ -139,6 +134,19 @@ public class Animation {
             e.printStackTrace();
         }
     }
+    private void write(){
+            dataLines.add(new String[]
+                    {Prey.getAverageVelocity(getObjects()).toString(),
+                            Predator.getAverageVelocity(getObjects()).toString()});
+            if(count%bufferSize==0){
+                try {
+                    write.writeToFile(dataLines,fileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
     public void render(Graphics2D g2d) {
         objects.getList().forEach(o -> o.render(g2d));
