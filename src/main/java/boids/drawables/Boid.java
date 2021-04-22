@@ -5,6 +5,7 @@ import boids.math.Rectangle;
 import boids.math.Vector2;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public abstract class Boid implements Drawable{
     protected Color color;
@@ -40,6 +41,9 @@ public abstract class Boid implements Drawable{
         Vector2 direction = position.subtract(vertices[2]);
         Vector2 newDirection = velocity;
 
+        if (direction.isZero() || newDirection.isZero()) {
+            return;
+        }
         float angle = direction.directAngle(newDirection);
 
         for (int i=1; i<vertices.length; i++) {
@@ -69,6 +73,44 @@ public abstract class Boid implements Drawable{
         }
     }
 
+    private Obstacle findWorst(ArrayList<Drawable> objects) {
+        float minDistance = Float.MAX_VALUE;
+        Obstacle minObstacle = null;
+        for (var i : Obstacle.obstacles) {
+            Obstacle obstacle = (Obstacle) objects.get(i);
+            if (fov.isIntersecting(obstacle.getBoundingBox(), velocity)) {
+                float distance;
+                if ((distance = Vector2.distance(position, obstacle.getPosition())) < minDistance) {
+                    minDistance = distance;
+                    minObstacle = obstacle;
+                }
+            }
+        }
+        return minObstacle;
+    }
+
+    protected Vector2 obstacleAvoidance(ArrayList<Drawable> objects, float maxSpeed, float maxAcceleration, float avoidObstaclesWeight) {
+        Vector2 steer = Vector2.ZERO;
+        Obstacle toAvoid = findWorst(objects);
+        if (toAvoid == null) {
+            return steer;
+        }
+        if (position.isInside(toAvoid.getBoundingBox())) {
+            steer = toAvoid.getPosition().subtract(velocity);
+        } else {
+            steer = fov.findPathAway(toAvoid.getBoundingBox());
+        }
+        if (steer.magnitude() > 0) {
+            steer.normalize();
+            steer = steer.multiply(maxSpeed);
+        }
+        steer = steer.subtract(velocity);
+        steer.limit(maxAcceleration);
+
+        steer = steer.multiply(avoidObstaclesWeight);
+        return steer;
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
         position = position.add(velocity.multiply(frameTime));
@@ -77,6 +119,7 @@ public abstract class Boid implements Drawable{
         }
         remainOnScreen(animation.getDimensions());
         fov.setPosition(position);
+        fov.setDirection(velocity);
         rotate();
     }
 

@@ -1,9 +1,6 @@
 package boids.gui;
 
-import boids.drawables.Drawable;
-import boids.drawables.LowPolyBackground;
-import boids.drawables.Predator;
-import boids.drawables.Prey;
+import boids.drawables.*;
 
 import java.util.ArrayList;
 
@@ -18,12 +15,17 @@ public class AnimationObjects {
     public void prepareObjects() {
        var background = new LowPolyBackground(panel, 10, 0.05f);
         objects.add(background);
-        for (int i = 0; i < 500; i++) {
-            Prey.addPrey(panel,objects);
-        }
+
         for (int i = 0; i < 3; i++) {
             Predator.addPredator(panel,objects);
         }
+        for (int i = 0; i < 500; i++) {
+            Prey.addPrey(panel,objects);
+        }
+        for (int i=0; i<5; i++) {
+            Obstacle.addObstacle(panel, objects);
+        }
+
     }
     public ArrayList<Drawable> getList() {
         return objects;

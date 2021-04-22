@@ -1,5 +1,6 @@
 package boids.drawables;
 
+import boids.drawables.geometry.DRectangle;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
 import boids.math.OpenSimplex2F;
@@ -12,7 +13,7 @@ import java.util.Random;
 
 public class Obstacle implements Drawable {
 
-    private static final ArrayList<Integer> obstacles = new ArrayList<>();
+    protected static final ArrayList<Integer> obstacles = new ArrayList<>();
 
     private final Vector2 position;
     private final Vector2[] vertices;
@@ -21,8 +22,6 @@ public class Obstacle implements Drawable {
     private final int resolution;
     private final float NOISE_RESOLUTION = 0.02f;
     private Rectangle boundingBox;
-
-    private int index;
 
     public Obstacle(Vector2 position, float radius, int resolution) {
         this.position = position;
@@ -45,7 +44,7 @@ public class Obstacle implements Drawable {
             var obstacle = new Obstacle(new Vector2(
                     random.nextInt(panel.getWidth()),
                     random.nextInt(panel.getHeight())
-            ), 25f, 15);
+            ), 35f, 21);
 
             for (var i : obstacles) {
                 if (obstacle.boundingBox.intersects(((Obstacle)objects.get(i)).boundingBox)) {
@@ -116,6 +115,14 @@ public class Obstacle implements Drawable {
         }
     }
 
+    public Rectangle getBoundingBox() {
+        return boundingBox;
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
         //No update
@@ -123,6 +130,7 @@ public class Obstacle implements Drawable {
 
     @Override
     public void render(Graphics2D g2d) {
+        g2d.setColor(Color.gray);
         g2d.fill(Drawable.drawShape(vertices));
     }
 }

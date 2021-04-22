@@ -1,5 +1,7 @@
 package boids.math;
 
+import boids.Utils;
+
 import java.util.Objects;
 
 public class Vector2 {
@@ -104,11 +106,11 @@ public class Vector2 {
         if (this.isZero() || vec.isZero()) {
             throw new ArithmeticException("Angle between zero vectors in undefined");
         }
-        float angle = (float) Math.atan2(x * vec.y - vec.x * y, x * vec.x + y * vec.y);
+        float angle = Utils.fastAtan2(x * vec.y - vec.x * y, x * vec.x + y * vec.y);
         if (angle >= 0) {
             return angle;
         } else {
-            return (float) (2 * Math.PI + angle);
+            return 2 * Utils.PI + angle;
         }
     }
 
@@ -132,6 +134,10 @@ public class Vector2 {
             throw new ArithmeticException("Divisor is 0");
         }
         return new Vector2(x / a, y / a);
+    }
+
+    public boolean isInside(Rectangle rectangle) {
+        return x >= rectangle.min.x && x <= rectangle.max.x && y >= rectangle.min.y && y <= rectangle.max.y;
     }
 
     @Override
