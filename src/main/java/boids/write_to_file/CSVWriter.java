@@ -16,6 +16,7 @@ public class CSVWriter {
     private HashMap<String,ArrayList<Float>> values = new HashMap<>();
     private HashMap<Integer,String> index = new HashMap<>();
     private int count=0;
+
     public CSVWriter(String fileName, int bufferSize,String[] headers){
 
         this.fileName=fileName;
@@ -27,9 +28,11 @@ public class CSVWriter {
 
 
     public  void addToBuffer(String header, Float value) {
-        values.put(header,new ArrayList<Float>());
-        values.get(header).add(value);
         count++;
+        if(count % (bufferSize * headers.length) == 1){
+            resetValues();
+        }
+        values.get(header).add(value);
         if(count % (bufferSize * headers.length) == 0){
             saveFromBuffer(values,index);
         }
@@ -58,20 +61,23 @@ public class CSVWriter {
                 e.printStackTrace();
             }
 
-        for(int j=0; j< headers.length;j++){
-            values.get(index.get(j)).clear();
+
         }
 
+    private void resetValues(){
 
+        for (int i=0;i<headers.length;i++){
+            values.put(headers[i],new ArrayList<Float>());
+            values.get(headers[i]).clear();
+        }
     }
-
 
     private String convertToCSV(String[] data) {
         return Stream.of(data)
                 .collect(Collectors.joining(";"));
     }
 
-    public void addHeader(){
+    private void addHeader(){
         List<String[]> headers = new ArrayList<>();
         headers.add(this.headers);
         try {
@@ -81,7 +87,7 @@ public class CSVWriter {
         }
     }
 
-    public void writeToFile(List<String[]> dataLines,String fileName) throws IOException {
+    private void writeToFile(List<String[]> dataLines,String fileName) throws IOException {
         FileWriter fileWriter = new FileWriter(fileName,true);
         PrintWriter pw = new PrintWriter(fileWriter);
         dataLines.stream()
