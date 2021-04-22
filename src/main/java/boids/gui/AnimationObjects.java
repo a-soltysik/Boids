@@ -18,7 +18,7 @@ public class AnimationObjects {
     public void prepareObjects() {
        var background = new LowPolyBackground(panel, 10, 0.05f);
         objects.add(background);
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 1000; i++) {
             Prey.addPrey(panel,objects);
         }
         for (int i = 0; i < 4; i++) {

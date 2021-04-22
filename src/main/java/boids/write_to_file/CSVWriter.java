@@ -2,20 +2,69 @@ package boids.write_to_file;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CSVWriter {
+
     private String fileName;
     private int bufferSize;
-    private String header1 = "Prey average velocity";
-    private String header2 = "Predator average velocity";
-    public CSVWriter(String fileName, int bufferSize){
+    private String[] headers;
+    private List<String[]> dataLines = new ArrayList<>();
+    private String header;
+    private HashMap<String,ArrayList<Float>> values = new HashMap<>();
+    private HashMap<Integer,String> index = new HashMap<>();
+    private int count=0;
+    public CSVWriter(String fileName, int bufferSize,String[] headers){
+
         this.fileName=fileName;
         this.bufferSize=bufferSize;
+        this.headers=headers;
+        addHeader();
     }
+
+
+
+    public  void addToBuffer(String header, Float value) {
+        values.put(header,new ArrayList<Float>());
+        values.get(header).add(value);
+        count++;
+        if(count % (bufferSize * headers.length) == 0){
+            saveFromBuffer(values,index);
+        }
+
+    }
+    public void setIndex(String header){
+        for (int i = 0; i<headers.length ; i++){
+            if(headers[i].equals(header)){
+                index.put(i,header);
+            }
+        }
+    }
+
+    private void saveFromBuffer(HashMap<String,ArrayList<Float>> values,HashMap<Integer,String> index){
+        for(int i=0;i<bufferSize;i++) {
+            String[] writeable = new String[headers.length];
+            for(int j=0; j< headers.length;j++){
+                writeable[j] = values.get(index.get(j)).get(i).toString();
+            }
+            dataLines.add(writeable);
+
+        }
+            try {
+                writeToFile(dataLines, fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        for(int j=0; j< headers.length;j++){
+            values.get(index.get(j)).clear();
+        }
+
+
+    }
+
 
     private String convertToCSV(String[] data) {
         return Stream.of(data)
@@ -23,10 +72,10 @@ public class CSVWriter {
     }
 
     public void addHeader(){
-        List<String[]> heading = new ArrayList<>();
-        heading.add(new String[]{header1,header2});
+        List<String[]> headers = new ArrayList<>();
+        headers.add(this.headers);
         try {
-            this.writeToFile(heading,fileName);
+            this.writeToFile(headers,fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }

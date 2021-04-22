@@ -11,6 +11,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -24,10 +25,14 @@ public class Animation {
     private final boolean running = true;
     private static String fileName = "target/generated-sources/test.csv";
     private static int bufferSize=100;
+    String preyHeader = "Prey average velocity";
+    String predatorHeader = "Predator average velocity";
+    private String[] headers = {preyHeader,predatorHeader};
+    private ArrayList<Float> averageVelocities= new ArrayList<Float>();
+
     public static List<String[]> dataLines = new ArrayList<>();
     private AnimationObjects objects;
-    private CSVWriter write = new CSVWriter(fileName,bufferSize);
-    private int count =0;
+    private CSVWriter writer = new CSVWriter(fileName,bufferSize,headers);
 
     private volatile boolean paused = false;
 
@@ -64,12 +69,12 @@ public class Animation {
         long time = 0;
         long frameTimeNanos;
         int current_fps = 0;
-        write.addHeader();
+        writer.setIndex(preyHeader);
+        writer.setIndex(predatorHeader);
         while (running) {
             if (!paused) {
                 update();
                 render();
-                count++;
                 write();
             }
 
@@ -135,17 +140,9 @@ public class Animation {
         }
     }
     private void write(){
-            dataLines.add(new String[]
-                    {Prey.getAverageVelocity(getObjects()).toString(),
-                            Predator.getAverageVelocity(getObjects()).toString()});
-            if(count%bufferSize==0){
-                try {
-                    write.writeToFile(dataLines,fileName);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
+        writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
+       }
 
 
     public void render(Graphics2D g2d) {
