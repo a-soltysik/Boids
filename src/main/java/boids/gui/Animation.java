@@ -5,16 +5,10 @@ import boids.drawables.Drawable;
 import boids.drawables.Predator;
 import boids.drawables.Prey;
 import boids.math.Rectangle;
-
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-
 
 public class Animation {
     private AnimationPanel frame;
@@ -23,12 +17,11 @@ public class Animation {
     private final int preferredFps;
     private final int TIME_SCALE = 1_000_000_000;
     private final boolean running = true;
-    private static String fileName = "target/generated-sources/test.csv";
-    private static int bufferSize=100;
+    private String fileName = "target/generated-sources/test.csv";
+    private int bufferSize=100;
     String preyHeader = "Prey average velocity";
     String predatorHeader = "Predator average velocity";
     private String[] headers = {preyHeader,predatorHeader};
-    private ArrayList<Float> averageVelocities= new ArrayList<Float>();
     private AnimationObjects objects;
     private CSVWriter writer = new CSVWriter(fileName,bufferSize,headers);
 
@@ -44,6 +37,8 @@ public class Animation {
     }
 
     public void start(AnimationPanel panel) {
+        writer.setIndex(preyHeader);
+        writer.setIndex(predatorHeader);
         frame = panel;
         objects = new AnimationObjects(frame);
         new SwingWorker<Void, Void>() {
@@ -67,8 +62,6 @@ public class Animation {
         long time = 0;
         long frameTimeNanos;
         int current_fps = 0;
-        writer.setIndex(preyHeader);
-        writer.setIndex(predatorHeader);
         while (running) {
             if (!paused) {
                 update();
@@ -103,6 +96,7 @@ public class Animation {
 
             if (!paused) {
                 update();
+                write();
                 if (timeToRender >= preferredFrameTime) {
                     render();
                     timeToRender = 0;
