@@ -21,15 +21,16 @@ public class Prey extends Boid{
     public static float alignmentWeight = 1.5f;
     public static float cohesionWeight = 1.5f;
     public static float escapeWeight = 5f;
+    public static float avoidObstaclesWeight = 10f;
 
     public Prey(Vector2 position) {
         super(10f, position,
-                new FOV(340, 60f, 10),
+                new FOV(340, 60f, 50),
                 Color.darkGray
         );
     }
 
-    private Vector2 separate(ArrayList<Drawable> objects) {
+    private Vector2 separation(ArrayList<Drawable> objects) {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
@@ -147,10 +148,20 @@ public class Prey extends Boid{
         return steer;
     }
     public static void addPrey(AnimationPanel panel, ArrayList<Drawable> objects){
-        var prey = new Prey(new Vector2(
-                (float) rnd.nextInt(panel.getWidth()),
-                (float) rnd.nextInt(panel.getHeight())
-        ));
+        boolean intersects;
+        Prey prey;
+        do {
+            intersects = false;
+            prey = new Prey(new Vector2(
+                    (float) rnd.nextInt(panel.getWidth()),
+                    (float) rnd.nextInt(panel.getHeight())
+            ));
+            for (var i : Obstacle.obstacles) {
+                if (prey.position.isInside(((Obstacle)objects.get(i)).getBoundingBox())) {
+                    intersects = true;
+                }
+            }
+        } while (intersects);
 
         prey.velocity = new Vector2(
                 (float) rnd.nextInt(40),
@@ -176,10 +187,12 @@ public class Prey extends Boid{
     @Override
     public void update(Animation animation, double frameTime) {
         acceleration = Vector2.ZERO;
-        acceleration = acceleration.add(separate(animation.getObjects()));
+        acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(alignment(animation.getObjects()));
         acceleration = acceleration.add(cohesion(animation.getObjects()));
         acceleration = acceleration.add(escape(animation.getObjects()));
+        acceleration = acceleration.add(obstacleAvoidance(animation.getObjects(),
+                maxSpeed, maxAcceleration, avoidObstaclesWeight));
         velocity = velocity.add(acceleration.multiply(frameTime));
         if (velocity.magnitude() > 0) {
             velocity.limit(maxSpeed);
