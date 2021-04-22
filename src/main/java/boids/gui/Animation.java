@@ -29,8 +29,6 @@ public class Animation {
     String predatorHeader = "Predator average velocity";
     private String[] headers = {preyHeader,predatorHeader};
     private ArrayList<Float> averageVelocities= new ArrayList<Float>();
-
-    public static List<String[]> dataLines = new ArrayList<>();
     private AnimationObjects objects;
     private CSVWriter writer = new CSVWriter(fileName,bufferSize,headers);
 

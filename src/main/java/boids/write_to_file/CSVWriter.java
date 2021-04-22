@@ -18,26 +18,25 @@ public class CSVWriter {
     private int count=0;
 
     public CSVWriter(String fileName, int bufferSize,String[] headers){
-
         this.fileName=fileName;
         this.bufferSize=bufferSize;
         this.headers=headers;
         addHeader();
+        for (int i=0;i< headers.length;i++){
+            values.put(headers[i],new ArrayList<Float>());
+        }
     }
 
-
-
-    public  void addToBuffer(String header, Float value) {
+    public  void addToBuffer(String header, float value) {
         count++;
-        if(count % (bufferSize * headers.length) == 1){
-            resetValues();
-        }
         values.get(header).add(value);
         if(count % (bufferSize * headers.length) == 0){
             saveFromBuffer(values,index);
+            resetValues();
         }
 
     }
+
     public void setIndex(String header){
         for (int i = 0; i<headers.length ; i++){
             if(headers[i].equals(header)){
@@ -53,23 +52,17 @@ public class CSVWriter {
                 writeable[j] = values.get(index.get(j)).get(i).toString();
             }
             dataLines.add(writeable);
-
         }
             try {
                 writeToFile(dataLines, fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
 
     private void resetValues(){
-
-        for (int i=0;i<headers.length;i++){
-            values.put(headers[i],new ArrayList<Float>());
-            values.get(headers[i]).clear();
-        }
+        values.replaceAll((k, v) -> new ArrayList<Float>());
+        dataLines.clear();
     }
 
     private String convertToCSV(String[] data) {

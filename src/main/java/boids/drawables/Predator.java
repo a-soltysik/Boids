@@ -111,8 +111,8 @@ public class Predator extends Boid {
             predators.remove(predators.size() - 1);
         }
     }
-    public static Float getAverageVelocity(ArrayList<Drawable> objects){
-        Float averageVelocity = Float.valueOf(0);
+    public static float getAverageVelocity(ArrayList<Drawable> objects){
+        float averageVelocity = Float.valueOf(0);
         int count = 0;
         for (var i : predators) {
             Predator predator = (Predator) objects.get(i);

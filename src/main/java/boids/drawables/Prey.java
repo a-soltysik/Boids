@@ -177,8 +177,8 @@ public class Prey extends Boid {
             preys.remove(preys.size() - 1);
         }
     }
-    public static Float getAverageVelocity(ArrayList<Drawable> objects){
-        Float averageVelocity = Float.valueOf(0);
+    public static float getAverageVelocity(ArrayList<Drawable> objects){
+        float averageVelocity = 0;
         int count = 0;
         for (var i : preys) {
             Prey prey = (Prey) objects.get(i);
