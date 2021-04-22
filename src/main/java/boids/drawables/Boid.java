@@ -8,6 +8,7 @@ import java.awt.*;
 
 public abstract class Boid implements Drawable{
     protected Color color;
+    protected FOV fov;
     protected Vector2 position;
     protected Vector2 velocity;
     protected Vector2 acceleration;
@@ -15,10 +16,11 @@ public abstract class Boid implements Drawable{
     protected float size;
     protected int index;
 
-    public Boid(float size, Vector2 position, Color color) {
+    public Boid(float size, Vector2 position, FOV fov, Color color) {
         this.size = size;
         this.position = position;
         this.color = color;
+        this.fov = fov;
         velocity = Vector2.ZERO;
         vertices = new Vector2[4];
         initializeShape();
@@ -43,6 +45,7 @@ public abstract class Boid implements Drawable{
         for (int i=1; i<vertices.length; i++) {
             vertices[i] = vertices[i].rotated(position, angle);
         }
+        fov.rotate(angle);
     }
 
     private void remainOnScreen(Rectangle frame) {
@@ -73,6 +76,7 @@ public abstract class Boid implements Drawable{
            vertices[i] = vertices[i].add(velocity.multiply(frameTime));
         }
         remainOnScreen(animation.getDimensions());
+        fov.setPosition(position);
         rotate();
     }
 
