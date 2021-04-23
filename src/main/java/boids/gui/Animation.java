@@ -1,8 +1,10 @@
 package boids.gui;
 
+import boids.write_to_file.CSVWriter;
 import boids.drawables.Drawable;
+import boids.drawables.Predator;
+import boids.drawables.Prey;
 import boids.math.Rectangle;
-
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -15,7 +17,13 @@ public class Animation {
     private final int preferredFps;
     private final int TIME_SCALE = 1_000_000_000;
     private final boolean running = true;
+    private String fileName = "target/generated-sources/test.csv";
+    private int bufferSize=100;
+    String preyHeader = "Prey average velocity";
+    String predatorHeader = "Predator average velocity";
+    private String[] headers = {preyHeader,predatorHeader};
     private AnimationObjects objects;
+    private CSVWriter writer = new CSVWriter(fileName,bufferSize,headers);
 
     private volatile boolean paused = false;
 
@@ -29,6 +37,8 @@ public class Animation {
     }
 
     public void start(AnimationPanel panel) {
+        writer.setIndex(preyHeader);
+        writer.setIndex(predatorHeader);
         frame = panel;
         objects = new AnimationObjects(frame);
         new SwingWorker<Void, Void>() {
@@ -52,12 +62,13 @@ public class Animation {
         long time = 0;
         long frameTimeNanos;
         int current_fps = 0;
-
         while (running) {
             if (!paused) {
                 update();
                 render();
+                write();
             }
+
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
             previousTime = currentTime;
@@ -85,6 +96,7 @@ public class Animation {
 
             if (!paused) {
                 update();
+                write();
                 if (timeToRender >= preferredFrameTime) {
                     render();
                     timeToRender = 0;
@@ -119,6 +131,11 @@ public class Animation {
             e.printStackTrace();
         }
     }
+    private void write(){
+        writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
+        writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
+       }
+
 
     public void render(Graphics2D g2d) {
         objects.getList().forEach(o -> o.render(g2d));

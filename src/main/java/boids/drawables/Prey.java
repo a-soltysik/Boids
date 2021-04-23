@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Prey extends Boid{
+public class Prey extends Boid {
 
     private static final Random rnd = ThreadLocalRandom.current();
     protected static final ArrayList<Integer> preys = new ArrayList<>();
@@ -183,7 +183,19 @@ public class Prey extends Boid{
             preys.remove(preys.size() - 1);
         }
     }
-
+    public static float getAverageVelocity(ArrayList<Drawable> objects){
+        float averageVelocity = 0;
+        int count = 0;
+        for (var i : preys) {
+            Prey prey = (Prey) objects.get(i);
+            averageVelocity += prey.velocity.magnitude();
+            count++;
+        }
+        if (count > 0) {
+            averageVelocity /= count;
+        }
+        return averageVelocity;
+    }
     @Override
     public void update(Animation animation, double frameTime) {
         acceleration = Vector2.ZERO;
@@ -204,4 +216,5 @@ public class Prey extends Boid{
     public void render(Graphics2D g2d) {
         super.render(g2d);
     }
+
 }

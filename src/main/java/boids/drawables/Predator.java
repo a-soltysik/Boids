@@ -118,6 +118,19 @@ public class Predator extends Boid {
             predators.remove(predators.size() - 1);
         }
     }
+    public static float getAverageVelocity(ArrayList<Drawable> objects){
+        float averageVelocity = 0;
+        int count = 0;
+        for (var i : predators) {
+            Predator predator = (Predator) objects.get(i);
+        averageVelocity += predator.velocity.magnitude();
+        count++;
+        }
+        if (count > 0) {
+            averageVelocity /= count;
+        }
+        return averageVelocity;
+    }
 
     @Override
     public void update(Animation animation, double frameTime) {
