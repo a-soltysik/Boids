@@ -19,6 +19,7 @@ public class Predator extends Boid {
     private static final float maxAcceleration = 8f;
     public static float separationWeight = 2f;
     public static float attractionWeight = 5f;
+    public static float avoidObstaclesWeight = 10f;
 
     public Predator(Vector2 position){
         super(20f,position,
@@ -51,7 +52,7 @@ public class Predator extends Boid {
         return steer.multiply(attractionWeight);
     }
 
-    private Vector2 separate(ArrayList<Drawable> objects) {
+    private Vector2 separation(ArrayList<Drawable> objects) {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
@@ -83,10 +84,20 @@ public class Predator extends Boid {
     }
 
     public static void addPredator(AnimationPanel panel, ArrayList<Drawable> objects){
-        var predator = new Predator(new Vector2(
-                (float) rnd.nextInt(panel.getWidth()),
-                (float) rnd.nextInt(panel.getHeight())
-        ));
+        boolean intersects;
+        Predator predator;
+        do {
+            intersects = false;
+            predator = new Predator(new Vector2(
+                    (float) rnd.nextInt(panel.getWidth()),
+                    (float) rnd.nextInt(panel.getHeight())
+            ));
+            for (var i : Obstacle.obstacles) {
+                if (predator.position.isInside(((Obstacle)objects.get(i)).getBoundingBox())) {
+                    intersects = true;
+                }
+            }
+        } while (intersects);
 
         predator.velocity = new Vector2(
                 (float) rnd.nextInt(30),
@@ -124,8 +135,10 @@ public class Predator extends Boid {
     @Override
     public void update(Animation animation, double frameTime) {
         acceleration = Vector2.ZERO;
-        acceleration = acceleration.add(separate(animation.getObjects()));
+        acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(attraction(animation.getObjects()));
+        acceleration = acceleration.add(obstacleAvoidance(animation.getObjects(),
+                maxSpeed, maxAcceleration, avoidObstaclesWeight));
         velocity = velocity.add(acceleration.multiply(frameTime));
         if (velocity.magnitude() > 0) {
             velocity.limit(maxSpeed);
