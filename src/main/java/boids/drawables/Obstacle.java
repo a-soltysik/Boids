@@ -1,49 +1,40 @@
 package boids.drawables;
 
+import boids.Utils;
+import boids.drawables.geometry.DPolygon;
 import boids.drawables.geometry.DRectangle;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
-import boids.math.OpenSimplex2F;
 import boids.math.Rectangle;
 import boids.math.Vector2;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Obstacle implements Drawable {
 
     protected static final ArrayList<Integer> obstacles = new ArrayList<>();
 
+    private final DPolygon shape;
     private final Vector2 position;
-    private final Vector2[] vertices;
-    private final OpenSimplex2F noise;
-    private final float radius;
-    private final int resolution;
-    private final float NOISE_RESOLUTION = 0.02f;
     private Rectangle boundingBox;
 
     public Obstacle(Vector2 position, float radius, int resolution) {
         this.position = position;
-        this.radius = radius;
-        this.resolution = resolution;
-        vertices = new Vector2[resolution];
-        noise = new OpenSimplex2F((int) (Math.random() * 100000000));
-        initializeVertices();
+        shape = new DPolygon(resolution, radius, position, true, Color.gray);
         setBoundingBox();
     }
 
     public static void addObstacle(AnimationPanel panel, ArrayList<Drawable> objects) {
         boolean intersects;
-        int max_tries = 10;
+        int max_tries = 100;
         int current_tries = 0;
-        var random = new Random();
         do {
             intersects = false;
             current_tries++;
             var obstacle = new Obstacle(new Vector2(
-                    random.nextInt(panel.getWidth()),
-                    random.nextInt(panel.getHeight())
+                    Utils.randomFloat(0f, panel.getWidth()),
+                    Utils.randomFloat(0f, panel.getHeight())
             ), 35f, 21);
 
             for (var i : obstacles) {
@@ -52,7 +43,7 @@ public class Obstacle implements Drawable {
                     break;
                 }
             }
-            intersects = intersects || !obstacle.boundingBox.isInside(panel.getRectangle());
+            intersects = intersects || !obstacle.boundingBox.isInside(panel.getDimensions());
             if (!intersects) {
                 objects.add(obstacle);
                 obstacles.add(objects.size() - 1);
@@ -67,38 +58,13 @@ public class Obstacle implements Drawable {
         }
     }
 
-    private void initializeVertices() {
-        generateCircle();
-        addNoise();
-    }
-
-    private void generateCircle() {
-        float angle = 0f;
-        for (int i = 0; i < vertices.length; i++, angle += 2 * Math.PI / resolution) {
-            vertices[i] = new Vector2(
-                    position.x + (float) (Math.sin(angle) * radius),
-                    position.y + (float) (Math.cos(angle) * radius)
-            );
-        }
-    }
-
-    private void addNoise() {
-        for (int i = 0; i < vertices.length; i++) {
-            Vector2 point = vertices[i].subtract(position);
-            double value = noise.noise2(point.x * NOISE_RESOLUTION, point.y * NOISE_RESOLUTION);
-            value = (value + 1) / 2;
-            value = value * (1.2f - 0.8f) + 0.8f;
-            point = point.multiply((float) value);
-            vertices[i] = point.add(position);
-        }
-    }
 
     private void setBoundingBox() {
         boundingBox = new Rectangle(
                 new Vector2(Float.MAX_VALUE, Float.MAX_VALUE),
                 new Vector2(Float.MIN_VALUE, Float.MIN_VALUE)
         );
-
+        Vector2[] vertices = shape.getVertices();
         for (var vertex : vertices) {
             if (vertex.x > boundingBox.max.x) {
                 boundingBox.max.x = vertex.x;
@@ -116,11 +82,11 @@ public class Obstacle implements Drawable {
     }
 
     public Rectangle getBoundingBox() {
-        return boundingBox;
+        return new Rectangle(boundingBox);
     }
 
     public Vector2 getPosition() {
-        return position;
+        return new Vector2(position);
     }
 
     @Override
@@ -130,7 +96,7 @@ public class Obstacle implements Drawable {
 
     @Override
     public void render(Graphics2D g2d) {
-        g2d.setColor(Color.gray);
-        g2d.fill(Drawable.drawShape(vertices));
+        shape.render(g2d);
+        new DRectangle(boundingBox, Color.green).render(g2d);
     }
 }

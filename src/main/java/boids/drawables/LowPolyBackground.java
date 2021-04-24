@@ -35,7 +35,7 @@ public class LowPolyBackground implements Drawable{
         this.height = height;
         this.width = (int) (height * (float) frame.getWidth() / frame.getHeight());
         background = Utils.createCompatibleImage(frame.getWidth(), frame.getHeight());
-        noise = new OpenSimplex2F((int) (Math.random() * 100000000));
+        noise = new OpenSimplex2F(Utils.randomInt(0, Integer.MAX_VALUE));
         g2d = (Graphics2D) background.getGraphics();
         shape = new Vector2[height * width];
         vertices = new Vector2[height * width];

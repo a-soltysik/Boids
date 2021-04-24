@@ -9,10 +9,10 @@ import java.awt.*;
 public class AnimationPanel extends JPanel {
 
     private Animation animation;
-    private Rectangle rectangle;
+    private Rectangle dimensions;
 
     public void startAnimation(int fps) {
-        rectangle = new Rectangle(Vector2.ZERO, new Vector2(getWidth(), getHeight()));
+        dimensions = new Rectangle(Vector2.ZERO, new Vector2(getWidth(), getHeight()));
         animation = new Animation(fps);
         animation.start(this);
     }
@@ -38,7 +38,7 @@ public class AnimationPanel extends JPanel {
         animation.setPaused(false);
     }
 
-    public Rectangle getRectangle() {
-        return rectangle;
+    public Rectangle getDimensions() {
+        return new Rectangle(dimensions);
     }
 }

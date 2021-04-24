@@ -1,5 +1,6 @@
 package boids.drawables;
 
+import boids.Utils;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
 import boids.math.Vector2;
@@ -12,7 +13,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import static boids.drawables.Prey.preys;
 
 public class Predator extends Boid {
-    private static final Random rnd = ThreadLocalRandom.current();
     protected static final ArrayList<Integer> predators = new ArrayList<>();
     private static final float desiredSeparation = 80f;
     private static final float maxSpeed = 30f;
@@ -89,8 +89,8 @@ public class Predator extends Boid {
         do {
             intersects = false;
             predator = new Predator(new Vector2(
-                    (float) rnd.nextInt(panel.getWidth()),
-                    (float) rnd.nextInt(panel.getHeight())
+                    Utils.randomFloat(0f, panel.getWidth()),
+                    Utils.randomFloat(0f, panel.getHeight())
             ));
             for (var i : Obstacle.obstacles) {
                 if (predator.position.isInside(((Obstacle)objects.get(i)).getBoundingBox())) {
@@ -100,13 +100,9 @@ public class Predator extends Boid {
         } while (intersects);
 
         predator.velocity = new Vector2(
-                (float) rnd.nextInt(30),
-                (float) rnd.nextInt(30)
+                Utils.randomFloat(0f, 40f),
+                Utils.randomFloat(0f, 40f)
         );
-
-        for (int i = 0; i < predator.vertices.length; i++) {
-            predator.vertices[i] = predator.vertices[i].add(predator.position);
-        }
 
         objects.add(predator);
         predators.add(objects.size() - 1);

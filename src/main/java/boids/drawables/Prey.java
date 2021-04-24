@@ -1,5 +1,6 @@
 package boids.drawables;
 
+import boids.Utils;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
 import boids.math.Vector2;
@@ -11,7 +12,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Prey extends Boid {
 
-    private static final Random rnd = ThreadLocalRandom.current();
     protected static final ArrayList<Integer> preys = new ArrayList<>();
     private static final float maxSpeed = 50f;
     private static final float maxAcceleration = 10f;
@@ -153,8 +153,8 @@ public class Prey extends Boid {
         do {
             intersects = false;
             prey = new Prey(new Vector2(
-                    (float) rnd.nextInt(panel.getWidth()),
-                    (float) rnd.nextInt(panel.getHeight())
+                    Utils.randomFloat(0f, panel.getWidth()),
+                    Utils.randomFloat(0f, panel.getHeight())
             ));
             for (var i : Obstacle.obstacles) {
                 if (prey.position.isInside(((Obstacle)objects.get(i)).getBoundingBox())) {
@@ -164,13 +164,9 @@ public class Prey extends Boid {
         } while (intersects);
 
         prey.velocity = new Vector2(
-                (float) rnd.nextInt(40),
-                (float) rnd.nextInt(40)
+                Utils.randomFloat(0f, 40f),
+                Utils.randomFloat(0f, 40f)
         );
-
-        for (int i = 0; i < prey.vertices.length; i++) {
-            prey.vertices[i] = prey.vertices[i].add(prey.position);
-        }
 
         objects.add(prey);
         preys.add(objects.size() - 1);

@@ -1,5 +1,6 @@
 package boids.drawables;
 
+import boids.drawables.geometry.DPolygon;
 import boids.gui.Animation;
 import boids.math.Rectangle;
 import boids.math.Vector2;
@@ -8,53 +9,44 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class Boid implements Drawable{
-    protected Color color;
     protected FOV fov;
     protected Vector2 position;
     protected Vector2 velocity;
     protected Vector2 acceleration;
-    protected final Vector2[] vertices;
+    protected final DPolygon shape;
     protected float size;
     protected int index;
 
     public Boid(float size, Vector2 position, FOV fov, Color color) {
         this.size = size;
         this.position = position;
-        this.color = color;
         this.fov = fov;
         velocity = Vector2.ZERO;
-        vertices = new Vector2[4];
-        initializeShape();
-    }
-
-    private void initializeShape() {
-        vertices[0] = new Vector2(0f, 0f);
-        vertices[1] = new Vector2(0.5f * size, 1f * size);
-        vertices[2] = new Vector2(0f, 0.75f * size);
-        vertices[3] = new Vector2(-0.5f * size, 1f * size);
+        shape = new DPolygon(
+                new Vector2[]{
+                        new Vector2(0f, 0f),
+                        new Vector2(0.5f * size, 1f * size),
+                        new Vector2(0f, 0.75f * size),
+                        new Vector2(-0.5f * size, 1f * size)},
+                position, color);
     }
 
     private void rotate() {
         if (velocity.magnitude() == 0) {
             return;
         }
-        Vector2 direction = position.subtract(vertices[2]);
+        Vector2 direction = position.subtract(shape.getVertices()[2]);
         Vector2 newDirection = velocity;
 
         if (direction.isZero() || newDirection.isZero()) {
             return;
         }
         float angle = direction.directAngle(newDirection);
-
-        for (int i=1; i<vertices.length; i++) {
-            vertices[i] = vertices[i].rotated(position, angle);
-        }
+        shape.rotate(angle);
         fov.rotate(angle);
     }
 
     private void remainOnScreen(Rectangle frame) {
-        Vector2 oldPosition = new Vector2(position);
-
         if (position.x > frame.max.x) {
             position.x = frame.min.x;
         } else if (position.x < frame.min.x) {
@@ -64,12 +56,6 @@ public abstract class Boid implements Drawable{
             position.y = frame.min.y;
         } else if (position.y < frame.min.y) {
             position.y = frame.max.y;
-        }
-
-        if (!position.equals(oldPosition)) {
-            for (int i = 0; i < vertices.length; i++) {
-                vertices[i] = vertices[i].add(position.subtract(oldPosition));
-            }
         }
     }
 
@@ -114,19 +100,16 @@ public abstract class Boid implements Drawable{
     @Override
     public void update(Animation animation, double frameTime) {
         position = position.add(velocity.multiply(frameTime));
-        for (int i = 0; i < vertices.length; i++) {
-           vertices[i] = vertices[i].add(velocity.multiply(frameTime));
-        }
         remainOnScreen(animation.getDimensions());
+        shape.moveTo(position);
+        rotate();
         fov.setPosition(position);
         fov.setDirection(velocity);
-        rotate();
     }
 
     @Override
     public void render(Graphics2D g2d) {
-        g2d.setColor(color);
-        g2d.fill(Drawable.drawShape(vertices));
+        shape.render(g2d);
     }
 
     protected void setIndex(int index) {

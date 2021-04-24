@@ -92,21 +92,18 @@ public class Vector2 {
         return x * v.x + y * v.y;
     }
 
-    public static float angleBetween(Vector2 v1, Vector2 v2) {
-        if (v1.isZero() || v2.isZero()) {
-            throw new ArithmeticException("Angle between zero vectors in undefined");
-        }
-        float value = v1.dot(v2) / (v1.magnitude() * v2.magnitude());
-        value = Math.max(value, -1f);
-        value = Math.min(value, 1f);
-        return (float) Math.acos(value);
+    public float cross(Vector2 v) {
+        return (x * v.y - y * v.x);
     }
 
     public float directAngle(Vector2 vec) {
-        if (this.isZero() || vec.isZero()) {
-            throw new ArithmeticException("Angle between zero vectors in undefined");
+        float dot = dot(vec);
+        if (dot == 0) {
+            throw new ArithmeticException(
+                    "Angle between vectors: " + this + "; " + vec + "is undefined"
+            );
         }
-        float angle = Utils.fastAtan2(x * vec.y - vec.x * y, x * vec.x + y * vec.y);
+        float angle = Utils.fastAtan2(cross(vec), dot);
         if (angle >= 0) {
             return angle;
         } else {
