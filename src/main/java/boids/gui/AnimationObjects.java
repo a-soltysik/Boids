@@ -1,9 +1,12 @@
 package boids.gui;
 
-import boids.drawables.*;
+import boids.drawables.Drawable;
+import boids.objects.LowPolyBackground;
+import boids.objects.Obstacle;
+import boids.objects.Predator;
+import boids.objects.Prey;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class AnimationObjects {
     private final ArrayList<Drawable> objects = new ArrayList<>();
@@ -17,9 +20,9 @@ public class AnimationObjects {
        var background = new LowPolyBackground(panel, 10, 0.05f);
         objects.add(background);
 
-        /*for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             Predator.addPredator(panel,objects);
-        }*/
+        }
         for (int i = 0; i < 100; i++) {
             Prey.addPrey(panel,objects);
         }

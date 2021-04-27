@@ -1,9 +1,9 @@
 package boids.gui;
 
-import boids.write_to_file.CSVWriter;
+import boids.CSVWriter;
 import boids.drawables.Drawable;
-import boids.drawables.Predator;
-import boids.drawables.Prey;
+import boids.objects.Predator;
+import boids.objects.Prey;
 import boids.math.Rectangle;
 import javax.swing.*;
 import java.awt.*;

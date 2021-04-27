@@ -11,9 +11,9 @@ import java.awt.geom.Path2D;
 import java.util.Arrays;
 
 public class DPolygon implements Drawable {
-    private final Color color;
-    private final Vector2[] vertices;
-    private Vector2 position;
+    protected final Color color;
+    protected final Vector2[] vertices;
+    protected Vector2 position;
 
     public DPolygon(Vector2[] vertices, Vector2 position, Color color) {
         this.vertices = new Vector2[vertices.length];

@@ -2,7 +2,6 @@ package boids;
 
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
-import boids.write_to_file.CSVWriter;
 
 import javax.swing.*;
 import java.awt.*;

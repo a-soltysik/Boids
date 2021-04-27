@@ -1,4 +1,4 @@
-package boids.write_to_file;
+package boids;
 
 
 import java.io.*;
@@ -19,8 +19,8 @@ public class CSVWriter {
         this.bufferSize=bufferSize;
         this.headers=headers;
         addHeader();
-        for (int i=0;i< headers.length;i++){
-            values.put(headers[i],new ArrayList<>());
+        for (String header : headers) {
+            values.put(header, new ArrayList<>());
         }
     }
 

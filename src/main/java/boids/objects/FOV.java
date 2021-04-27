@@ -1,5 +1,6 @@
-package boids.drawables;
+package boids.objects;
 
+import boids.drawables.Drawable;
 import boids.drawables.geometry.DSegment;
 import boids.gui.Animation;
 import boids.math.Rectangle;
@@ -8,7 +9,7 @@ import boids.math.Vector2;
 import java.awt.*;
 import java.util.Arrays;
 
-public class FOV implements Drawable{
+public class FOV implements Drawable {
     private final Color color = Color.green;
     private final float angle;
     private final float radius;
