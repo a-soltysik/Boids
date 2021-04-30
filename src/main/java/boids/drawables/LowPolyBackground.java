@@ -18,7 +18,7 @@ public class LowPolyBackground implements Drawable{
     private final Graphics2D g2d;
     private final float moveResolution = 0.5f;
     private float colorResolution = 0.3f;
-    private float speed;
+    public static float speed = 0.01f;
     private double moveOffset = 0f;
     private double colorOffset = 0f;
     private boolean moving = false;

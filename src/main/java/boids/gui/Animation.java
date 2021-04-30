@@ -24,6 +24,9 @@ public class Animation {
     private String[] headers = {preyHeader,predatorHeader};
     private AnimationObjects objects;
     private CSVWriter writer = new CSVWriter(fileName,bufferSize,headers);
+    public static volatile boolean changeNumber = false;
+    public static volatile boolean writeToFile = false;
+
 
     private volatile boolean paused = false;
 
@@ -37,8 +40,8 @@ public class Animation {
     }
 
     public void start(AnimationPanel panel) {
-        writer.setIndex(preyHeader);
-        writer.setIndex(predatorHeader);
+            writer.setIndex(preyHeader);
+            writer.setIndex(predatorHeader);
         frame = panel;
         objects = new AnimationObjects(frame);
         new SwingWorker<Void, Void>() {
@@ -65,10 +68,16 @@ public class Animation {
         while (running) {
             if (!paused) {
                 update();
+                changeNumber = true;
                 render();
+                changeNumber = false;
                 write();
             }
-
+            if (paused){
+                changeNumber = true;
+                render();
+                changeNumber = false;
+            }
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
             previousTime = currentTime;
@@ -96,14 +105,20 @@ public class Animation {
 
             if (!paused) {
                 update();
-                write();
+                changeNumber = true;
                 if (timeToRender >= preferredFrameTime) {
                     render();
+                    changeNumber = false;
+                    write();
                     timeToRender = 0;
                     current_fps++;
                 }
             }
-
+            if (paused){
+                changeNumber = true;
+                render();
+                changeNumber = false;
+            }
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
             previousTime = currentTime;
@@ -132,8 +147,11 @@ public class Animation {
         }
     }
     private void write(){
-        writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
-        writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
+        if (writeToFile){
+            writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
+            writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
+        }
+        return;
        }
 
 

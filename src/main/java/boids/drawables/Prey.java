@@ -13,15 +13,15 @@ public class Prey extends Boid {
 
     private static final Random rnd = ThreadLocalRandom.current();
     protected static final ArrayList<Integer> preys = new ArrayList<>();
-    private static final float maxSpeed = 50f;
-    private static final float maxAcceleration = 10f;
-    private static final float desiredSeparation = 30f;
-
+    public static float maxSpeed = 50f;
+    public static float maxAcceleration = 10f;
+    private static float desiredSeparation = 30f;
     public static float separationWeight = 2f;
     public static float alignmentWeight = 1.5f;
     public static float cohesionWeight = 1.5f;
-    public static float escapeWeight = 5f;
-    public static float avoidObstaclesWeight = 10f;
+    private static float escapeWeight = (separationWeight+alignmentWeight+cohesionWeight)*4;
+    private static float avoidObstaclesWeight =(separationWeight+alignmentWeight+cohesionWeight)*10;
+    public static int preyNumber = 200;
 
     public Prey(Vector2 position) {
         super(10f, position,

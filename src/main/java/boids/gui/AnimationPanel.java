@@ -10,7 +10,6 @@ public class AnimationPanel extends JPanel {
 
     private Animation animation;
     private Rectangle rectangle;
-
     public void startAnimation(int fps) {
         rectangle = new Rectangle(Vector2.ZERO, new Vector2(getWidth(), getHeight()));
         animation = new Animation(fps);
