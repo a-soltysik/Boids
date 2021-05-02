@@ -1,19 +1,18 @@
-package boids.drawables;
+package boids.objects;
 
+import boids.Utils;
+import boids.drawables.Drawable;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
 import boids.math.Vector2;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-import static boids.drawables.Prey.preys;
+import static boids.objects.Prey.preysIndices;
 
 public class Predator extends Boid {
-    private static final Random rnd = ThreadLocalRandom.current();
-    protected static final ArrayList<Integer> predators = new ArrayList<>();
+    protected static final ArrayList<Integer> predatorsIndices = new ArrayList<>();
     private static final float desiredSeparation = 80f;
     private static final float maxSpeed = 30f;
     private static final float maxAcceleration = 8f;
@@ -32,16 +31,16 @@ public class Predator extends Boid {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
-        for(var i : preys) {
+        for(var i : preysIndices) {
             Prey prey = (Prey) objects.get(i);
-            if (fov.isIntersecting(prey.position)) {
-               steer = steer.add(prey.position);
+            if (fov.isIntersecting(prey.getPosition())) {
+               steer = steer.add(prey.getPosition());
                 count++;
             }
         }
         if(count > 0) {
             steer = steer.divide(count);
-            steer = steer.subtract(this.position);
+            steer = steer.subtract(position);
             if (steer.magnitude() > 0) {
                 steer.normalize();
                 steer = steer.multiply(maxSpeed);
@@ -56,7 +55,7 @@ public class Predator extends Boid {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
-        for (var i : predators) {
+        for (var i : predatorsIndices) {
             if (i == index) {
                 continue;
             }
@@ -89,10 +88,10 @@ public class Predator extends Boid {
         do {
             intersects = false;
             predator = new Predator(new Vector2(
-                    (float) rnd.nextInt(panel.getWidth()),
-                    (float) rnd.nextInt(panel.getHeight())
+                    Utils.randomFloat(0f, panel.getWidth()),
+                    Utils.randomFloat(0f, panel.getHeight())
             ));
-            for (var i : Obstacle.obstacles) {
+            for (var i : Obstacle.obstaclesIndices) {
                 if (predator.position.isInside(((Obstacle)objects.get(i)).getBoundingBox())) {
                     intersects = true;
                 }
@@ -100,28 +99,24 @@ public class Predator extends Boid {
         } while (intersects);
 
         predator.velocity = new Vector2(
-                (float) rnd.nextInt(30),
-                (float) rnd.nextInt(30)
+                Utils.randomFloat(0f, 40f),
+                Utils.randomFloat(0f, 40f)
         );
 
-        for (int i = 0; i < predator.vertices.length; i++) {
-            predator.vertices[i] = predator.vertices[i].add(predator.position);
-        }
-
         objects.add(predator);
-        predators.add(objects.size() - 1);
+        predatorsIndices.add(objects.size() - 1);
         predator.setIndex(objects.size() - 1);
     }
     public static void removePredator(ArrayList<Drawable> objects) {
-        if (predators.size() > 0) {
-            objects.remove((int) predators.get(predators.size() - 1));
-            predators.remove(predators.size() - 1);
+        if (predatorsIndices.size() > 0) {
+            objects.remove((int) predatorsIndices.get(predatorsIndices.size() - 1));
+            predatorsIndices.remove(predatorsIndices.size() - 1);
         }
     }
     public static float getAverageVelocity(ArrayList<Drawable> objects){
         float averageVelocity = 0;
         int count = 0;
-        for (var i : predators) {
+        for (var i : predatorsIndices) {
             Predator predator = (Predator) objects.get(i);
         averageVelocity += predator.velocity.magnitude();
         count++;

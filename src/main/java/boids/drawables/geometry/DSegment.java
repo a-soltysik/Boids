@@ -20,11 +20,11 @@ public class DSegment implements Drawable {
     }
 
     public Vector2 getStart() {
-        return start;
+        return new Vector2(start);
     }
 
     public Vector2 getEnd() {
-        return end;
+        return new Vector2(end);
     }
     @Override
     public void update(Animation animation, double frameTime) {

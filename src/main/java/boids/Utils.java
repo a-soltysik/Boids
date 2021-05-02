@@ -2,9 +2,12 @@ package boids;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Utils {
 
+    private static final Random random = ThreadLocalRandom.current();
     public static final float PI = 3.14159265359f;
     public static final float PI_2 = 1.57079632679f;
 
@@ -18,6 +21,14 @@ public class Utils {
                 .getDefaultScreenDevice()
                 .getDefaultConfiguration()
                 .createCompatibleImage(width, height);
+    }
+
+    public static float randomFloat(float min, float max) {
+        return random.nextFloat() * (max - min) + min;
+    }
+
+    public static int randomInt(int min, int max) {
+        return random.nextInt() % (max - min + 1) + min;
     }
 
     //https://stackoverflow.com/questions/11930594/calculate-atan2-without-std-functions-or-c99

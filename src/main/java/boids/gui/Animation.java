@@ -1,9 +1,9 @@
 package boids.gui;
 
-import boids.write_to_file.CSVWriter;
+import boids.CSVWriter;
 import boids.drawables.Drawable;
-import boids.drawables.Predator;
-import boids.drawables.Prey;
+import boids.objects.Predator;
+import boids.objects.Prey;
 import boids.math.Rectangle;
 import javax.swing.*;
 import java.awt.*;
@@ -17,13 +17,11 @@ public class Animation {
     private final int preferredFps;
     private final int TIME_SCALE = 1_000_000_000;
     private final boolean running = true;
-    private String fileName = "target/generated-sources/test.csv";
-    private int bufferSize=100;
-    String preyHeader = "Prey average velocity";
-    String predatorHeader = "Predator average velocity";
-    private String[] headers = {preyHeader,predatorHeader};
+    private String fileName = "test2.csv";
+    private final String preyHeader = "Prey average velocity";
+    private final String predatorHeader = "Predator average velocity";
     private AnimationObjects objects;
-    private CSVWriter writer = new CSVWriter(fileName,bufferSize,headers);
+    private final CSVWriter writer = new CSVWriter(fileName, 100, new String[]{preyHeader, predatorHeader});
 
     private volatile boolean paused = false;
 
@@ -37,8 +35,8 @@ public class Animation {
     }
 
     public void start(AnimationPanel panel) {
-        writer.setIndex(preyHeader);
-        writer.setIndex(predatorHeader);
+        writer.setIndices(preyHeader);
+        writer.setIndices(predatorHeader);
         frame = panel;
         objects = new AnimationObjects(frame);
         new SwingWorker<Void, Void>() {
@@ -152,6 +150,6 @@ public class Animation {
     }
 
     public Rectangle getDimensions() {
-        return frame.getRectangle();
+        return frame.getDimensions();
     }
 }
