@@ -15,18 +15,19 @@ public class Main {
         JFrame frame = new JFrame("Boids");
         AnimationPanel panel = new AnimationPanel();
         OptionsPanel optionsPanel = new OptionsPanel(panel);
-        JButton button = new JButton("Pause");
-
+        JButton button = new JButton("Resume");
+        button.setFocusable(false);
+        button.setPreferredSize(new Dimension(100, frame.getHeight()));
 
         button.addActionListener(o-> {
             if (i % 2 == 0) {
-                panel.pauseAnimation();
-                button.setText("Resume");
-                optionsPanel.button1.setEnabled(true);
-            } else {
                 panel.resumeAnimation();
                 button.setText("Pause");
                 optionsPanel.button1.setEnabled(false);
+            } else {
+                panel.pauseAnimation();
+                button.setText("Resume");
+                optionsPanel.button1.setEnabled(true);
             }
             i++;
         });
@@ -37,7 +38,6 @@ public class Main {
         frame.getContentPane().add(BorderLayout.EAST,optionsPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setIgnoreRepaint(true);
         frame.pack();
         frame.setVisible(true);
 

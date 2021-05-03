@@ -2,6 +2,7 @@ package boids.drawables;
 
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
+import boids.gui.GuiParameters;
 import boids.math.Vector2;
 
 import java.awt.*;
@@ -15,12 +16,12 @@ public class Predator extends Boid {
     private static final Random rnd = ThreadLocalRandom.current();
     protected static final ArrayList<Integer> predators = new ArrayList<>();
     private static float desiredSeparation = 80f;
-    public static float maxSpeed = 30f;
-    public static float maxAcceleration = 8f;
+    private static float maxSpeed = 30f;
+    private static float maxAcceleration = 8f;
     private static float separationWeight = 2f;
     private static float attractionWeight = 5f;
     private static float avoidObstaclesWeight = 10f;
-    public static int predatorNumber = 2;
+
 
     public Predator(Vector2 position){
         super(20f,position,
@@ -133,9 +134,18 @@ public class Predator extends Boid {
         }
         return averageVelocity;
     }
+    public static float getMaxAcceleration() {
+        return maxAcceleration;
+    }
+
+    public static float getMaxSpeed() {
+        return maxSpeed;
+    }
 
     @Override
     public void update(Animation animation, double frameTime) {
+        maxSpeed = GuiParameters.predatorMaxSpeed;
+        maxAcceleration = GuiParameters.predatorMaxAcceleration;
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(attraction(animation.getObjects()));

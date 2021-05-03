@@ -22,7 +22,6 @@ public class Obstacle implements Drawable {
     private final int resolution;
     private final float NOISE_RESOLUTION = 0.02f;
     private Rectangle boundingBox;
-    public static int obstacleNumber = 0;
 
     public Obstacle(Vector2 position, float radius, int resolution) {
         this.position = position;

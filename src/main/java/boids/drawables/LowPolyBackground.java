@@ -3,6 +3,7 @@ package boids.drawables;
 import boids.Utils;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
+import boids.gui.GuiParameters;
 import boids.math.OpenSimplex2F;
 import boids.math.Vector2;
 
@@ -18,7 +19,7 @@ public class LowPolyBackground implements Drawable{
     private final Graphics2D g2d;
     private final float moveResolution = 0.5f;
     private float colorResolution = 0.3f;
-    public static float speed = 0.01f;
+    private float speed;
     private double moveOffset = 0f;
     private double colorOffset = 0f;
     private boolean moving = false;
@@ -153,6 +154,7 @@ public class LowPolyBackground implements Drawable{
 
     @Override
     public void update(Animation animation, double frameTime) {
+        speed = GuiParameters.backGroundSpeed;
         if (moving) {
             moveOffset += speed * frameTime;
             colorOffset += speed * frameTime;

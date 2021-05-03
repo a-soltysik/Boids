@@ -10,6 +10,9 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import static boids.gui.OptionsPanel.writeToFile;
+import static boids.gui.OptionsPanel.changeNumber;
+
 public class Animation {
     private AnimationPanel frame;
     private double frameTime;
@@ -17,15 +20,12 @@ public class Animation {
     private final int preferredFps;
     private final int TIME_SCALE = 1_000_000_000;
     private final boolean running = true;
-    private String fileName = "target/generated-sources/test.csv";
     private int bufferSize=100;
     String preyHeader = "Prey average velocity";
     String predatorHeader = "Predator average velocity";
     private String[] headers = {preyHeader,predatorHeader};
     private AnimationObjects objects;
-    private CSVWriter writer = new CSVWriter(fileName,bufferSize,headers);
-    public static volatile boolean changeNumber = false;
-    public static volatile boolean writeToFile = false;
+    private CSVWriter writer = new CSVWriter(GuiParameters.fileName,bufferSize,headers);
 
 
     private volatile boolean paused = false;
@@ -34,7 +34,7 @@ public class Animation {
 
     public Animation(int fps) {
         if (fps < 0) {
-            throw new IllegalArgumentException();
+          throw new IllegalArgumentException();
         }
         preferredFps = fps;
     }
@@ -49,8 +49,10 @@ public class Animation {
             protected Void doInBackground() {
                 objects.prepareObjects();
                 if (preferredFps == UNLIMITED_FPS) {
+                    setPaused(true);
                     unlimitedLoop();
                 } else {
+                    setPaused(true);
                     loop();
                 }
                 return null;
@@ -172,4 +174,5 @@ public class Animation {
     public Rectangle getDimensions() {
         return frame.getRectangle();
     }
+
 }

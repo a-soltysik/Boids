@@ -1,7 +1,9 @@
 package boids.drawables;
 
 import boids.gui.Animation;
+import boids.gui.AnimationObjects;
 import boids.gui.AnimationPanel;
+import boids.gui.GuiParameters;
 import boids.math.Vector2;
 
 import java.awt.*;
@@ -9,19 +11,20 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+
 public class Prey extends Boid {
 
     private static final Random rnd = ThreadLocalRandom.current();
     protected static final ArrayList<Integer> preys = new ArrayList<>();
-    public static float maxSpeed = 50f;
-    public static float maxAcceleration = 10f;
+    private static float maxSpeed = 50f;
+    private static float maxAcceleration = 10f;
     private static float desiredSeparation = 30f;
-    public static float separationWeight = 2f;
-    public static float alignmentWeight = 1.5f;
-    public static float cohesionWeight = 1.5f;
+    private static float separationWeight = 2f;
+    private static float alignmentWeight = 1.5f;
+    private static float cohesionWeight = 1.5f;
     private static float escapeWeight = (separationWeight+alignmentWeight+cohesionWeight)*4;
     private static float avoidObstaclesWeight =(separationWeight+alignmentWeight+cohesionWeight)*10;
-    public static int preyNumber = 200;
+
 
     public Prey(Vector2 position) {
         super(10f, position,
@@ -29,6 +32,7 @@ public class Prey extends Boid {
                 Color.darkGray
         );
     }
+
 
     private Vector2 separation(ArrayList<Drawable> objects) {
         Vector2 steer = Vector2.ZERO;
@@ -196,8 +200,34 @@ public class Prey extends Boid {
         }
         return averageVelocity;
     }
+
+    public static float getCohesionWeight() {
+        return cohesionWeight;
+    }
+
+    public static float getAlignmentWeight() {
+        return alignmentWeight;
+    }
+
+    public static float getSeparationWeight() {
+        return separationWeight;
+    }
+
+    public static float getMaxAcceleration() {
+        return maxAcceleration;
+    }
+
+    public static float getMaxSpeed() {
+        return maxSpeed;
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
+        cohesionWeight = GuiParameters.preyCohesionWeight;
+        separationWeight = GuiParameters.preySeparationWeight;
+        alignmentWeight = GuiParameters.preyAlignmentWeight;
+        maxSpeed = GuiParameters.preyMaxSpeed;
+        maxAcceleration = GuiParameters.preyMaxAcceleration;
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(alignment(animation.getObjects()));

@@ -1,6 +1,5 @@
 package boids.gui;
 
-import boids.drawables.LowPolyBackground;
 import boids.drawables.Obstacle;
 import boids.drawables.Predator;
 import boids.drawables.Prey;
@@ -9,26 +8,38 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+
+
 public class OptionsPanel extends JPanel {
+    private GuiParameters parameters= new GuiParameters();
     public JButton button1;
-    private JSlider preySlider = new JSlider(200, 800, 200);
-    private JSlider predatorSlider = new JSlider(2, 10, 2);
-    private JSlider obstacleSlider = new JSlider(0, 8, 0);
-    private JSlider cohesionSlider = new JSlider(0, 100, (int) Prey.cohesionWeight*10);
-    private JSlider separationSlider = new JSlider(0, 100,  (int) Prey.separationWeight*10);
-    private JSlider alignmentSlider = new JSlider(0, 100, (int) Prey.alignmentWeight*10);
-    private JSlider maxSpeedSlider = new JSlider(20, 120, (int) Prey.maxSpeed);
-    private JSlider backgroundSpeedSlider = new JSlider(0, 5, (int) LowPolyBackground.speed*10);
-    private ArrayList<JSlider> sliders = new ArrayList<JSlider>();
+    private MySlider preySlider = new MySlider(200, 800, 200,100);
+    private MySlider predatorSlider = new MySlider(2, 10, 2,1);
+    private MySlider obstacleSlider = new MySlider(0, 8, 0,1);
+    private MySlider cohesionSlider = new MySlider(0, 100, (int) GuiParameters.preyCohesionWeight*10,10);
+    private MySlider separationSlider = new MySlider(0, 100,  (int) GuiParameters.preySeparationWeight*10,10);
+    private MySlider alignmentSlider = new MySlider(0, 100, (int) GuiParameters.preyAlignmentWeight*10,10);
+    private MySlider maxSpeedSlider = new MySlider(20, 120, (int) GuiParameters.preyMaxSpeed,10);
+    private MySlider backgroundSpeedSlider = new MySlider(0, 5, (int) GuiParameters.backGroundSpeed*10,1);
+    private ArrayList<MySlider> sliders = new ArrayList<MySlider>();
     private ArrayList<JLabel> labels = new ArrayList<JLabel>();
     private AnimationPanel panel;
+    public static volatile boolean writeToFile = false;
+    public static volatile boolean changeNumber = false;
     private int count = 0;
     private int i = 0;
 
     public OptionsPanel(AnimationPanel panel){
         this.panel=panel;
-        this.setPreferredSize(new Dimension(300,800));
+        this.setPreferredSize(new Dimension(300,850));
         this.setLayout(new FlowLayout(FlowLayout.CENTER,0,10));
+        JButton button2 =new JButton("Submit");
+        JTextField textField = new JTextField();
+        textField.setText(GuiParameters.fileName);
+        textField.setPreferredSize(new Dimension(200,50));
+        button2.setPreferredSize(new Dimension(100,50));
+        button2.addActionListener(o-> {GuiParameters.fileName = textField.getText();});
+        button2.setFocusable(false);
 
         sliders.add(preySlider);
         sliders.add(predatorSlider);
@@ -41,117 +52,91 @@ public class OptionsPanel extends JPanel {
 
         button1 = new JButton("save data to file");
         button1.setPreferredSize(new Dimension(300,50));
-        button1.setEnabled(false);
+        button1.setEnabled(true);
+        button1.setFocusable(false);
         button1.addActionListener(o-> {
             if (i % 2 == 0) {
-                Animation.writeToFile=true;
+               writeToFile=true;
                 button1.setText("stop saving data to file");
                 blockSliders();
 
             } else {
-                Animation.writeToFile=false;
+               writeToFile=false;
                 button1.setText("save data to file");
                 unblockSliders();
             }
             i++;
         });
 
-        maxSpeedSlider.setPaintTicks(true);
-        maxSpeedSlider.setMajorTickSpacing(10);
-        maxSpeedSlider.setPaintLabels(true);
-        maxSpeedSlider.setPreferredSize(new Dimension(300,50));
-
         JLabel maxSpeedLabel = new JLabel();
         maxSpeedLabel.setText("max boids Speed: "+maxSpeedSlider.getValue());
-        maxSpeedSlider.addChangeListener(o->{maxSpeedLabel.setText("max boids Speed: "+maxSpeedSlider.getValue());
-        Prey.maxSpeed = maxSpeedSlider.getValue();
-        Predator.maxSpeed=(Prey.maxSpeed/5)*3;
-        Predator.maxAcceleration=Predator.maxSpeed/10;
-        Prey.maxAcceleration=Prey.maxSpeed/10;});
-
-        cohesionSlider.setPaintTicks(true);
-        cohesionSlider.setMajorTickSpacing(10);
-        cohesionSlider.setPaintLabels(true);
-        cohesionSlider.setPreferredSize(new Dimension(300,50));
+        maxSpeedSlider.addChangeListener(o->
+        {maxSpeedLabel.setText("max boids Speed: "+maxSpeedSlider.getValue());
+        GuiParameters.preyMaxSpeed = maxSpeedSlider.getValue();
+        GuiParameters.predatorMaxSpeed=(GuiParameters.preyMaxSpeed/5)*3;
+       GuiParameters.predatorMaxAcceleration=GuiParameters.predatorMaxSpeed/10;
+        GuiParameters.preyMaxAcceleration=GuiParameters.preyMaxSpeed/10;});
 
         JLabel cohesionLabel = new JLabel();
         cohesionLabel.setText("cohesionWeight: "+cohesionSlider.getValue());
-        cohesionSlider.addChangeListener(o->{cohesionLabel.setText("cohesionWeight: "+cohesionSlider.getValue());
-        Prey.cohesionWeight = (float) cohesionSlider.getValue()/10;});
-
-        separationSlider.setPaintTicks(true);
-        separationSlider.setMajorTickSpacing(10);
-        separationSlider.setPaintLabels(true);
-        separationSlider.setPreferredSize(new Dimension(300,50));
+        cohesionSlider.addChangeListener(o->
+        {cohesionLabel.setText("cohesionWeight: "+cohesionSlider.getValue());
+        GuiParameters.preyCohesionWeight = (float) cohesionSlider.getValue()/10;});
 
         JLabel separationLabel = new JLabel();
         separationLabel.setText("separationWeight: "+separationSlider.getValue());
-        separationSlider.addChangeListener(o->{separationLabel.setText("separationWeight: "+separationSlider.getValue());
-        Prey.separationWeight=(float) separationSlider.getValue()/10;});
-
-        alignmentSlider.setPaintTicks(true);
-        alignmentSlider.setMajorTickSpacing(10);
-        alignmentSlider.setPaintLabels(true);
-        alignmentSlider.setPreferredSize(new Dimension(300,50));
+        separationSlider.addChangeListener(o->
+        {separationLabel.setText("separationWeight: "+separationSlider.getValue());
+        GuiParameters.preySeparationWeight=(float) separationSlider.getValue()/10;});
 
         JLabel alignmentLabel = new JLabel();
         alignmentLabel.setText("alignmentWeight: "+alignmentSlider.getValue());
-        alignmentSlider.addChangeListener(o->{alignmentLabel.setText("alignmentWeight: "+alignmentSlider.getValue());
-        Prey.alignmentWeight= (float) alignmentSlider.getValue()/10;});
-        
-        
-        predatorSlider.setPaintTicks(true);
-        predatorSlider.setMajorTickSpacing(1);
-        predatorSlider.setPaintLabels(true);
-        predatorSlider.setPreferredSize(new Dimension(300,50));
+        alignmentSlider.addChangeListener(o->
+        {alignmentLabel.setText("alignmentWeight: "+alignmentSlider.getValue());
+        GuiParameters.preyAlignmentWeight= (float) alignmentSlider.getValue()/10;});
 
         JLabel predatorLabel = new JLabel();
         predatorLabel.setText("predators: "+predatorSlider.getValue());
-        predatorSlider.addChangeListener(o->{predatorLabel.setText("predators: "+predatorSlider.getValue());
+        predatorSlider.addChangeListener(o->
+        {
+            JSlider source3 = (JSlider) o.getSource();
+            predatorLabel.setText("predators: "+source3.getValue());
             try {
-                changePredatorNumber(predatorSlider.getValue());
+                changePredatorNumber(source3.getValue());
             } catch (InterruptedException e) {
                 e.printStackTrace();
         }
         });
 
-        preySlider.setPaintTicks(true);
-        preySlider.setMajorTickSpacing(100);
-        preySlider.setPaintLabels(true);
-        preySlider.setPreferredSize(new Dimension(300,50));
-
         JLabel preyLabel = new JLabel();
         preyLabel.setText("preys: "+preySlider.getValue());
-        preySlider.addChangeListener(o->{preyLabel.setText("preys: "+preySlider.getValue());
+        preySlider.addChangeListener(o->{
+            JSlider source2 = (JSlider) o.getSource();
+            preyLabel.setText("preys: "+source2.getValue());
             try {
-                changePreyNumber(preySlider.getValue());
+                changePreyNumber(source2.getValue());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         });
-        obstacleSlider.setPaintTicks(true);
-        obstacleSlider.setMajorTickSpacing(1);
-        obstacleSlider.setPaintLabels(true);
-        obstacleSlider.setPreferredSize(new Dimension(300,50));
 
         JLabel obstacleLabel = new JLabel();
         obstacleLabel.setText("obstacles: "+obstacleSlider.getValue());
-        obstacleSlider.addChangeListener(o->{obstacleLabel.setText("obstacles: "+obstacleSlider.getValue());
+        obstacleSlider.addChangeListener(o->{
+            JSlider source1 = (JSlider) o.getSource();
+            obstacleLabel.setText("obstacles: "+source1.getValue());
             try {
-                changeObstacleNumber(obstacleSlider.getValue());
+                changeObstacleNumber(source1.getValue());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        backgroundSpeedSlider.setPaintTicks(true);
-        backgroundSpeedSlider.setMajorTickSpacing(1);
-        backgroundSpeedSlider.setPaintLabels(true);
-        backgroundSpeedSlider.setPreferredSize(new Dimension(300,50));
 
         JLabel backgroundSpeedLabel = new JLabel();
         backgroundSpeedLabel.setText("backgroundSpeed: "+backgroundSpeedSlider.getValue());
         backgroundSpeedSlider.addChangeListener(o->{backgroundSpeedLabel.setText("backgroundSpeed: "+backgroundSpeedSlider.getValue());
-            LowPolyBackground.speed =(float) backgroundSpeedSlider.getValue()/10;
+            GuiParameters.backGroundSpeed =(float) backgroundSpeedSlider.getValue()/10;
         });
 
         labels.add(preyLabel);
@@ -162,109 +147,111 @@ public class OptionsPanel extends JPanel {
         labels.add(alignmentLabel);
         labels.add(maxSpeedLabel);
         labels.add(backgroundSpeedLabel);
+
         this.add(button1);
-
+        this.add(button2);
+        this.add(textField);
         int j =0;
-
-        for (JSlider slider : sliders){
+        for (MySlider slider : sliders){
             this.add(slider);
             this.add(labels.get(j));
             j++;
         }
-
         this.setVisible(true);
-
     }
     private void changePreyNumber(int sliderValue) throws InterruptedException {
-        count = 0;
-        int currentNumber = 0;
-        while (!Animation.changeNumber) {
+        count=0;
+        while (!changeNumber){
             Thread.sleep(1);
             count++;
-            if (count > 25) return;
+            if (count>10) return;
         }
-        currentNumber = sliderValue - Prey.preyNumber;
+        int currentNumber = 0;
+        currentNumber = sliderValue - GuiParameters.preyNumber;
         if (currentNumber == 0) return;
         if (currentNumber > 0) {
             for (int i = 0; i < currentNumber; i++) {
-                Prey.addPrey(panel, AnimationObjects.objects);
+                Prey.addPrey(panel, AnimationObjects.getList());
             }
-            Prey.preyNumber += currentNumber;
-            Animation.changeNumber = false;
+            GuiParameters.preyNumber += currentNumber;
+            changeNumber = false;
         }
         if (currentNumber < 0) {
             currentNumber *= -1;
             for (int i = 0; i < currentNumber; i++) {
-                Prey.removePrey(AnimationObjects.objects);
+                Prey.removePrey(AnimationObjects.getList());
             }
-            Animation.changeNumber = false;
-            Prey.preyNumber -= currentNumber;
+            GuiParameters.preyNumber -= currentNumber;
+            changeNumber = false;
         }
     }
     
         private void changePredatorNumber( int sliderValue) throws InterruptedException {
             count=0;
-            int currentNumber = 0;
-            while (!Animation.changeNumber){
+            while (!changeNumber){
                 Thread.sleep(1);
                 count++;
-                if (count>25) return;
+                if (count>10) return;
             }
-            currentNumber = sliderValue - Predator.predatorNumber;
+            int currentNumber = 0;
+            currentNumber = sliderValue - GuiParameters.predatorNumber;
             if (currentNumber == 0) return;
             if (currentNumber > 0) {
                 for (int i = 0; i < currentNumber; i++) {
-                    Predator.addPredator(panel, AnimationObjects.objects);
+                    Predator.addPredator(panel,AnimationObjects.getList());
                 }
-                Predator.predatorNumber += currentNumber;
-                Animation.changeNumber = false;
+                changeNumber = false;
+                GuiParameters.predatorNumber += currentNumber;
             }
             if (currentNumber<0){
                 currentNumber *= -1;
                 for (int i=0;i<currentNumber;i++){
-                    Predator.removePredator(AnimationObjects.objects);
+                    Predator.removePredator(AnimationObjects.getList());
                 }
-                Animation.changeNumber = false;
-                Predator.predatorNumber -= currentNumber;
+                changeNumber = false;
+                GuiParameters.predatorNumber -= currentNumber;
             }
 
     }
     private void changeObstacleNumber( int sliderValue) throws InterruptedException {
         count = 0;
-        int currentNumber = 0;
-        while (!Animation.changeNumber) {
+        while (!changeNumber) {
             Thread.sleep(1);
             count++;
-            if (count > 25) return;
+            if (count > 10) return;
         }
-        currentNumber = sliderValue - Obstacle.obstacleNumber;
+        int currentNumber = 0;
+        currentNumber = sliderValue - GuiParameters.obstacleNumber;
         if (currentNumber == 0) return;
         if (currentNumber > 0) {
             for (int i = 0; i < currentNumber; i++) {
-                Obstacle.addObstacle(panel, AnimationObjects.objects);
+                Obstacle.addObstacle(panel, AnimationObjects.getList());
             }
-            Obstacle.obstacleNumber += currentNumber;
-            Animation.changeNumber = false;
+            changeNumber = false;
+            GuiParameters.obstacleNumber += currentNumber;
+
         }
         if (currentNumber < 0) {
             currentNumber *= -1;
             for (int i = 0; i < currentNumber; i++) {
-                Obstacle.removeObstacle(AnimationObjects.objects);
+                Obstacle.removeObstacle(AnimationObjects.getList());
             }
-            Animation.changeNumber = false;
-            Obstacle.obstacleNumber -= currentNumber;
+            changeNumber = false;
+            GuiParameters.obstacleNumber -= currentNumber;
+
         }
+
     }
     private void blockSliders(){
-        if (Animation.writeToFile){
-            for (JSlider slider : sliders){
+        if (writeToFile){
+            for (MySlider slider : sliders){
                 slider.setEnabled(false);
             }
         }
     }
     private void unblockSliders(){
-        if (!Animation.writeToFile){
-            for (JSlider slider : sliders){
+        if (!writeToFile){
+            for (MySlider slider : sliders){
                 slider.setEnabled(true);
             }
         }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class AnimationObjects {
 
-    public static final ArrayList<Drawable> objects = new ArrayList<>();
+    public static volatile ArrayList<Drawable> objects = new ArrayList<>();
     private final AnimationPanel panel;
 
 
@@ -15,21 +15,21 @@ public class AnimationObjects {
     }
 
     public void prepareObjects() {
-       var background = new LowPolyBackground(panel, 10, LowPolyBackground.speed);
+       var background = new LowPolyBackground(panel, 10, GuiParameters.backGroundSpeed);
         objects.add(background);
 
-        for (int i = 0; i < Predator.predatorNumber; i++) {
+        for (int i = 0; i < GuiParameters.predatorNumber; i++) {
             Predator.addPredator(panel,objects);
         }
-        for (int i = 0; i < Prey.preyNumber ; i++) {
+        for (int i = 0; i < GuiParameters.preyNumber ; i++) {
             Prey.addPrey(panel,objects);
         }
-        for (int i=0; i<Obstacle.obstacleNumber; i++) {
+        for (int i=0; i<GuiParameters.obstacleNumber; i++) {
             Obstacle.addObstacle(panel, objects);
         }
 
     }
-    public ArrayList<Drawable> getList() {
+    public static ArrayList<Drawable> getList() {
         return objects;
     }
 }
