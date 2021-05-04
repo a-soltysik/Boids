@@ -29,7 +29,24 @@ public class AnimationObjects {
         }
     }
     public void addObjects(){
-    if (Prey.preyIndices.size())
+        while(Prey.preys.size() < GuiParameters.preyNumber) {
+            Prey.addPrey(panel, objects);
+        }
+        while(Prey.preys.size() > GuiParameters.preyNumber) {
+            Prey.removePrey(objects);
+        }
+        while(Obstacle.obstacles.size() < GuiParameters.obstacleNumber) {
+            Obstacle.addObstacle(panel, objects);
+        }
+        while(Obstacle.obstacles.size() > GuiParameters.obstacleNumber) {
+            Obstacle.removeObstacle(objects);
+        }
+        while(Predator.predators.size() < GuiParameters.predatorNumber) {
+            Predator.addPredator(panel, objects);
+        }
+        while(Predator.predators.size() > GuiParameters.predatorNumber) {
+            Predator.removePredator(objects);
+        }
     }
     public  ArrayList<Drawable> getList() {
         return objects;

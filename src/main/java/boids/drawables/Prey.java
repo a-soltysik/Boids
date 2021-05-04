@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Prey extends Boid {
 
     private static final Random rnd = ThreadLocalRandom.current();
-    protected static final ArrayList<Integer> preys = new ArrayList<>();
+    public static final ArrayList<Integer> preys = new ArrayList<>();
     private static float maxSpeed = 50f;
     private static float maxAcceleration = 10f;
     private static float desiredSeparation = 30f;
@@ -199,26 +199,6 @@ public class Prey extends Boid {
             averageVelocity /= count;
         }
         return averageVelocity;
-    }
-
-    public static float getCohesionWeight() {
-        return cohesionWeight;
-    }
-
-    public static float getAlignmentWeight() {
-        return alignmentWeight;
-    }
-
-    public static float getSeparationWeight() {
-        return separationWeight;
-    }
-
-    public static float getMaxAcceleration() {
-        return maxAcceleration;
-    }
-
-    public static float getMaxSpeed() {
-        return maxSpeed;
     }
 
     @Override

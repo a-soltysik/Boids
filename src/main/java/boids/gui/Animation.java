@@ -69,10 +69,12 @@ public class Animation {
         while (running) {
             if (!paused) {
                 update();
+                objects.addObjects();
                 render();
                 write();
             }
             if (paused){
+                objects.addObjects();
                 render();
             }
             currentTime = System.nanoTime();
@@ -103,6 +105,7 @@ public class Animation {
             if (!paused) {
                 update();
                 if (timeToRender >= preferredFrameTime) {
+                    objects.addObjects();
                     render();
                     write();
                     timeToRender = 0;
@@ -110,6 +113,7 @@ public class Animation {
                 }
             }
             if (paused){
+                objects.addObjects();
                 render();
             }
             currentTime = System.nanoTime();

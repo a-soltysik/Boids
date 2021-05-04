@@ -14,7 +14,7 @@ import static boids.drawables.Prey.preys;
 
 public class Predator extends Boid {
     private static final Random rnd = ThreadLocalRandom.current();
-    protected static final ArrayList<Integer> predators = new ArrayList<>();
+    public static final ArrayList<Integer> predators = new ArrayList<>();
     private static float desiredSeparation = 80f;
     private static float maxSpeed = 30f;
     private static float maxAcceleration = 8f;
@@ -133,13 +133,6 @@ public class Predator extends Boid {
             averageVelocity /= count;
         }
         return averageVelocity;
-    }
-    public static float getMaxAcceleration() {
-        return maxAcceleration;
-    }
-
-    public static float getMaxSpeed() {
-        return maxSpeed;
     }
 
     @Override

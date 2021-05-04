@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class Obstacle implements Drawable {
 
-    protected static final ArrayList<Integer> obstacles = new ArrayList<>();
+    public static final ArrayList<Integer> obstacles = new ArrayList<>();
 
     private final Vector2 position;
     private final Vector2[] vertices;

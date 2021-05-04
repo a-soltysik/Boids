@@ -1,9 +1,5 @@
 package boids.gui;
 
-import boids.drawables.Predator;
-import boids.drawables.Prey;
-
-
 public class GuiParameters {
     public static volatile int preyNumber = 200;
     public static volatile int predatorNumber = 2;

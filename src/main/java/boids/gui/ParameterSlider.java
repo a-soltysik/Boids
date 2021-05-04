@@ -3,8 +3,8 @@ package boids.gui;
 import javax.swing.*;
 import java.awt.*;
 
-public class MySlider extends JSlider {
-    MySlider(int minimum, int maximum, int value, int tick){
+public class ParameterSlider extends JSlider {
+    ParameterSlider(int minimum, int maximum, int value, int tick){
         this.setMaximum(maximum);
         this.setMinimum(minimum);
         this.setValue(value);

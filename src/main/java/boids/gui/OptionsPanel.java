@@ -1,9 +1,5 @@
 package boids.gui;
 
-import boids.drawables.Obstacle;
-import boids.drawables.Predator;
-import boids.drawables.Prey;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,15 +8,15 @@ import java.util.ArrayList;
 
 public class OptionsPanel extends JPanel {
     public JButton button1;
-    private MySlider preySlider = new MySlider(200, 800, 200,100);
-    private MySlider predatorSlider = new MySlider(2, 10, 2,1);
-    private MySlider obstacleSlider = new MySlider(0, 8, 0,1);
-    private MySlider cohesionSlider = new MySlider(0, 100, (int) GuiParameters.preyCohesionWeight*10,10);
-    private MySlider separationSlider = new MySlider(0, 100,  (int) GuiParameters.preySeparationWeight*10,10);
-    private MySlider alignmentSlider = new MySlider(0, 100, (int) GuiParameters.preyAlignmentWeight*10,10);
-    private MySlider maxSpeedSlider = new MySlider(20, 120, (int) GuiParameters.preyMaxSpeed,10);
-    private MySlider backgroundSpeedSlider = new MySlider(0, 5, (int) (GuiParameters.backGroundSpeed*10),1);
-    private ArrayList<MySlider> sliders = new ArrayList<MySlider>();
+    private ParameterSlider preySlider = new ParameterSlider(200, 800, 200,100);
+    private ParameterSlider predatorSlider = new ParameterSlider(2, 10, 2,1);
+    private ParameterSlider obstacleSlider = new ParameterSlider(0, 8, 0,1);
+    private ParameterSlider cohesionSlider = new ParameterSlider(0, 100, (int) GuiParameters.preyCohesionWeight*10,10);
+    private ParameterSlider separationSlider = new ParameterSlider(0, 100,  (int) GuiParameters.preySeparationWeight*10,10);
+    private ParameterSlider alignmentSlider = new ParameterSlider(0, 100, (int) GuiParameters.preyAlignmentWeight*10,10);
+    private ParameterSlider maxSpeedSlider = new ParameterSlider(20, 120, (int) GuiParameters.preyMaxSpeed,10);
+    private ParameterSlider backgroundSpeedSlider = new ParameterSlider(0, 5, (int) (GuiParameters.backGroundSpeed*10),1);
+    private ArrayList<ParameterSlider> sliders = new ArrayList<ParameterSlider>();
     private ArrayList<JLabel> labels = new ArrayList<JLabel>();
     private AnimationPanel panel;
     public static volatile boolean writeToFile = false;
@@ -142,7 +138,7 @@ public class OptionsPanel extends JPanel {
         this.add(button2);
         this.add(textField);
         int j =0;
-        for (MySlider slider : sliders){
+        for (ParameterSlider slider : sliders){
             this.add(slider);
             this.add(labels.get(j));
             j++;
@@ -152,14 +148,14 @@ public class OptionsPanel extends JPanel {
 
     private void blockSliders(){
         if (writeToFile){
-            for (MySlider slider : sliders){
+            for (ParameterSlider slider : sliders){
                 slider.setEnabled(false);
             }
         }
     }
     private void unblockSliders(){
         if (!writeToFile){
-            for (MySlider slider : sliders){
+            for (ParameterSlider slider : sliders){
                 slider.setEnabled(true);
             }
         }
