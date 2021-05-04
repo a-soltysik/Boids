@@ -5,30 +5,19 @@ import boids.drawables.Prey;
 
 
 public class GuiParameters {
-    public static volatile int preyNumber;
-    public static volatile int predatorNumber;
-    public static volatile float backGroundSpeed;
-    public static volatile int obstacleNumber;
-    public static volatile float predatorMaxSpeed;
-    public static volatile float predatorMaxAcceleration;
-    public static volatile float preyMaxSpeed;
-    public static volatile float preyMaxAcceleration;
-    public static volatile float preyAlignmentWeight;
-    public static volatile float preySeparationWeight;
-    public static volatile float preyCohesionWeight ;
+    public static volatile int preyNumber = 200;
+    public static volatile int predatorNumber = 2;
+    public static volatile float backGroundSpeed = 0.1f;;
+    public static volatile int obstacleNumber = 0;
+    public static volatile float predatorMaxSpeed = 30f;
+    public static volatile float predatorMaxAcceleration = 8f;
+    public static volatile float preyMaxSpeed = 50f;
+    public static volatile float preyMaxAcceleration = 10f;
+    public static volatile float preyAlignmentWeight = 1.5f;
+    public static volatile float preySeparationWeight = 2f;
+    public static volatile float preyCohesionWeight = 1.5f;
     public static volatile String fileName = "target/generated-sources/test.csv";;
 
-    public GuiParameters (){
-        this.predatorNumber = 2;
-        this.preyNumber = 200;
-        this.obstacleNumber = 0;
-        this.backGroundSpeed = 0.1f;
-        this.predatorMaxSpeed = Predator.getMaxSpeed();
-        this.predatorMaxAcceleration = Predator.getMaxAcceleration();
-        this.preyMaxSpeed = Prey.getMaxSpeed();
-        this.preyMaxAcceleration = Prey.getMaxAcceleration();
-        this.preyAlignmentWeight = Prey.getAlignmentWeight();
-        this.preySeparationWeight = Prey.getSeparationWeight();
-        this.preyCohesionWeight = Prey.getCohesionWeight();
+    private GuiParameters (){
     }
 }

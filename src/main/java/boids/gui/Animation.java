@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import static boids.gui.OptionsPanel.writeToFile;
-import static boids.gui.OptionsPanel.changeNumber;
 
 public class Animation {
     private AnimationPanel frame;
@@ -70,15 +69,11 @@ public class Animation {
         while (running) {
             if (!paused) {
                 update();
-                changeNumber = true;
                 render();
-                changeNumber = false;
                 write();
             }
             if (paused){
-                changeNumber = true;
                 render();
-                changeNumber = false;
             }
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
@@ -107,19 +102,15 @@ public class Animation {
 
             if (!paused) {
                 update();
-                changeNumber = true;
                 if (timeToRender >= preferredFrameTime) {
                     render();
-                    changeNumber = false;
                     write();
                     timeToRender = 0;
                     current_fps++;
                 }
             }
             if (paused){
-                changeNumber = true;
                 render();
-                changeNumber = false;
             }
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;

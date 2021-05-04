@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 
 public class OptionsPanel extends JPanel {
-    private GuiParameters parameters= new GuiParameters();
     public JButton button1;
     private MySlider preySlider = new MySlider(200, 800, 200,100);
     private MySlider predatorSlider = new MySlider(2, 10, 2,1);
@@ -20,12 +19,11 @@ public class OptionsPanel extends JPanel {
     private MySlider separationSlider = new MySlider(0, 100,  (int) GuiParameters.preySeparationWeight*10,10);
     private MySlider alignmentSlider = new MySlider(0, 100, (int) GuiParameters.preyAlignmentWeight*10,10);
     private MySlider maxSpeedSlider = new MySlider(20, 120, (int) GuiParameters.preyMaxSpeed,10);
-    private MySlider backgroundSpeedSlider = new MySlider(0, 5, (int) GuiParameters.backGroundSpeed*10,1);
+    private MySlider backgroundSpeedSlider = new MySlider(0, 5, (int) (GuiParameters.backGroundSpeed*10),1);
     private ArrayList<MySlider> sliders = new ArrayList<MySlider>();
     private ArrayList<JLabel> labels = new ArrayList<JLabel>();
     private AnimationPanel panel;
     public static volatile boolean writeToFile = false;
-    public static volatile boolean changeNumber = false;
     private int count = 0;
     private int i = 0;
 
@@ -101,11 +99,8 @@ public class OptionsPanel extends JPanel {
         {
             JSlider source3 = (JSlider) o.getSource();
             predatorLabel.setText("predators: "+source3.getValue());
-            try {
-                changePredatorNumber(source3.getValue());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-        }
+             GuiParameters.predatorNumber = source3.getValue();
+
         });
 
         JLabel preyLabel = new JLabel();
@@ -113,11 +108,8 @@ public class OptionsPanel extends JPanel {
         preySlider.addChangeListener(o->{
             JSlider source2 = (JSlider) o.getSource();
             preyLabel.setText("preys: "+source2.getValue());
-            try {
-                changePreyNumber(source2.getValue());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+            GuiParameters.preyNumber =(source2.getValue());
 
         });
 
@@ -126,11 +118,9 @@ public class OptionsPanel extends JPanel {
         obstacleSlider.addChangeListener(o->{
             JSlider source1 = (JSlider) o.getSource();
             obstacleLabel.setText("obstacles: "+source1.getValue());
-            try {
-                changeObstacleNumber(source1.getValue());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+                GuiParameters.obstacleNumber = (source1.getValue());
+
         });
 
         JLabel backgroundSpeedLabel = new JLabel();
@@ -159,89 +149,7 @@ public class OptionsPanel extends JPanel {
         }
         this.setVisible(true);
     }
-    private void changePreyNumber(int sliderValue) throws InterruptedException {
-        count=0;
-        while (!changeNumber){
-            Thread.sleep(1);
-            count++;
-            if (count>10) return;
-        }
-        int currentNumber = 0;
-        currentNumber = sliderValue - GuiParameters.preyNumber;
-        if (currentNumber == 0) return;
-        if (currentNumber > 0) {
-            for (int i = 0; i < currentNumber; i++) {
-                Prey.addPrey(panel, AnimationObjects.getList());
-            }
-            GuiParameters.preyNumber += currentNumber;
-            changeNumber = false;
-        }
-        if (currentNumber < 0) {
-            currentNumber *= -1;
-            for (int i = 0; i < currentNumber; i++) {
-                Prey.removePrey(AnimationObjects.getList());
-            }
-            GuiParameters.preyNumber -= currentNumber;
-            changeNumber = false;
-        }
-    }
-    
-        private void changePredatorNumber( int sliderValue) throws InterruptedException {
-            count=0;
-            while (!changeNumber){
-                Thread.sleep(1);
-                count++;
-                if (count>10) return;
-            }
-            int currentNumber = 0;
-            currentNumber = sliderValue - GuiParameters.predatorNumber;
-            if (currentNumber == 0) return;
-            if (currentNumber > 0) {
-                for (int i = 0; i < currentNumber; i++) {
-                    Predator.addPredator(panel,AnimationObjects.getList());
-                }
-                changeNumber = false;
-                GuiParameters.predatorNumber += currentNumber;
-            }
-            if (currentNumber<0){
-                currentNumber *= -1;
-                for (int i=0;i<currentNumber;i++){
-                    Predator.removePredator(AnimationObjects.getList());
-                }
-                changeNumber = false;
-                GuiParameters.predatorNumber -= currentNumber;
-            }
 
-    }
-    private void changeObstacleNumber( int sliderValue) throws InterruptedException {
-        count = 0;
-        while (!changeNumber) {
-            Thread.sleep(1);
-            count++;
-            if (count > 10) return;
-        }
-        int currentNumber = 0;
-        currentNumber = sliderValue - GuiParameters.obstacleNumber;
-        if (currentNumber == 0) return;
-        if (currentNumber > 0) {
-            for (int i = 0; i < currentNumber; i++) {
-                Obstacle.addObstacle(panel, AnimationObjects.getList());
-            }
-            changeNumber = false;
-            GuiParameters.obstacleNumber += currentNumber;
-
-        }
-        if (currentNumber < 0) {
-            currentNumber *= -1;
-            for (int i = 0; i < currentNumber; i++) {
-                Obstacle.removeObstacle(AnimationObjects.getList());
-            }
-            changeNumber = false;
-            GuiParameters.obstacleNumber -= currentNumber;
-
-        }
-
-    }
     private void blockSliders(){
         if (writeToFile){
             for (MySlider slider : sliders){

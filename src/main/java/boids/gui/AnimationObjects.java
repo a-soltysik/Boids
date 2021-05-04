@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class AnimationObjects {
 
-    public static volatile ArrayList<Drawable> objects = new ArrayList<>();
+    private ArrayList<Drawable> objects = new ArrayList<>();
     private final AnimationPanel panel;
 
 
@@ -27,9 +27,11 @@ public class AnimationObjects {
         for (int i=0; i<GuiParameters.obstacleNumber; i++) {
             Obstacle.addObstacle(panel, objects);
         }
-
     }
-    public static ArrayList<Drawable> getList() {
+    public void addObjects(){
+    if (Prey.preyIndices.size())
+    }
+    public  ArrayList<Drawable> getList() {
         return objects;
     }
 }
