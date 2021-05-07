@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Prey extends Boid {
 
-    public static final ArrayList<Integer> preysIndices = new ArrayList<>();
+    protected static final ArrayList<Integer> preysIndices = new ArrayList<>();
     private static float maxSpeed = 50f;
     private static float maxAcceleration = 10f;
     private static final float desiredSeparation = 30f;
@@ -194,6 +194,11 @@ public class Prey extends Boid {
         }
         return averageVelocity;
     }
+
+    public static ArrayList<Integer> getPreysIndices() {
+        return preysIndices;
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
         cohesionWeight = GuiParameters.preyCohesionWeight;

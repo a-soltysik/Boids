@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import static boids.objects.Prey.preysIndices;
 
 public class Predator extends Boid {
-    public static final ArrayList<Integer> predatorsIndices = new ArrayList<>();
+    protected static final ArrayList<Integer> predatorsIndices = new ArrayList<>();
     private static final float desiredSeparation = 80f;
     private static float maxSpeed = 30f;
     private static float maxAcceleration = 8f;
@@ -126,6 +126,10 @@ public class Predator extends Boid {
             averageVelocity /= count;
         }
         return averageVelocity;
+    }
+
+    public static ArrayList<Integer> getPredatorsIndices() {
+        return predatorsIndices;
     }
 
     @Override

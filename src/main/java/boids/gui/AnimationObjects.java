@@ -31,22 +31,22 @@ public class AnimationObjects {
         }
     }
     public void addObjects(){
-        while(Prey.preysIndices.size() < GuiParameters.preyNumber) {
+        while(Prey.getPreysIndices().size() < GuiParameters.preyNumber) {
             Prey.addPrey(panel, objects);
         }
-        while(Prey.preysIndices.size() > GuiParameters.preyNumber) {
+        while(Prey.getPreysIndices().size() > GuiParameters.preyNumber) {
             Prey.removePrey(objects);
         }
-        while(Obstacle.obstaclesIndices.size() < GuiParameters.obstacleNumber) {
+        while(Obstacle.getObstaclesIndices().size() < GuiParameters.obstacleNumber) {
             Obstacle.addObstacle(panel, objects);
         }
-        while(Obstacle.obstaclesIndices.size() > GuiParameters.obstacleNumber) {
+        while(Obstacle.getObstaclesIndices().size() > GuiParameters.obstacleNumber) {
             Obstacle.removeObstacle(objects);
         }
-        while(Predator.predatorsIndices.size() < GuiParameters.predatorNumber) {
+        while(Predator.getPredatorsIndices().size() < GuiParameters.predatorNumber) {
             Predator.addPredator(panel, objects);
         }
-        while(Predator.predatorsIndices.size() > GuiParameters.predatorNumber) {
+        while(Predator.getPredatorsIndices().size() > GuiParameters.predatorNumber) {
             Predator.removePredator(objects);
         }
     }
