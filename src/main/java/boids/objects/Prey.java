@@ -1,5 +1,7 @@
 package boids.drawables;
 
+import boids.Utils;
+import boids.drawables.Drawable;
 import boids.gui.Animation;
 import boids.gui.AnimationObjects;
 import boids.gui.AnimationPanel;
@@ -8,17 +10,14 @@ import boids.math.Vector2;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 
 public class Prey extends Boid {
 
-    private static final Random rnd = ThreadLocalRandom.current();
-    public static final ArrayList<Integer> preys = new ArrayList<>();
-    private static float maxSpeed = 50f;
-    private static float maxAcceleration = 10f;
-    private static float desiredSeparation = 30f;
+    protected static final ArrayList<Integer> preysIndices = new ArrayList<>();
+    private static final float maxSpeed = 50f;
+    private static final float maxAcceleration = 10f;
+    private static final float desiredSeparation = 30f;
+
     private static float separationWeight = 2f;
     private static float alignmentWeight = 1.5f;
     private static float cohesionWeight = 1.5f;
@@ -33,12 +32,11 @@ public class Prey extends Boid {
         );
     }
 
-
     private Vector2 separation(ArrayList<Drawable> objects) {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
-        for (var i : preys) {
+        for (var i : preysIndices) {
             if (i == index) {
                 continue;
             }
@@ -69,7 +67,7 @@ public class Prey extends Boid {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
-        for (var i : preys) {
+        for (var i : preysIndices) {
             if (i == index) {
                 continue;
             }
@@ -97,7 +95,7 @@ public class Prey extends Boid {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
-        for (var i : preys) {
+        for (var i : preysIndices) {
             if (i == index) {
                 continue;
             }
@@ -124,14 +122,14 @@ public class Prey extends Boid {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
-        for (var i : Predator.predators) {
+        for (var i : Predator.predatorsIndices) {
             if (i == index) {
                 continue;
             }
             Predator predator = (Predator) objects.get(i);
-            if (fov.isIntersecting(predator.position)) {
-                float distance = Vector2.distance(this.position, predator.position);
-                Vector2 diff = this.position.subtract(predator.position);
+            if (fov.isIntersecting(predator.getPosition())) {
+                float distance = Vector2.distance(position, predator.getPosition());
+                Vector2 diff = this.position.subtract(predator.getPosition());
                 if (distance * distance > 0) {
                     diff = diff.divide(distance * distance);
                 }
@@ -157,10 +155,10 @@ public class Prey extends Boid {
         do {
             intersects = false;
             prey = new Prey(new Vector2(
-                    (float) rnd.nextInt(panel.getWidth()),
-                    (float) rnd.nextInt(panel.getHeight())
+                    Utils.randomFloat(0f, panel.getWidth()),
+                    Utils.randomFloat(0f, panel.getHeight())
             ));
-            for (var i : Obstacle.obstacles) {
+            for (var i : Obstacle.obstaclesIndices) {
                 if (prey.position.isInside(((Obstacle)objects.get(i)).getBoundingBox())) {
                     intersects = true;
                 }
@@ -168,29 +166,25 @@ public class Prey extends Boid {
         } while (intersects);
 
         prey.velocity = new Vector2(
-                (float) rnd.nextInt(40),
-                (float) rnd.nextInt(40)
-        );
+                Utils.randomFloat(0f, 40f),
+                Utils.randomFloat(0f, 40f)
 
-        for (int i = 0; i < prey.vertices.length; i++) {
-            prey.vertices[i] = prey.vertices[i].add(prey.position);
-        }
 
         objects.add(prey);
-        preys.add(objects.size() - 1);
+        preysIndices.add(objects.size() - 1);
         prey.setIndex(objects.size() - 1);
     }
 
     public static void removePrey(ArrayList<Drawable> objects) {
-        if (preys.size() > 0) {
-            objects.remove((int) preys.get(preys.size() - 1));
-            preys.remove(preys.size() - 1);
+        if (preysIndices.size() > 0) {
+            objects.remove((int) preysIndices.get(preysIndices.size() - 1));
+            preysIndices.remove(preysIndices.size() - 1);
         }
     }
     public static float getAverageVelocity(ArrayList<Drawable> objects){
         float averageVelocity = 0;
         int count = 0;
-        for (var i : preys) {
+        for (var i : preysIndices) {
             Prey prey = (Prey) objects.get(i);
             averageVelocity += prey.velocity.magnitude();
             count++;
@@ -200,7 +194,6 @@ public class Prey extends Boid {
         }
         return averageVelocity;
     }
-
     @Override
     public void update(Animation animation, double frameTime) {
         cohesionWeight = GuiParameters.preyCohesionWeight;

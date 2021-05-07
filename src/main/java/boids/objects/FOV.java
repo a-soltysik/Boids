@@ -1,16 +1,16 @@
-package boids.drawables;
+package boids.objects;
 
+import boids.drawables.Drawable;
 import boids.drawables.geometry.DSegment;
 import boids.gui.Animation;
 import boids.math.Rectangle;
 import boids.math.Vector2;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-public class FOV implements Drawable{
-    private Color color = Color.green;
+public class FOV implements Drawable {
+    private final Color color = Color.green;
     private final float angle;
     private final float radius;
     private Vector2[] rays;
@@ -75,53 +75,37 @@ public class FOV implements Drawable{
         return direction.multiply(-1f);
     }
 
-    private boolean onSegment(Vector2 p, Vector2 q, Vector2 r) {
-        return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&
-                q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
-    }
-
-    private int orientation(Vector2 p, Vector2 q, Vector2 r) {
-        float val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-        if (val == 0) {
-            return 0;
-        }
-        return (val > 0) ? 1 : 2;
-    }
-
     public void rotate(float angle) {
         for (int i=0; i<rays.length; i++) {
             rays[i] = rays[i].rotated(Vector2.ZERO, angle);
         }
     }
 
-    //https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
-    private boolean isIntersecting(Vector2 start1, Vector2 end1, Vector2 start2, Vector2 end2)
-    {
-        // Find the four orientations needed for general and
-        // special cases
-        int o1 = orientation(start1, end1, start2);
-        int o2 = orientation(start1, end1, end2);
-        int o3 = orientation(start2, end2, start1);
-        int o4 = orientation(start2, end2, end1);
+    //https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+    private boolean isIntersecting(Vector2 start1, Vector2 end1, Vector2 start2, Vector2 end2) {
+        Vector2 CmP = start2.subtract(start1);
+        Vector2 r = end1.subtract(start1);
+        Vector2 s = end2.subtract(start2);
 
-        // General case
-        if (o1 != o2 && o3 != o4)
-            return true;
+        float CmPxr = CmP.cross(r);
+        float CmPxs = CmP.cross(s);
+        float rxs = r.cross(s);
 
-        // Special Cases
-        // start1, end1 and start2are colinear and start2lies on segment p1end1
-        if (o1 == 0 && onSegment(start1, start2, end1)) return true;
 
-        // start1, end1 and end2 are colinear and end2 lies on segment p1end1
-        if (o2 == 0 && onSegment(start1, end2, end1)) return true;
+        if (CmPxr == 0f) {
+            return ((start2.x - start1.x < 0f) != (start2.x - end1.x < 0f))
+                    || ((start2.y - start1.y < 0f) != (start2.y - end1.y < 0f));
+        }
 
-        // start2, end2 and start1 are colinear and start1 lies on segment start2end2
-        if (o3 == 0 && onSegment(start2, start1, end2)) return true;
+        if (rxs == 0f) {
+            return false;
+        }
 
-        // start2, end2 and end1 are colinear and end1 lies on segment start2end2
-        if (o4 == 0 && onSegment(start2, end1, end2)) return true;
+        float rxsr = 1 / rxs;
+        float t = CmPxs * rxsr;
+        float u = CmPxr * rxsr;
 
-        return false; // Doesn't fall in any of the above cases
+        return (t >= 0f) && (t <= 1f) && (u >= 0f) && (u <= 1f);
     }
 
     private void rearrangeRays() {

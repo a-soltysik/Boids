@@ -1,14 +1,16 @@
 package boids.gui;
 
-import boids.drawables.*;
+import boids.drawables.Drawable;
+import boids.objects.LowPolyBackground;
+import boids.objects.Obstacle;
+import boids.objects.Predator;
+import boids.objects.Prey;
 
 import java.util.ArrayList;
 
 public class AnimationObjects {
-
-    private ArrayList<Drawable> objects = new ArrayList<>();
+    private final ArrayList<Drawable> objects = new ArrayList<>();
     private final AnimationPanel panel;
-
 
     public AnimationObjects(AnimationPanel panel) {
         this.panel = panel;
@@ -48,7 +50,7 @@ public class AnimationObjects {
             Predator.removePredator(objects);
         }
     }
-    public  ArrayList<Drawable> getList() {
+    public ArrayList<Drawable> getList() {
         return objects;
     }
 }

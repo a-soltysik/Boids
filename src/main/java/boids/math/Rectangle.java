@@ -6,8 +6,13 @@ public class Rectangle {
     public Vector2 max;
 
     public Rectangle(Vector2 min, Vector2 max) {
-        this.min = min;
-        this.max = max;
+        this.min = new Vector2(min);
+        this.max = new Vector2(max);
+    }
+
+    public Rectangle(Rectangle rectangle) {
+        this.min = new Vector2(rectangle.min);
+        this.max = new Vector2(rectangle.max);
     }
 
     public boolean intersects(Rectangle rectangle) {
