@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Obstacle extends DPolygon {
 
-    protected static final ArrayList<Integer> obstaclesIndices = new ArrayList<>();
+    public static final ArrayList<Integer> obstaclesIndices = new ArrayList<>();
 
     private Rectangle boundingBox;
 

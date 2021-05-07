@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class OptionsPanel extends JPanel {
     public JButton button1;
+    private JButton button2;
+    private JTextField textField;
     private ParameterSlider preySlider = new ParameterSlider(200, 800, 200,100);
     private ParameterSlider predatorSlider = new ParameterSlider(2, 10, 2,1);
     private ParameterSlider obstacleSlider = new ParameterSlider(0, 8, 0,1);
@@ -27,12 +29,12 @@ public class OptionsPanel extends JPanel {
         this.panel=panel;
         this.setPreferredSize(new Dimension(300,850));
         this.setLayout(new FlowLayout(FlowLayout.CENTER,0,10));
-        JButton button2 =new JButton("Submit");
-        JTextField textField = new JTextField();
-        textField.setText(GuiParameters.fileName);
+        button2 =new JButton("Submit");
+        textField = new JTextField();
+        textField.setText("nazwa pliku");
         textField.setPreferredSize(new Dimension(200,50));
         button2.setPreferredSize(new Dimension(100,50));
-        button2.addActionListener(o-> {GuiParameters.fileName = textField.getText();});
+        button2.addActionListener(o-> {GuiParameters.fileName = textField.getText() + ".csv";});
         button2.setFocusable(false);
 
         sliders.add(preySlider);
@@ -52,12 +54,12 @@ public class OptionsPanel extends JPanel {
             if (i % 2 == 0) {
                writeToFile=true;
                 button1.setText("stop saving data to file");
-                blockSliders();
+                blockOptions();
 
             } else {
                writeToFile=false;
                 button1.setText("save data to file");
-                unblockSliders();
+                unblockOptions();
             }
             i++;
         });
@@ -146,17 +148,21 @@ public class OptionsPanel extends JPanel {
         this.setVisible(true);
     }
 
-    private void blockSliders(){
+    private void blockOptions(){
         if (writeToFile){
             for (ParameterSlider slider : sliders){
                 slider.setEnabled(false);
+                button2.setEnabled(false);
+                textField.setEnabled(false);
             }
         }
     }
-    private void unblockSliders(){
+    private void unblockOptions(){
         if (!writeToFile){
             for (ParameterSlider slider : sliders){
                 slider.setEnabled(true);
+                button2.setEnabled(true);
+                textField.setEnabled(true);
             }
         }
     }

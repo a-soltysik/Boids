@@ -12,7 +12,7 @@ public class GuiParameters {
     public static volatile float preyAlignmentWeight = 1.5f;
     public static volatile float preySeparationWeight = 2f;
     public static volatile float preyCohesionWeight = 1.5f;
-    public static volatile String fileName = "target/generated-sources/test.csv";;
+    public static volatile String fileName = "plik.csv";
 
     private GuiParameters (){
     }

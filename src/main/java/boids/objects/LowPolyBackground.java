@@ -1,4 +1,4 @@
-package boids.drawables;
+package boids.objects;
 
 import boids.Utils;
 import boids.drawables.Drawable;

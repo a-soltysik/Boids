@@ -1,4 +1,4 @@
-package boids.drawables;
+package boids.objects;
 
 import boids.Utils;
 import boids.drawables.Drawable;
@@ -13,9 +13,9 @@ import java.util.ArrayList;
 
 public class Prey extends Boid {
 
-    protected static final ArrayList<Integer> preysIndices = new ArrayList<>();
-    private static final float maxSpeed = 50f;
-    private static final float maxAcceleration = 10f;
+    public static final ArrayList<Integer> preysIndices = new ArrayList<>();
+    private static float maxSpeed = 50f;
+    private static float maxAcceleration = 10f;
     private static final float desiredSeparation = 30f;
 
     private static float separationWeight = 2f;
@@ -167,7 +167,7 @@ public class Prey extends Boid {
 
         prey.velocity = new Vector2(
                 Utils.randomFloat(0f, 40f),
-                Utils.randomFloat(0f, 40f)
+                Utils.randomFloat(0f, 40f));
 
 
         objects.add(prey);

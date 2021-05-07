@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import static boids.objects.Prey.preysIndices;
 
 public class Predator extends Boid {
-    public static final ArrayList<Integer> predators = new ArrayList<>();
+    public static final ArrayList<Integer> predatorsIndices = new ArrayList<>();
     private static final float desiredSeparation = 80f;
-    private static final float maxSpeed = 30f;
-    private static final float maxAcceleration = 8f;
+    private static float maxSpeed = 30f;
+    private static float maxAcceleration = 8f;
     private static float separationWeight = 2f;
     private static float attractionWeight = 5f;
     private static float avoidObstaclesWeight = 10f;
