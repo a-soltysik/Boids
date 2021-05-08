@@ -77,6 +77,10 @@ public class Obstacle extends DPolygon {
         }
     }
 
+    public static ArrayList<Integer> getObstaclesIndices() {
+        return obstaclesIndices;
+    }
+
     public Rectangle getBoundingBox() {
         return new Rectangle(boundingBox);
     }

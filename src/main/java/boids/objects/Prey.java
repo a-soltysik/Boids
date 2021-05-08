@@ -3,7 +3,9 @@ package boids.objects;
 import boids.Utils;
 import boids.drawables.Drawable;
 import boids.gui.Animation;
+import boids.gui.AnimationObjects;
 import boids.gui.AnimationPanel;
+import boids.gui.GuiParameters;
 import boids.math.Vector2;
 
 import java.awt.*;
@@ -12,15 +14,16 @@ import java.util.ArrayList;
 public class Prey extends Boid {
 
     protected static final ArrayList<Integer> preysIndices = new ArrayList<>();
-    private static final float maxSpeed = 50f;
-    private static final float maxAcceleration = 10f;
+    private static float maxSpeed = 50f;
+    private static float maxAcceleration = 10f;
     private static final float desiredSeparation = 30f;
 
-    public static float separationWeight = 2f;
-    public static float alignmentWeight = 1.5f;
-    public static float cohesionWeight = 1.5f;
-    public static float escapeWeight = 5f;
-    public static float avoidObstaclesWeight = 10f;
+    private static float separationWeight = 2f;
+    private static float alignmentWeight = 1.5f;
+    private static float cohesionWeight = 1.5f;
+    private static float escapeWeight = (separationWeight+alignmentWeight+cohesionWeight)*4;
+    private static float avoidObstaclesWeight =(separationWeight+alignmentWeight+cohesionWeight)*10;
+
 
     public Prey(Vector2 position) {
         super(10f, position,
@@ -164,8 +167,8 @@ public class Prey extends Boid {
 
         prey.velocity = new Vector2(
                 Utils.randomFloat(0f, 40f),
-                Utils.randomFloat(0f, 40f)
-        );
+                Utils.randomFloat(0f, 40f));
+
 
         objects.add(prey);
         preysIndices.add(objects.size() - 1);
@@ -191,8 +194,18 @@ public class Prey extends Boid {
         }
         return averageVelocity;
     }
+
+    public static ArrayList<Integer> getPreysIndices() {
+        return preysIndices;
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
+        cohesionWeight = GuiParameters.preyCohesionWeight;
+        separationWeight = GuiParameters.preySeparationWeight;
+        alignmentWeight = GuiParameters.preyAlignmentWeight;
+        maxSpeed = GuiParameters.preyMaxSpeed;
+        maxAcceleration = GuiParameters.preyMaxAcceleration;
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(alignment(animation.getObjects()));

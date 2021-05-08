@@ -4,6 +4,7 @@ import boids.Utils;
 import boids.drawables.Drawable;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
+import boids.gui.GuiParameters;
 import boids.math.Vector2;
 
 import java.awt.*;
@@ -14,11 +15,11 @@ import static boids.objects.Prey.preysIndices;
 public class Predator extends Boid {
     protected static final ArrayList<Integer> predatorsIndices = new ArrayList<>();
     private static final float desiredSeparation = 80f;
-    private static final float maxSpeed = 30f;
-    private static final float maxAcceleration = 8f;
-    public static float separationWeight = 2f;
-    public static float attractionWeight = 5f;
-    public static float avoidObstaclesWeight = 10f;
+    private static float maxSpeed = 30f;
+    private static float maxAcceleration = 8f;
+    private static float separationWeight = 2f;
+    private static float attractionWeight = 5f;
+    private static float avoidObstaclesWeight = 10f;
 
     public Predator(Vector2 position){
         super(20f,position,
@@ -127,8 +128,14 @@ public class Predator extends Boid {
         return averageVelocity;
     }
 
+    public static ArrayList<Integer> getPredatorsIndices() {
+        return predatorsIndices;
+    }
+
     @Override
     public void update(Animation animation, double frameTime) {
+        maxSpeed = GuiParameters.predatorMaxSpeed;
+        maxAcceleration = GuiParameters.predatorMaxAcceleration;
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(attraction(animation.getObjects()));

@@ -10,6 +10,9 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import static boids.gui.OptionsPanel.writeToFile;
+import static boids.gui.GuiParameters.fileName;
+
 public class Animation {
     private AnimationPanel frame;
     private double frameTime;
@@ -17,13 +20,13 @@ public class Animation {
     private final int preferredFps;
     private final int TIME_SCALE = 1_000_000_000;
     private final boolean running = true;
-    private String fileName = "test2.csv";
     private final String preyHeader = "Prey average velocity";
     private final String predatorHeader = "Predator average velocity";
     private AnimationObjects objects;
-    private final CSVWriter writer = new CSVWriter(fileName, 100, new String[]{preyHeader, predatorHeader});
+    private CSVWriter writer;
+    private String oldFilename = "";
 
-    private volatile boolean paused = false;
+    private volatile boolean paused = true;
 
     public static final int UNLIMITED_FPS = 0;
 
@@ -35,8 +38,6 @@ public class Animation {
     }
 
     public void start(AnimationPanel panel) {
-        writer.setIndices(preyHeader);
-        writer.setIndices(predatorHeader);
         frame = panel;
         objects = new AnimationObjects(frame);
         new SwingWorker<Void, Void>() {
@@ -63,10 +64,15 @@ public class Animation {
         while (running) {
             if (!paused) {
                 update();
+                objects.addObjects();
                 render();
                 write();
             }
-
+            if (paused){
+                objects.addObjects();
+                createFile();
+                render();
+            }
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
             previousTime = currentTime;
@@ -96,12 +102,17 @@ public class Animation {
                 update();
                 write();
                 if (timeToRender >= preferredFrameTime) {
+                    objects.addObjects();
                     render();
                     timeToRender = 0;
                     current_fps++;
                 }
             }
-
+            if (paused){
+                createFile();
+                objects.addObjects();
+                render();
+            }
             currentTime = System.nanoTime();
             frameTimeNanos = currentTime - previousTime;
             previousTime = currentTime;
@@ -129,9 +140,22 @@ public class Animation {
             e.printStackTrace();
         }
     }
+    private void createFile(){
+        if (oldFilename != fileName){
+            if (writeToFile){
+                writer = new CSVWriter(fileName, 100, new String[]{preyHeader, predatorHeader});
+                writer.setIndices(preyHeader);
+                writer.setIndices(predatorHeader);
+                oldFilename = fileName;
+            }
+        }
+    }
     private void write(){
-        writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
-        writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
+        if (writeToFile){
+            writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
+            writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
+        }
+        return;
        }
 
 

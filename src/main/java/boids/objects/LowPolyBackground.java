@@ -4,6 +4,7 @@ import boids.Utils;
 import boids.drawables.Drawable;
 import boids.gui.Animation;
 import boids.gui.AnimationPanel;
+import boids.gui.GuiParameters;
 import boids.math.OpenSimplex2F;
 import boids.math.Vector2;
 
@@ -154,6 +155,7 @@ public class LowPolyBackground implements Drawable {
 
     @Override
     public void update(Animation animation, double frameTime) {
+        speed = GuiParameters.backGroundSpeed;
         if (moving) {
             moveOffset += speed * frameTime;
             colorOffset += speed * frameTime;
