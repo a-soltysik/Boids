@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Boids");
         AnimationPanel panel = new AnimationPanel();
-        OptionsPanel optionsPanel = new OptionsPanel(panel);
+        OptionsPanel optionsPanel = new OptionsPanel();
         JButton button = new JButton("Resume");
         button.setFocusable(false);
         button.setPreferredSize(new Dimension(100, frame.getHeight()));
