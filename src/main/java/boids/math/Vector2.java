@@ -97,13 +97,12 @@ public class Vector2 {
     }
 
     public float directAngle(Vector2 vec) {
-        float dot = dot(vec);
-        if (dot == 0) {
+        if (vec.isZero() || isZero()) {
             throw new ArithmeticException(
-                    "Angle between vectors: " + this + "; " + vec + "is undefined"
+                    "Angle between zero vectors is undefined"
             );
         }
-        float angle = Utils.fastAtan2(cross(vec), dot);
+        float angle = Utils.fastAtan2(cross(vec), dot(vec));
         if (angle >= 0) {
             return angle;
         } else {
@@ -142,7 +141,7 @@ public class Vector2 {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vector2 vector2 = (Vector2) o;
-        return Float.compare(vector2.x, x) == 0 && Float.compare(vector2.y, y) == 0;
+        return Utils.isEqual(vector2.x, x);
     }
 
     @Override
