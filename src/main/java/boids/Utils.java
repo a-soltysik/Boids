@@ -31,6 +31,16 @@ public class Utils {
         return random.nextInt() % (max - min + 1) + min;
     }
 
+    //https://embeddeduse.com/2019/08/26/qt-compare-two-floats/
+    public static boolean isEqual(float f1, float f2) {
+        float diff = Math.abs(f1 - f2);
+        if (diff <= 1.0e-5f) {
+            return true;
+        }
+        return diff <= 1.0e-5f * Math.max(Math.abs(f1), Math.abs(f2));
+
+    }
+
     //https://stackoverflow.com/questions/11930594/calculate-atan2-without-std-functions-or-c99
     public static float fastAtan(float x) {
         final float b = 0.596227f;
