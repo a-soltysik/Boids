@@ -1,9 +1,9 @@
 package boids.gui;
 
 public class GuiParameters {
+    public static volatile String fileName = "plik.csv";
     public static volatile int preyNumber = 200;
     public static volatile int predatorNumber = 2;
-    public static volatile float backGroundSpeed = 0.1f;;
     public static volatile int obstacleNumber = 0;
     public static volatile float predatorMaxSpeed = 30f;
     public static volatile float predatorMaxAcceleration = 8f;
@@ -12,7 +12,8 @@ public class GuiParameters {
     public static volatile float preyAlignmentWeight = 1.5f;
     public static volatile float preySeparationWeight = 2f;
     public static volatile float preyCohesionWeight = 1.5f;
-    public static volatile String fileName = "plik.csv";
+    public static volatile float backGroundSpeed = 0.1f;
+    public static volatile boolean writeToFile = false;
 
     private GuiParameters (){
     }
