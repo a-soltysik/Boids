@@ -20,8 +20,8 @@ public class Prey extends Boid {
     private static float separationWeight = 2f;
     private static float alignmentWeight = 1.5f;
     private static float cohesionWeight = 1.5f;
-    private static float escapeWeight = (separationWeight+alignmentWeight+cohesionWeight)*4;
-    private static float avoidObstaclesWeight =(separationWeight+alignmentWeight+cohesionWeight)*10;
+    private static final float escapeWeight = (separationWeight+alignmentWeight+cohesionWeight)*4;
+    private static final float avoidObstaclesWeight =(separationWeight+alignmentWeight+cohesionWeight)*10;
 
 
     public Prey(Vector2 position) {

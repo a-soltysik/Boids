@@ -10,16 +10,14 @@ import boids.math.Vector2;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static boids.objects.Prey.preysIndices;
-
 public class Predator extends Boid {
     protected static final ArrayList<Integer> predatorsIndices = new ArrayList<>();
     private static final float desiredSeparation = 80f;
     private static float maxSpeed = 30f;
     private static float maxAcceleration = 8f;
-    private static float separationWeight = 2f;
-    private static float attractionWeight = 5f;
-    private static float avoidObstaclesWeight = 10f;
+    private static final float separationWeight = 2f;
+    private static final float attractionWeight = 5f;
+    private static final float avoidObstaclesWeight = 10f;
 
     public Predator(Vector2 position){
         super(20f,position,
@@ -32,12 +30,7 @@ public class Predator extends Boid {
         Vector2 steer = Vector2.ZERO;
         int count = 0;
 
-        for(var i : preysIndices) {
-            if (i >= objects.size()) {
-                System.out.println(i + " " + objects.size());
-                System.out.println("aaaaaaa");
-                continue;
-            }
+        for(var i : Prey.preysIndices) {
             Prey prey = (Prey) objects.get(i);
             if (fov.isIntersecting(prey.getPosition())) {
                steer = steer.add(prey.getPosition());
@@ -63,11 +56,6 @@ public class Predator extends Boid {
 
         for (var i : predatorsIndices) {
             if (i == index) {
-                continue;
-            }
-            if (i >= objects.size()) {
-                System.out.println(i + " " + objects.size());
-                System.out.println("aaaaaaa");
                 continue;
             }
             Predator predator = (Predator) objects.get(i);
