@@ -33,6 +33,11 @@ public class Predator extends Boid {
         int count = 0;
 
         for(var i : preysIndices) {
+            if (i >= objects.size()) {
+                System.out.println(i + " " + objects.size());
+                System.out.println("aaaaaaa");
+                continue;
+            }
             Prey prey = (Prey) objects.get(i);
             if (fov.isIntersecting(prey.getPosition())) {
                steer = steer.add(prey.getPosition());
@@ -58,6 +63,11 @@ public class Predator extends Boid {
 
         for (var i : predatorsIndices) {
             if (i == index) {
+                continue;
+            }
+            if (i >= objects.size()) {
+                System.out.println(i + " " + objects.size());
+                System.out.println("aaaaaaa");
                 continue;
             }
             Predator predator = (Predator) objects.get(i);
@@ -103,14 +113,22 @@ public class Predator extends Boid {
                 Utils.randomFloat(0f, 40f),
                 Utils.randomFloat(0f, 40f)
         );
-
-        objects.add(predator);
-        predatorsIndices.add(objects.size() - 1);
-        predator.setIndex(objects.size() - 1);
+        int i;
+        for (i=0; i<objects.size(); i++) {
+            if (objects.get(i) == null) {
+                objects.set(i, predator);
+                break;
+            }
+        }
+        if (i == objects.size()) {
+            objects.add(predator);
+        }
+        predatorsIndices.add(i);
+        predator.setIndex(i);
     }
     public static void removePredator(ArrayList<Drawable> objects) {
         if (predatorsIndices.size() > 0) {
-            objects.remove((int) predatorsIndices.get(predatorsIndices.size() - 1));
+            objects.set(predatorsIndices.get(predatorsIndices.size() - 1), null);
             predatorsIndices.remove(predatorsIndices.size() - 1);
         }
     }

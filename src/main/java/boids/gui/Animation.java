@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static boids.gui.OptionsPanel.writeToFile;
 import static boids.gui.GuiParameters.fileName;
@@ -64,9 +66,9 @@ public class Animation {
         while (running) {
             if (!paused) {
                 update();
-                objects.addObjects();
                 render();
                 write();
+                objects.addObjects();
             }
             if (paused){
                 objects.addObjects();
@@ -104,6 +106,7 @@ public class Animation {
                 if (timeToRender >= preferredFrameTime) {
                     objects.addObjects();
                     render();
+
                     timeToRender = 0;
                     current_fps++;
                 }
@@ -130,7 +133,8 @@ public class Animation {
 
 
     private void update() {
-        objects.getList().forEach(o -> o.update(this, frameTime));
+        //objects.getList().forEach(o -> o.update(this, frameTime));
+        objects.getList().stream().filter(Objects::nonNull).forEach(o -> o.update(this, frameTime));
     }
 
     private void render() {
@@ -155,12 +159,11 @@ public class Animation {
             writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
             writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
         }
-        return;
-       }
+    }
 
 
     public void render(Graphics2D g2d) {
-        objects.getList().forEach(o -> o.render(g2d));
+        objects.getList().stream().filter(Objects::nonNull).forEach(o -> o.render(g2d));
         g2d.setColor(Color.GREEN);
         g2d.drawString("FPS: " + fps + "", 5, 15);
         g2d.drawString("Liczba obiektów: " + objects.getList().size(), 5, 30);

@@ -3,7 +3,6 @@ package boids.objects;
 import boids.Utils;
 import boids.drawables.Drawable;
 import boids.gui.Animation;
-import boids.gui.AnimationObjects;
 import boids.gui.AnimationPanel;
 import boids.gui.GuiParameters;
 import boids.math.Vector2;
@@ -169,15 +168,23 @@ public class Prey extends Boid {
                 Utils.randomFloat(0f, 40f),
                 Utils.randomFloat(0f, 40f));
 
-
-        objects.add(prey);
-        preysIndices.add(objects.size() - 1);
-        prey.setIndex(objects.size() - 1);
+        int i;
+        for (i=0; i<objects.size(); i++) {
+            if (objects.get(i) == null) {
+                objects.set(i, prey);
+                break;
+            }
+        }
+        if (i == objects.size()) {
+            objects.add(prey);
+        }
+        preysIndices.add(i);
+        prey.setIndex(i);
     }
 
     public static void removePrey(ArrayList<Drawable> objects) {
         if (preysIndices.size() > 0) {
-            objects.remove((int) preysIndices.get(preysIndices.size() - 1));
+            objects.set(preysIndices.get(preysIndices.size() - 1), null);
             preysIndices.remove(preysIndices.size() - 1);
         }
     }

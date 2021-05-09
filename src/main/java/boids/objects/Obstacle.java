@@ -9,6 +9,7 @@ import boids.math.Vector2;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Obstacle extends DPolygon {
 
@@ -21,7 +22,7 @@ public class Obstacle extends DPolygon {
         setBoundingBox();
     }
 
-    public static void addObstacle(AnimationPanel panel, ArrayList<Drawable> objects) {
+    public static void addObstacle(AnimationPanel panel, List<Drawable> objects) {
         boolean intersects;
         int max_tries = 100;
         int current_tries = 0;
@@ -41,15 +42,24 @@ public class Obstacle extends DPolygon {
             }
             intersects = intersects || !obstacle.boundingBox.isInside(panel.getDimensions());
             if (!intersects) {
-                objects.add(obstacle);
-                obstaclesIndices.add(objects.size() - 1);
+                int i;
+                for (i=0; i<objects.size(); i++) {
+                    if (objects.get(i) == null) {
+                        objects.set(i, obstacle);
+                        break;
+                    }
+                }
+                if (i == objects.size()) {
+                    objects.add(obstacle);
+                }
+                obstaclesIndices.add(i);
             }
         } while (intersects && current_tries <= max_tries);
     }
 
-    public static void removeObstacle(ArrayList<Drawable> objects) {
+    public static void removeObstacle(List<Drawable> objects) {
         if (obstaclesIndices.size() > 0) {
-            objects.remove((int) obstaclesIndices.get(obstaclesIndices.size() - 1));
+            objects.set(obstaclesIndices.get(obstaclesIndices.size() - 1), null);
             obstaclesIndices.remove(obstaclesIndices.size() - 1);
         }
     }
