@@ -7,8 +7,6 @@ import boids.objects.Predator;
 import boids.objects.Prey;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class AnimationObjects {
     private final ArrayList<Drawable> objects = new ArrayList<>();

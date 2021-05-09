@@ -9,11 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import static boids.gui.OptionsPanel.writeToFile;
-import static boids.gui.GuiParameters.fileName;
 
 public class Animation {
     private AnimationPanel frame;
@@ -106,7 +102,6 @@ public class Animation {
                 if (timeToRender >= preferredFrameTime) {
                     objects.addObjects();
                     render();
-
                     timeToRender = 0;
                     current_fps++;
                 }
@@ -145,17 +140,17 @@ public class Animation {
         }
     }
     private void createFile(){
-        if (oldFilename != fileName){
-            if (writeToFile){
-                writer = new CSVWriter(fileName, 100, new String[]{preyHeader, predatorHeader});
+        if (!oldFilename.equals(GuiParameters.fileName)){
+            if (GuiParameters.writeToFile){
+                writer = new CSVWriter(GuiParameters.fileName, 100, new String[]{preyHeader, predatorHeader});
                 writer.setIndices(preyHeader);
                 writer.setIndices(predatorHeader);
-                oldFilename = fileName;
+                oldFilename = GuiParameters.fileName;
             }
         }
     }
     private void write(){
-        if (writeToFile){
+        if (GuiParameters.writeToFile){
             writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
             writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
         }

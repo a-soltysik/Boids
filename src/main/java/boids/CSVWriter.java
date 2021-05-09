@@ -6,12 +6,12 @@ import java.util.*;
 
 public class CSVWriter {
 
-    private String fileName;
-    private int bufferSize;
-    private String[] headers;
-    private List<String[]> dataLines = new ArrayList<>();
-    private HashMap<String,ArrayList<Float>> values = new HashMap<>();
-    private HashMap<Integer,String> indices = new HashMap<>();
+    private final String fileName;
+    private final int bufferSize;
+    private final String[] headers;
+    private final List<String[]> dataLines = new ArrayList<>();
+    private final HashMap<String,ArrayList<Float>> values = new HashMap<>();
+    private final HashMap<Integer,String> indices = new HashMap<>();
     private int count=0;
 
     public CSVWriter(String fileName, int bufferSize,String[] headers){

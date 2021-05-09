@@ -55,10 +55,7 @@ public class FOV implements Drawable {
         if (isIntersecting(position, ray.add(position), boundingBox.max, new Vector2(boundingBox.min.x, boundingBox.max.y))) {
             return true;
         }
-        if (isIntersecting(position, ray.add(position), new Vector2(boundingBox.min.x, boundingBox.max.y), boundingBox.min)) {
-            return true;
-        }
-        return false;
+        return isIntersecting(position, ray.add(position), new Vector2(boundingBox.min.x, boundingBox.max.y), boundingBox.min);
     }
 
     public Vector2 findPathAway(Rectangle boundingBox) {
