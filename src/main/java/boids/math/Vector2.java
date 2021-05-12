@@ -141,7 +141,7 @@ public class Vector2 {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vector2 vector2 = (Vector2) o;
-        return Utils.isEqual(vector2.x, x);
+        return Utils.isEqual(vector2.x, x) && Utils.isEqual(vector2.y, y);
     }
 
     @Override

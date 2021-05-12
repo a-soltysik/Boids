@@ -143,15 +143,17 @@ public class Vector2Test {
     @Test
     public void equalsTest() {
         Vector2 a = new Vector2(0f, 0f);
-        assertEquals(a, Vector2.ZERO);
-        assertEquals(Vector2.ZERO, a);
-        a = new Vector2(1f, 2f);
-        Vector2 b = new Vector2(1f, 2f);
-        assertEquals(a, b);
-        assertEquals(b, a);
+        //assertEquals(a, Vector2.ZERO);
+        //assertEquals(Vector2.ZERO, a);
+        assertTrue(a.equals(Vector2.ZERO));
+        assertTrue(Vector2.ZERO.equals(a));
+        a = new Vector2(1.234234f, 2.324556f);
+        Vector2 b = new Vector2(1.234234f, 2.324556f);
+        assertTrue(a.equals(b));
+        assertTrue(b.equals(a));
         b = new Vector2(1.1f, 2.1f);
-        assertNotEquals(a, b);
-        assertNotEquals(b, a);
+        assertFalse(a.equals(b));
+        assertFalse(b.equals(a));
     }
 
     @Test
