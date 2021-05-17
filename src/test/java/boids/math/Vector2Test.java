@@ -1,9 +1,10 @@
 package boids.math;
 
 import boids.Utils;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Vector2Test {
 
@@ -143,17 +144,17 @@ public class Vector2Test {
     @Test
     public void equalsTest() {
         Vector2 a = new Vector2(0f, 0f);
-        //assertEquals(a, Vector2.ZERO);
-        //assertEquals(Vector2.ZERO, a);
-        assertTrue(a.equals(Vector2.ZERO));
-        assertTrue(Vector2.ZERO.equals(a));
+        assertEquals(a, Vector2.ZERO);
+        assertEquals(Vector2.ZERO, a);
+
         a = new Vector2(1.234234f, 2.324556f);
         Vector2 b = new Vector2(1.234234f, 2.324556f);
-        assertTrue(a.equals(b));
-        assertTrue(b.equals(a));
+        assertEquals(a, b);
+        assertEquals(b, a);
+
         b = new Vector2(1.1f, 2.1f);
-        assertFalse(a.equals(b));
-        assertFalse(b.equals(a));
+        assertNotEquals(a, b);
+        assertNotEquals(b, a);
     }
 
     @Test

@@ -17,7 +17,7 @@ public class AnimationObjects {
     }
 
     public void prepareObjects() {
-       var background = new LowPolyBackground(panel, 10, GuiParameters.backGroundSpeed);
+        var background = new LowPolyBackground(panel, 10, GuiParameters.backGroundSpeed);
         objects.add(background);
 
         for (int i = 0; i < GuiParameters.predatorNumber; i++) {
