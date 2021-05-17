@@ -14,7 +14,7 @@
 ## IntelliJ
 ##############################
 out/
-../Program/Boids/.idea/
+.idea/
 .idea_modules/
 *.iml
 *.ipr
