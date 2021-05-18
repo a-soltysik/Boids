@@ -1,0 +1,30 @@
+plugins {
+    id 'application'
+    id 'java'
+}
+
+group 'boids'
+version '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+application {
+    mainClass.set('boids.Main')
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'boids.Main'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

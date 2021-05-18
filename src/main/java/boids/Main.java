@@ -7,11 +7,18 @@ import boids.gui.OptionsPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 
 public class Main {
     static int i = 0;
 
     public static void main(String[] args) {
+        Locale.setDefault(Locale.getDefault());
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {
+
+        }
         JFrame frame = new JFrame("Boids");
         AnimationPanel panel = new AnimationPanel();
         OptionsPanel optionsPanel = new OptionsPanel();

@@ -50,12 +50,12 @@ public class CSVWriter {
             }
             dataLines.add(writeable);
         }
-            try {
-                writeToFile(dataLines);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            writeToFile(dataLines);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
     private void resetValues(){
         values.replaceAll((k, v) -> new ArrayList<>());

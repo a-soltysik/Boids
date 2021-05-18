@@ -33,7 +33,7 @@ public class Predator extends Boid {
         for(var i : Prey.preysIndices) {
             Prey prey = (Prey) objects.get(i);
             if (fov.isIntersecting(prey.getPosition())) {
-               steer = steer.add(prey.getPosition());
+                steer = steer.add(prey.getPosition());
                 count++;
             }
         }
@@ -125,8 +125,8 @@ public class Predator extends Boid {
         int count = 0;
         for (var i : predatorsIndices) {
             Predator predator = (Predator) objects.get(i);
-        averageVelocity += predator.velocity.magnitude();
-        count++;
+            averageVelocity += predator.velocity.magnitude();
+            count++;
         }
         if (count > 0) {
             averageVelocity /= count;
