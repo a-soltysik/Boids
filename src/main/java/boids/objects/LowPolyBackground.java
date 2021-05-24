@@ -37,7 +37,7 @@ public class LowPolyBackground implements Drawable {
         this.height = height;
         this.width = (int) (height * (float) frame.getWidth() / frame.getHeight());
         background = Utils.createCompatibleImage(frame.getWidth(), frame.getHeight());
-        noise = new OpenSimplex2F(Utils.randomInt(0, Integer.MAX_VALUE));
+        noise = new OpenSimplex2F(Utils.randomLong());
         g2d = (Graphics2D) background.getGraphics();
         shape = new Vector2[height * width];
         vertices = new Vector2[height * width];
@@ -155,8 +155,8 @@ public class LowPolyBackground implements Drawable {
 
     @Override
     public void update(Animation animation, double frameTime) {
-        speed = GuiParameters.backGroundSpeed;
-        if (moving) {
+        speed = GuiParameters.backGroundSpeed.getValue();
+        if (moving && speed > 0) {
             moveOffset += speed * frameTime;
             colorOffset += speed * frameTime;
             generateVertices();

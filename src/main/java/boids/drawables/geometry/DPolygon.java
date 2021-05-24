@@ -45,7 +45,7 @@ public class DPolygon implements Drawable {
 
     private void addNoise() {
         final float NOISE_RESOLUTION = 0.02f;
-        OpenSimplex2F noise = new OpenSimplex2F(Utils.randomInt(0, Integer.MAX_VALUE));
+        OpenSimplex2F noise = new OpenSimplex2F(Utils.randomLong());
         for (int i = 0; i < vertices.length; i++) {
             Vector2 point = vertices[i].subtract(position);
             double value = noise.noise2(point.x * NOISE_RESOLUTION, point.y * NOISE_RESOLUTION);

@@ -19,6 +19,12 @@ application {
     mainClass.set('boids.Main')
 }
 
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'boids.Main'

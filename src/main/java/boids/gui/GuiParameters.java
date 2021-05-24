@@ -2,7 +2,7 @@ package boids.gui;
 
 public class GuiParameters {
     public static volatile String fileName = "plik.csv";
-    public static volatile int preyNumber = 200;
+    /*public static volatile int preyNumber = 200;
     public static volatile int predatorNumber = 2;
     public static volatile int obstacleNumber = 0;
     public static volatile float predatorMaxSpeed = 30f;
@@ -13,9 +13,9 @@ public class GuiParameters {
     public static volatile float preySeparationWeight = 2f;
     public static volatile float preyCohesionWeight = 1.5f;
     public static volatile float backGroundSpeed = 0.1f;
-    public static volatile boolean writeToFile = false;
+    public static volatile boolean writeToFile = false;*/
 
-    /*public static final IntegerParameter preyNumber = new IntegerParameter("Liczba ptaków", 200, 0, 1000, 10);
+    public static final IntegerParameter preyNumber = new IntegerParameter("Liczba ptaków", 200, 0, 1000, 10);
     public static final IntegerParameter predatorNumber = new IntegerParameter("Liczba drapieżników", 0, 0, 10, 1);
     public static final IntegerParameter obstacleNumber = new IntegerParameter("Liczba przeszkód", 0, 0, 10, 1);
     public static final FloatParameter predatorMaxSpeed = new FloatParameter(50f);
@@ -28,7 +28,7 @@ public class GuiParameters {
     public static final FloatParameter backGroundSpeed = new FloatParameter("Szybkość tła", 0.05f, 0f, 1f, 0.01f);
     public static final BooleanParameter writeToFile = new BooleanParameter("Czy zapisać dane do pliku?", false);
     public static final BooleanParameter showFov = new BooleanParameter("Czy wyświetlić pola widzenia?", false);
-    public static final BooleanParameter showVelocity = new BooleanParameter("Czy wyświetlić wektory prędkości?", false);*/
+    public static final BooleanParameter showVelocity = new BooleanParameter("Czy wyświetlić wektory prędkości?", false);
 
     private GuiParameters (){
     }

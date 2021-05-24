@@ -2,7 +2,9 @@ package boids.objects;
 
 import boids.drawables.Drawable;
 import boids.drawables.geometry.DPolygon;
+import boids.drawables.geometry.DSegment;
 import boids.gui.Animation;
+import boids.gui.GuiParameters;
 import boids.math.Rectangle;
 import boids.math.Vector2;
 
@@ -114,6 +116,12 @@ public abstract class Boid extends DPolygon{
     @Override
     public void render(Graphics2D g2d) {
         super.render(g2d);
+        if (GuiParameters.showVelocity.getValue()) {
+            new DSegment(position, position.add(velocity), Color.green).render(g2d);
+        }
+        if (GuiParameters.showFov.getValue()) {
+            fov.render(g2d);
+        }
     }
 
     protected void setIndex(int index) {

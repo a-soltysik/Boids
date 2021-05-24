@@ -5,8 +5,11 @@ import boids.drawables.Drawable;
 import boids.objects.Predator;
 import boids.objects.Prey;
 import boids.math.Rectangle;
+import com.sun.java.accessibility.util.GUIInitializedListener;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -47,6 +50,7 @@ public class Animation {
                 } else {
                     loop();
                 }
+                //loop();
                 return null;
             }
         }.execute();
@@ -128,8 +132,7 @@ public class Animation {
 
 
     private void update() {
-        //objects.getList().forEach(o -> o.update(this, frameTime));
-        objects.getList().stream().filter(Objects::nonNull).forEach(o -> o.update(this, frameTime));
+        objects.getList().stream().parallel().filter(Objects::nonNull).forEach(o -> o.update(this, frameTime));
     }
 
     private void render() {
@@ -140,28 +143,34 @@ public class Animation {
         }
     }
     private void createFile(){
-        if (!oldFilename.equals(GuiParameters.fileName)){
-            if (GuiParameters.writeToFile){
-                writer = new CSVWriter(GuiParameters.fileName, 100, new String[]{preyHeader, predatorHeader});
-                writer.setIndices(preyHeader);
-                writer.setIndices(predatorHeader);
-                oldFilename = GuiParameters.fileName;
+        if (!GuiParameters.fileName.equals("") && (writer == null || !writer.fileName.equals(GuiParameters.fileName))){
+            if (GuiParameters.writeToFile.getValue()){
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Nie udało się zamknąć pliku");
+                }
+                try {
+                    writer = new CSVWriter(GuiParameters.fileName, 100, new String[]{preyHeader, predatorHeader});
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Nie udało się otworzyć pliku" + GuiParameters.fileName);
+                    GuiParameters.fileName = "";
+                }
             }
         }
     }
     private void write(){
-        if (GuiParameters.writeToFile){
+        if (GuiParameters.writeToFile.getValue()){
             writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
             writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
         }
     }
 
-
     public void render(Graphics2D g2d) {
         objects.getList().stream().filter(Objects::nonNull).forEach(o -> o.render(g2d));
         g2d.setColor(Color.GREEN);
         g2d.drawString("FPS: " + fps + "", 5, 15);
-        g2d.drawString("Liczba obiektów: " + objects.getList().size(), 5, 30);
+        g2d.drawString("Liczba obiektów: " + objects.getList().stream().filter(Objects::nonNull).count(), 5, 30);
     }
 
     public void setPaused(boolean paused) {

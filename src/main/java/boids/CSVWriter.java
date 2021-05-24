@@ -6,7 +6,8 @@ import java.util.*;
 
 public class CSVWriter {
 
-    private final String fileName;
+    public final String fileName;
+    private final PrintWriter printWriter;
     private final int bufferSize;
     private final String[] headers;
     private final List<String[]> dataLines = new ArrayList<>();
@@ -14,27 +15,33 @@ public class CSVWriter {
     private final HashMap<Integer,String> indices = new HashMap<>();
     private int count=0;
 
-    public CSVWriter(String fileName, int bufferSize,String[] headers){
-        this.fileName=fileName;
+    public CSVWriter(String fileName, int bufferSize,String[] headers) throws IOException {
         this.bufferSize=bufferSize;
         this.headers=headers;
+        this.fileName = fileName;
+        FileWriter fileWriter = new FileWriter(fileName,false);
+        printWriter = new PrintWriter(fileWriter);
         addHeader();
         for (String header : headers) {
             values.put(header, new ArrayList<>());
+            setIndices(header);
         }
     }
 
-    public  void addToBuffer(String header, float value) {
+    public void close() throws IOException {
+        printWriter.close();
+    }
+
+    public void addToBuffer(String header, float value) {
         count++;
         values.get(header).add(value);
         if(count % (bufferSize * headers.length) == 0){
             saveFromBuffer();
             resetValues();
         }
-
     }
 
-    public void setIndices(String header){
+    private void setIndices(String header){
         for (int i = 0; i<headers.length ; i++){
             if(headers[i].equals(header)){
                 indices.put(i,header);
@@ -62,10 +69,6 @@ public class CSVWriter {
         dataLines.clear();
     }
 
-    private String convertToCSV(String[] data) {
-        return String.join(";", data);
-    }
-
     private void addHeader(){
         List<String[]> headers = new ArrayList<>();
         headers.add(this.headers);
@@ -77,13 +80,9 @@ public class CSVWriter {
     }
 
     private void writeToFile(List<String[]> dataLines) throws IOException {
-        FileWriter fileWriter = new FileWriter(fileName,true);
-        PrintWriter pw = new PrintWriter(fileWriter);
         dataLines.stream()
-                .map(this::convertToCSV)
-                .forEach(pw::println);
-        pw.close();
-
+                .map(o -> String.join(";", o))
+                .forEach(printWriter::println);
     }
 }
 
