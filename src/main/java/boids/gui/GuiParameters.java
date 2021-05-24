@@ -14,6 +14,7 @@ public class GuiParameters {
     public static volatile float preyCohesionWeight = 1.5f;
     public static volatile float backGroundSpeed = 0.1f;
     public static volatile boolean writeToFile = false;
+    public static volatile boolean isEndOfProgram = false;
 
     private GuiParameters (){
     }

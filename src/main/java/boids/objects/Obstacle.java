@@ -98,9 +98,4 @@ public class Obstacle extends DPolygon {
     public Vector2 getPosition() {
         return new Vector2(position);
     }
-
-    @Override
-    public void render(Graphics2D g2d) {
-        super.render(g2d);
-    }
 }

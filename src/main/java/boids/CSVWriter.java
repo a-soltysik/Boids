@@ -6,7 +6,8 @@ import java.util.*;
 
 public class CSVWriter {
 
-    private final String fileName;
+    public final String fileName;
+    private final PrintWriter printWriter;
     private final int bufferSize;
     private final String[] headers;
     private final List<String[]> dataLines = new ArrayList<>();
@@ -14,24 +15,30 @@ public class CSVWriter {
     private final HashMap<Integer,String> indices = new HashMap<>();
     private int count=0;
 
-    public CSVWriter(String fileName, int bufferSize,String[] headers){
+    public CSVWriter(String fileName, int bufferSize,String[] headers) throws IOException {
         this.fileName=fileName;
         this.bufferSize=bufferSize;
         this.headers=headers;
-        addHeader();
+        FileWriter fileWriter = new FileWriter(fileName, false);
+        printWriter = new PrintWriter(fileWriter);
+        writeHeaders();
         for (String header : headers) {
             values.put(header, new ArrayList<>());
+            setIndices(header);
         }
     }
 
-    public  void addToBuffer(String header, float value) {
+    public void close() {
+        printWriter.close();
+    }
+
+    public void addToBuffer(String header, float value) {
         count++;
         values.get(header).add(value);
         if(count % (bufferSize * headers.length) == 0){
             saveFromBuffer();
             resetValues();
         }
-
     }
 
     public void setIndices(String header){
@@ -42,7 +49,7 @@ public class CSVWriter {
         }
     }
 
-    private void saveFromBuffer(){
+    private void saveFromBuffer() {
         for(int i=0;i<bufferSize;i++) {
             String[] writeable = new String[headers.length];
             for(int j=0; j< headers.length;j++){
@@ -50,11 +57,8 @@ public class CSVWriter {
             }
             dataLines.add(writeable);
         }
-        try {
-            writeToFile(dataLines);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writeToFile(dataLines);
+
     }
 
     private void resetValues(){
@@ -62,28 +66,14 @@ public class CSVWriter {
         dataLines.clear();
     }
 
-    private String convertToCSV(String[] data) {
-        return String.join(";", data);
+    private void writeHeaders(){
+        writeToFile(new ArrayList<>(Collections.singletonList(headers)));
     }
 
-    private void addHeader(){
-        List<String[]> headers = new ArrayList<>();
-        headers.add(this.headers);
-        try {
-            this.writeToFile(headers);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void writeToFile(List<String[]> dataLines) throws IOException {
-        FileWriter fileWriter = new FileWriter(fileName,true);
-        PrintWriter pw = new PrintWriter(fileWriter);
+    private void writeToFile(List<String[]> dataLines) {
         dataLines.stream()
-                .map(this::convertToCSV)
-                .forEach(pw::println);
-        pw.close();
-
+                .map(o -> String.join(";", o))
+                .forEach(printWriter::println);
     }
 }
 

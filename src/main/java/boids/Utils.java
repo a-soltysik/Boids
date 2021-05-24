@@ -27,8 +27,8 @@ public class Utils {
         return random.nextFloat() * (max - min) + min;
     }
 
-    public static int randomInt(int min, int max) {
-        return random.nextInt() % (max - min + 1) + min;
+    public static long randomLong() {
+        return random.nextLong();
     }
 
     //https://embeddeduse.com/2019/08/26/qt-compare-two-floats/

@@ -12,7 +12,7 @@ public class OptionsPanel extends JPanel {
     private final ParameterSlider separationSlider = new ParameterSlider(0, 100, (int) GuiParameters.preySeparationWeight * 10, 10);
     private final ParameterSlider alignmentSlider = new ParameterSlider(0, 100, (int) GuiParameters.preyAlignmentWeight * 10, 10);
     private final ParameterSlider maxSpeedSlider = new ParameterSlider(20, 120, (int) GuiParameters.preyMaxSpeed, 10);
-    private final ParameterSlider backgroundSpeedSlider = new ParameterSlider(0, 5, (int) (GuiParameters.backGroundSpeed * 10), 1);
+    private final ParameterSlider backgroundSpeedSlider = new ParameterSlider(0, 100, (int) (GuiParameters.backGroundSpeed * 10), 1);
     private final ArrayList<ParameterSlider> sliders = new ArrayList<>();
     private int i = 0;
 

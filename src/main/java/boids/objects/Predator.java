@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public class Predator extends Boid {
     protected static final ArrayList<Integer> predatorsIndices = new ArrayList<>();
     private static final float desiredSeparation = 80f;
-    private static float maxSpeed = 30f;
-    private static float maxAcceleration = 8f;
+    private static float maxSpeed;
+    private static float maxAcceleration;
     private static final float separationWeight = 2f;
     private static final float attractionWeight = 5f;
     private static final float avoidObstaclesWeight = 10f;
@@ -134,14 +134,19 @@ public class Predator extends Boid {
         return averageVelocity;
     }
 
+    public static void updateParameters() {
+        maxSpeed = GuiParameters.predatorMaxSpeed;
+        maxAcceleration = GuiParameters.predatorMaxAcceleration;
+    }
+
     public static ArrayList<Integer> getPredatorsIndices() {
         return predatorsIndices;
     }
 
     @Override
     public void update(Animation animation, double frameTime) {
-        maxSpeed = GuiParameters.predatorMaxSpeed;
-        maxAcceleration = GuiParameters.predatorMaxAcceleration;
+        updateParameters();
+        //updateFOV();
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(attraction(animation.getObjects()));
@@ -154,10 +159,6 @@ public class Predator extends Boid {
         super.update(animation, frameTime);
     }
 
-    @Override
-    public void render(Graphics2D g2d) {
-        super.render(g2d);
-    }
 }
 
 

@@ -7,6 +7,7 @@ import boids.objects.Prey;
 import boids.math.Rectangle;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -22,7 +23,6 @@ public class Animation {
     private final String predatorHeader = "Predator average velocity";
     private AnimationObjects objects;
     private CSVWriter writer;
-    private String oldFilename = "";
 
     private volatile boolean paused = true;
 
@@ -47,6 +47,10 @@ public class Animation {
                 } else {
                     loop();
                 }
+                if (writer != null) {
+                    writer.close();
+                }
+                System.exit(0);
                 return null;
             }
         }.execute();
@@ -59,7 +63,7 @@ public class Animation {
         long time = 0;
         long frameTimeNanos;
         int current_fps = 0;
-        while (running) {
+        while (!GuiParameters.isEndOfProgram) {
             if (!paused) {
                 update();
                 render();
@@ -94,7 +98,7 @@ public class Animation {
         long frameTimeNanos;
         final int preferredFrameTime = TIME_SCALE / preferredFps;
 
-        while (running) {
+        while (!GuiParameters.isEndOfProgram) {
 
             if (!paused) {
                 update();
@@ -129,7 +133,8 @@ public class Animation {
 
     private void update() {
         //objects.getList().forEach(o -> o.update(this, frameTime));
-        objects.getList().stream().filter(Objects::nonNull).forEach(o -> o.update(this, frameTime));
+        objects.updateParameters();
+        objects.getList().stream().parallel().filter(Objects::nonNull).forEach(o -> o.update(this, frameTime));
     }
 
     private void render() {
@@ -140,19 +145,24 @@ public class Animation {
         }
     }
     private void createFile(){
-        if (!oldFilename.equals(GuiParameters.fileName)){
+        if (writer == null || !writer.fileName.equals(GuiParameters.fileName)){
             if (GuiParameters.writeToFile){
-                writer = new CSVWriter(GuiParameters.fileName, 100, new String[]{preyHeader, predatorHeader});
-                writer.setIndices(preyHeader);
-                writer.setIndices(predatorHeader);
-                oldFilename = GuiParameters.fileName;
+                if (writer != null) {
+                    writer.close();
+                }
+                try {
+                    writer = new CSVWriter(GuiParameters.fileName, 100, new String[]{preyHeader, predatorHeader});
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Nie udało się otworzyć pliku " + GuiParameters.fileName);
+                    GuiParameters.writeToFile = false;
+                }
             }
         }
     }
     private void write(){
         if (GuiParameters.writeToFile){
-            writer.addToBuffer(preyHeader,Prey.getAverageVelocity(getObjects()));
-            writer.addToBuffer(predatorHeader,Predator.getAverageVelocity(getObjects()));
+            writer.addToBuffer(preyHeader, Prey.getAverageVelocity(getObjects()));
+            writer.addToBuffer(predatorHeader, Predator.getAverageVelocity(getObjects()));
         }
     }
 
@@ -161,7 +171,7 @@ public class Animation {
         objects.getList().stream().filter(Objects::nonNull).forEach(o -> o.render(g2d));
         g2d.setColor(Color.GREEN);
         g2d.drawString("FPS: " + fps + "", 5, 15);
-        g2d.drawString("Liczba obiektów: " + objects.getList().size(), 5, 30);
+        g2d.drawString("Liczba obiektów: " + objects.getList().stream().filter(Objects::nonNull).count(), 5, 30);
     }
 
     public void setPaused(boolean paused) {

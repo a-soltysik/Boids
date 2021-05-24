@@ -30,6 +30,11 @@ public class AnimationObjects {
             Obstacle.addObstacle(panel, objects);
         }
     }
+
+    public void updateParameters() {
+        Prey.updateParameters();
+        Predator.updateParameters();
+    }
     public void addObjects(){
         while(Prey.getPreysIndices().size() < GuiParameters.preyNumber) {
             Prey.addPrey(panel, objects);
