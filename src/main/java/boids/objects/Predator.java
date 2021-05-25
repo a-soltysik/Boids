@@ -139,8 +139,8 @@ public class Predator extends Boid {
         maxAcceleration = GuiParameters.predatorMaxAcceleration.getValue();
     }
 
-    public static ArrayList<Integer> getPredatorsIndices() {
-        return predatorsIndices;
+    public static int getPredatorsNumber() {
+        return predatorsIndices.size();
     }
 
     @Override

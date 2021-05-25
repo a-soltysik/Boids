@@ -63,7 +63,7 @@ public class Animation {
         long time = 0;
         long frameTimeNanos;
         int current_fps = 0;
-        while (!GuiParameters.isEndOfProgram) {
+        while (!GuiParameters.isEndOfProgram.getValue()) {
             if (!paused) {
                 update();
                 render();
@@ -98,7 +98,7 @@ public class Animation {
         long frameTimeNanos;
         final int preferredFrameTime = TIME_SCALE / preferredFps;
 
-        while (!GuiParameters.isEndOfProgram) {
+        while (!GuiParameters.isEndOfProgram.getValue()) {
 
             if (!paused) {
                 update();
@@ -146,7 +146,7 @@ public class Animation {
     }
     private void createFile(){
         if (writer == null || !writer.fileName.equals(GuiParameters.fileName)){
-            if (GuiParameters.writeToFile){
+            if (GuiParameters.writeToFile.getValue()){
                 if (writer != null) {
                     writer.close();
                 }
@@ -154,13 +154,13 @@ public class Animation {
                     writer = new CSVWriter(GuiParameters.fileName, 100, new String[]{preyHeader, predatorHeader});
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(null, "Nie udało się otworzyć pliku " + GuiParameters.fileName);
-                    GuiParameters.writeToFile = false;
+                    GuiParameters.writeToFile.setValue(false);
                 }
             }
         }
     }
     private void write(){
-        if (GuiParameters.writeToFile){
+        if (GuiParameters.writeToFile.getValue()){
             writer.addToBuffer(preyHeader, Prey.getAverageVelocity(getObjects()));
             writer.addToBuffer(predatorHeader, Predator.getAverageVelocity(getObjects()));
         }

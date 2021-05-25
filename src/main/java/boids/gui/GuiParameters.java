@@ -22,6 +22,7 @@ public class GuiParameters {
     public static final BooleanParameter showFov = new BooleanParameter("Czy wyświetlić pola widzenia?", false);
     public static final BooleanParameter showVelocity = new BooleanParameter("Czy wyświetlić wektory prędkości?", false);
     public static final BooleanParameter antialiasing = new BooleanParameter("Czy wygładzić krawędzie?", true);
+    public static final BooleanParameter isEndOfProgram = new BooleanParameter("czy chcesz zakończyć program?", false);
 
     private GuiParameters (){
     }

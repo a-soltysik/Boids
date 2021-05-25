@@ -212,8 +212,8 @@ public class Prey extends Boid {
         avoidObstaclesWeight =(separationWeight + alignmentWeight + cohesionWeight) * 10;
     }
 
-    public static ArrayList<Integer> getPreysIndices() {
-        return preysIndices;
+    public static int getPreysNumber() {
+        return preysIndices.size();
     }
 
     @Override
