@@ -87,8 +87,8 @@ public class Obstacle extends DPolygon {
         }
     }
 
-    public static ArrayList<Integer> getObstaclesIndices() {
-        return obstaclesIndices;
+    public static int getObstaclesNumber() {
+        return obstaclesIndices.size();
     }
 
     public Rectangle getBoundingBox() {

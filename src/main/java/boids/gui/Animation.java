@@ -166,7 +166,6 @@ public class Animation {
         }
     }
 
-
     public void render(Graphics2D g2d) {
         objects.getList().stream().filter(Objects::nonNull).forEach(o -> o.render(g2d));
         g2d.setColor(Color.GREEN);

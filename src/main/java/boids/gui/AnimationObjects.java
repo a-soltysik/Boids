@@ -17,16 +17,16 @@ public class AnimationObjects {
     }
 
     public void prepareObjects() {
-        var background = new LowPolyBackground(panel, 10, GuiParameters.backGroundSpeed);
+        var background = new LowPolyBackground(panel, 10, GuiParameters.backGroundSpeed.getValue());
         objects.add(background);
 
-        for (int i = 0; i < GuiParameters.predatorNumber; i++) {
+        for (int i = 0; i < GuiParameters.predatorNumber.getValue(); i++) {
             Predator.addPredator(panel,objects);
         }
-        for (int i = 0; i < GuiParameters.preyNumber ; i++) {
+        for (int i = 0; i < GuiParameters.preyNumber.getValue() ; i++) {
             Prey.addPrey(panel,objects);
         }
-        for (int i=0; i<GuiParameters.obstacleNumber; i++) {
+        for (int i=0; i<GuiParameters.obstacleNumber.getValue(); i++) {
             Obstacle.addObstacle(panel, objects);
         }
     }
@@ -36,22 +36,22 @@ public class AnimationObjects {
         Predator.updateParameters();
     }
     public void addObjects(){
-        while(Prey.getPreysIndices().size() < GuiParameters.preyNumber) {
+        while(Prey.getPreysNumber() < GuiParameters.preyNumber.getValue()) {
             Prey.addPrey(panel, objects);
         }
-        while(Prey.getPreysIndices().size() > GuiParameters.preyNumber) {
+        while(Prey.getPreysNumber() > GuiParameters.preyNumber.getValue()) {
             Prey.removePrey(objects);
         }
-        while(Obstacle.getObstaclesIndices().size() < GuiParameters.obstacleNumber) {
+        while(Obstacle.getObstaclesNumber() < GuiParameters.obstacleNumber.getValue()) {
             Obstacle.addObstacle(panel, objects);
         }
-        while(Obstacle.getObstaclesIndices().size() > GuiParameters.obstacleNumber) {
+        while(Obstacle.getObstaclesNumber() > GuiParameters.obstacleNumber.getValue()) {
             Obstacle.removeObstacle(objects);
         }
-        while(Predator.getPredatorsIndices().size() < GuiParameters.predatorNumber) {
+        while(Predator.getPredatorsNumber() < GuiParameters.predatorNumber.getValue()) {
             Predator.addPredator(panel, objects);
         }
-        while(Predator.getPredatorsIndices().size() > GuiParameters.predatorNumber) {
+        while(Predator.getPredatorsNumber() > GuiParameters.predatorNumber.getValue()) {
             Predator.removePredator(objects);
         }
     }

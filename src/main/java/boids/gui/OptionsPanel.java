@@ -3,170 +3,198 @@ package boids.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class OptionsPanel extends JPanel {
-    public JButton button1;
-    private final JButton button2;
-    private final JTextField textField;
-    private final ParameterSlider cohesionSlider = new ParameterSlider(0, 100, (int) GuiParameters.preyCohesionWeight * 10, 10);
-    private final ParameterSlider separationSlider = new ParameterSlider(0, 100, (int) GuiParameters.preySeparationWeight * 10, 10);
-    private final ParameterSlider alignmentSlider = new ParameterSlider(0, 100, (int) GuiParameters.preyAlignmentWeight * 10, 10);
-    private final ParameterSlider maxSpeedSlider = new ParameterSlider(20, 120, (int) GuiParameters.preyMaxSpeed, 10);
-    private final ParameterSlider backgroundSpeedSlider = new ParameterSlider(0, 100, (int) (GuiParameters.backGroundSpeed * 10), 1);
-    private final ArrayList<ParameterSlider> sliders = new ArrayList<>();
-    private int i = 0;
+    private final JButton submitButton = new JButton("Wczytaj");
+    private final HintTextField textField = new HintTextField("Nazwa pliku");
+    private final BooleanCheckbox writeToFileCheckBox = new BooleanCheckbox(GuiParameters.writeToFile);
+    private final ArrayList<JSlider> sliders = new ArrayList<>();
 
     public OptionsPanel() {
-        this.setPreferredSize(new Dimension(300, 850));
-        this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        button2 = new JButton("Submit");
-        textField = new JTextField();
-        textField.setText("nazwa pliku");
-        textField.setPreferredSize(new Dimension(200, 50));
-        button2.setPreferredSize(new Dimension(100, 50));
-        button2.addActionListener(o -> GuiParameters.fileName = textField.getText() + ".csv");
-        button2.setFocusable(false);
+        setPreferredSize(new Dimension(350, getPreferredSize().height));
+        setLayout(new BorderLayout());
 
-        ParameterSlider preySlider = new ParameterSlider(200, 800, 200, 100);
+        JPanel slidersPanel = new JPanel();
+        slidersPanel.setLayout(new BoxLayout(slidersPanel, BoxLayout.Y_AXIS));
+        slidersPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu optionsMenu = new JMenu("Opcje");
+        menuBar.add(optionsMenu);
+
+        BooleanCheckbox showFovCheckBox = new BooleanCheckbox(GuiParameters.showFov);
+        BooleanCheckbox showVelocityCheckBox = new BooleanCheckbox(GuiParameters.showVelocity);
+        BooleanCheckbox antialiasingCheckBox = new BooleanCheckbox(GuiParameters.antialiasing);
+        optionsMenu.add(writeToFileCheckBox);
+        optionsMenu.add(showFovCheckBox);
+        optionsMenu.add(showVelocityCheckBox);
+        optionsMenu.add(antialiasingCheckBox);
+
+        IntegerSlider preySlider = new IntegerSlider(GuiParameters.preyNumber);
+        IntegerSlider predatorSlider = new IntegerSlider(GuiParameters.predatorNumber);
+        IntegerSlider obstacleSlider = new IntegerSlider(GuiParameters.obstacleNumber);
+        FloatSlider separationSlider = new FloatSlider(GuiParameters.preySeparationWeight);
+        FloatSlider cohesionSlider = new FloatSlider(GuiParameters.preyCohesionWeight);
+        FloatSlider alignmentSlider = new FloatSlider(GuiParameters.preyAlignmentWeight);
+        FloatSlider maxSpeedSlider = new FloatSlider(GuiParameters.preyMaxSpeed);
+        FloatSlider backgroundSpeedSlider = new FloatSlider(GuiParameters.backGroundSpeed);
+        FloatSlider preyFovRadiusSlider = new FloatSlider(GuiParameters.preyFovRadius);
+        FloatSlider preyFovAngleSlider = new FloatSlider(GuiParameters.preyFovAngleDeg);
+        FloatSlider predatorFovRadiusSlider = new FloatSlider(GuiParameters.predatorFovRadius);
+        FloatSlider predatorFovAngleSlider = new FloatSlider(GuiParameters.predatorFovAngleDeg);
         sliders.add(preySlider);
-        ParameterSlider predatorSlider = new ParameterSlider(2, 10, 2, 1);
         sliders.add(predatorSlider);
-        ParameterSlider obstacleSlider = new ParameterSlider(0, 8, 0, 1);
         sliders.add(obstacleSlider);
         sliders.add(separationSlider);
         sliders.add(cohesionSlider);
         sliders.add(alignmentSlider);
         sliders.add(maxSpeedSlider);
         sliders.add(backgroundSpeedSlider);
+        sliders.add(preyFovRadiusSlider);
+        sliders.add(preyFovAngleSlider);
+        sliders.add(predatorFovRadiusSlider);
+        sliders.add(predatorFovAngleSlider);
 
-        button1 = new JButton("save data to file");
-        button1.setPreferredSize(new Dimension(300, 50));
-        button1.setEnabled(true);
-        button1.setFocusable(false);
-        button1.addActionListener(o -> {
-            if (i % 2 == 0) {
-                GuiParameters.writeToFile = true;
-                button1.setText("stop saving data to file");
+        submitButton.addActionListener(o -> GuiParameters.fileName = textField.getText() + ".csv");
+
+        writeToFileCheckBox.addChangeListener(o -> {
+            if (writeToFileCheckBox.isSelected()) {
                 blockOptions();
-
             } else {
-                GuiParameters.writeToFile = false;
-                button1.setText("save data to file");
                 unblockOptions();
             }
-            i++;
         });
 
-        JLabel maxSpeedLabel = new JLabel();
-        maxSpeedLabel.setText("max boids Speed: " + maxSpeedSlider.getValue());
         maxSpeedSlider.addChangeListener(o ->
         {
-            maxSpeedLabel.setText("max boids Speed: " + maxSpeedSlider.getValue());
-            GuiParameters.preyMaxSpeed = maxSpeedSlider.getValue();
-            GuiParameters.predatorMaxSpeed = (GuiParameters.preyMaxSpeed / 5) * 3;
-            GuiParameters.predatorMaxAcceleration = GuiParameters.predatorMaxSpeed / 10;
-            GuiParameters.preyMaxAcceleration = GuiParameters.preyMaxSpeed / 10;
+            GuiParameters.predatorMaxSpeed.setValue((GuiParameters.preyMaxSpeed.getValue() / 5) * 3);
+            GuiParameters.predatorMaxAcceleration.setValue(GuiParameters.predatorMaxSpeed.getValue() / 10);
+            GuiParameters.preyMaxAcceleration.setValue(GuiParameters.preyMaxSpeed.getValue() / 10);
         });
 
-        JLabel cohesionLabel = new JLabel();
-        cohesionLabel.setText("cohesionWeight: " + cohesionSlider.getValue());
-        cohesionSlider.addChangeListener(o ->
-        {
-            cohesionLabel.setText("cohesionWeight: " + cohesionSlider.getValue());
-            GuiParameters.preyCohesionWeight = (float) cohesionSlider.getValue() / 10;
-        });
+        JPanel fileNamePanel = new JPanel();
+        fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
+        textField.setPreferredSize(new Dimension(getPreferredSize().width, submitButton.getHeight()));
+        fileNamePanel.add(textField);
+        fileNamePanel.add(submitButton);
+        slidersPanel.add(fileNamePanel);
+        slidersPanel.add(Box.createVerticalStrut(15));
 
-        JLabel separationLabel = new JLabel();
-        separationLabel.setText("separationWeight: " + separationSlider.getValue());
-        separationSlider.addChangeListener(o ->
-        {
-            separationLabel.setText("separationWeight: " + separationSlider.getValue());
-            GuiParameters.preySeparationWeight = (float) separationSlider.getValue() / 10;
-        });
-
-        JLabel alignmentLabel = new JLabel();
-        alignmentLabel.setText("alignmentWeight: " + alignmentSlider.getValue());
-        alignmentSlider.addChangeListener(o ->
-        {
-            alignmentLabel.setText("alignmentWeight: " + alignmentSlider.getValue());
-            GuiParameters.preyAlignmentWeight = (float) alignmentSlider.getValue() / 10;
-        });
-
-        JLabel predatorLabel = new JLabel();
-        predatorLabel.setText("predators: " + predatorSlider.getValue());
-        predatorSlider.addChangeListener(o ->
-        {
-            JSlider source3 = (JSlider) o.getSource();
-            predatorLabel.setText("predators: " + source3.getValue());
-            GuiParameters.predatorNumber = source3.getValue();
-
-        });
-
-        JLabel preyLabel = new JLabel();
-        preyLabel.setText("preys: " + preySlider.getValue());
-        preySlider.addChangeListener(o -> {
-            JSlider source2 = (JSlider) o.getSource();
-            preyLabel.setText("preys: " + source2.getValue());
-
-            GuiParameters.preyNumber = (source2.getValue());
-
-        });
-
-        JLabel obstacleLabel = new JLabel();
-        obstacleLabel.setText("obstacles: " + obstacleSlider.getValue());
-        obstacleSlider.addChangeListener(o -> {
-            JSlider source1 = (JSlider) o.getSource();
-            obstacleLabel.setText("obstacles: " + source1.getValue());
-
-            GuiParameters.obstacleNumber = (source1.getValue());
-
-        });
-
-        JLabel backgroundSpeedLabel = new JLabel();
-        backgroundSpeedLabel.setText("backgroundSpeed: " + backgroundSpeedSlider.getValue());
-        backgroundSpeedSlider.addChangeListener(o -> {
-            backgroundSpeedLabel.setText("backgroundSpeed: " + backgroundSpeedSlider.getValue());
-            GuiParameters.backGroundSpeed = (float) backgroundSpeedSlider.getValue() / 10;
-        });
-
-        ArrayList<JLabel> labels = new ArrayList<>();
-        labels.add(preyLabel);
-        labels.add(predatorLabel);
-        labels.add(obstacleLabel);
-        labels.add(separationLabel);
-        labels.add(cohesionLabel);
-        labels.add(alignmentLabel);
-        labels.add(maxSpeedLabel);
-        labels.add(backgroundSpeedLabel);
-
-        this.add(button1);
-        this.add(button2);
-        this.add(textField);
-        int j = 0;
-        for (ParameterSlider slider : sliders) {
-            this.add(slider);
-            this.add(labels.get(j));
-            j++;
+        for (JSlider slider : sliders) {
+            slidersPanel.add(slider);
+            slidersPanel.add(Box.createVerticalStrut(15));
         }
-        this.setVisible(true);
+        JScrollPane scrollPane = new JScrollPane(slidersPanel);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        add(BorderLayout.CENTER, scrollPane);
+        add(BorderLayout.NORTH, menuBar);
+
+        slidersPanel.setPreferredSize(new Dimension(getPreferredSize().width - scrollPane.getVerticalScrollBar().getPreferredSize().width, slidersPanel.getPreferredSize().height));
+    }
+
+    public void setWriteToFileEnabled(boolean writeToFile) {
+        writeToFileCheckBox.setEnabled(writeToFile);
     }
 
     private void blockOptions() {
-        if (GuiParameters.writeToFile) {
-            for (ParameterSlider slider : sliders) {
+        if (GuiParameters.writeToFile.getValue()) {
+            for (JSlider slider : sliders) {
                 slider.setEnabled(false);
-                button2.setEnabled(false);
+                submitButton.setEnabled(false);
                 textField.setEnabled(false);
             }
         }
     }
 
     private void unblockOptions() {
-        if (!GuiParameters.writeToFile) {
-            for (ParameterSlider slider : sliders) {
+        if (!GuiParameters.writeToFile.getValue()) {
+            for (JSlider slider : sliders) {
                 slider.setEnabled(true);
-                button2.setEnabled(true);
+                submitButton.setEnabled(true);
                 textField.setEnabled(true);
+            }
+        }
+    }
+
+    private static class IntegerSlider extends JSlider{
+        private final GuiParameters.IntegerParameter parameter;
+        public IntegerSlider(GuiParameters.IntegerParameter parameter) {
+            this.parameter = parameter;
+            setValue(parameter.getValue() / parameter.tick);
+            setMinimum(parameter.min);
+            setMaximum(parameter.max / parameter.tick);
+            setCustomLabels();
+            setPaintLabels(true);
+            addChangeListener(o -> {
+                parameter.setValue(getValue() * parameter.tick);
+                setCustomLabels();
+            });
+        }
+
+        private void setCustomLabels() {
+            setLabelTable(new Hashtable<>(Map.of(
+                    getMinimum(), new JLabel(Integer.toString(parameter.min)),
+                    (getMinimum() + getMaximum()) / 2, new JLabel(parameter.name + ": " + parameter.getValue()),
+                    getMaximum(), new JLabel(Integer.toString(parameter.max))
+            )));
+        }
+    }
+
+    private static class FloatSlider extends JSlider {
+        private final GuiParameters.FloatParameter parameter;
+        public FloatSlider(GuiParameters.FloatParameter parameter) {
+            this.parameter = parameter;
+            float scale = 1 / parameter.tick;
+            setValue(Math.round (parameter.getValue() * scale));
+            setMinimum(Math.round(parameter.min * scale));
+            setMaximum(Math.round(parameter.max * scale));
+            setCustomLabels();
+            setPaintLabels(true);
+            addChangeListener(o -> {
+                parameter.setValue(getValue() / scale);
+                setCustomLabels();
+            });
+        }
+
+        private void setCustomLabels() {
+            setLabelTable(new Hashtable<>(Map.of(
+                    getMinimum(), new JLabel(Float.toString(parameter.min)),
+                    (getMinimum() + getMaximum()) / 2, new JLabel(parameter.name + ": " + parameter.getValue()),
+                    getMaximum(), new JLabel(Float.toString(parameter.max))
+            )));
+        }
+    }
+
+    private static class BooleanCheckbox extends JCheckBoxMenuItem {
+        public BooleanCheckbox(GuiParameters.BooleanParameter parameter) {
+            super(parameter.name);
+            setSelected(parameter.getValue());
+            addChangeListener(o -> parameter.setValue(isSelected()));
+        }
+    }
+
+    //https://stackoverflow.com/questions/1738966/java-jtextfield-with-input-hint
+    private static class HintTextField extends JTextField {
+        private final String hint;
+        public HintTextField(String hint) {
+            this.hint = hint;
+        }
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            if (getText().length() == 0) {
+                int h = getHeight();
+                ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                Insets ins = getInsets();
+                FontMetrics fm = g.getFontMetrics();
+                int c0 = getBackground().getRGB();
+                int c1 = getForeground().getRGB();
+                int m = 0xfefefefe;
+                int c2 = ((c0 & m) >>> 1) + ((c1 & m) >>> 1);
+                g.setColor(new Color(c2, true));
+                g.drawString(hint, ins.left, h / 2 + fm.getAscent() / 2 - 2);
             }
         }
     }
