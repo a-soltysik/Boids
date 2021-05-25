@@ -13,12 +13,24 @@ public class OptionsPanel extends JPanel {
     private final ArrayList<JSlider> sliders = new ArrayList<>();
 
     public OptionsPanel() {
-        setPreferredSize(new Dimension(300, getPreferredSize().height));
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        setPreferredSize(new Dimension(350, getPreferredSize().height));
+        setLayout(new BorderLayout());
+
+        JPanel slidersPanel = new JPanel();
+        slidersPanel.setLayout(new BoxLayout(slidersPanel, BoxLayout.Y_AXIS));
+        slidersPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu optionsMenu = new JMenu("Opcje");
+        menuBar.add(optionsMenu);
 
         BooleanCheckbox showFovCheckBox = new BooleanCheckbox(GuiParameters.showFov);
         BooleanCheckbox showVelocityCheckBox = new BooleanCheckbox(GuiParameters.showVelocity);
+        BooleanCheckbox antialiasingCheckBox = new BooleanCheckbox(GuiParameters.antialiasing);
+        optionsMenu.add(writeToFileCheckBox);
+        optionsMenu.add(showFovCheckBox);
+        optionsMenu.add(showVelocityCheckBox);
+        optionsMenu.add(antialiasingCheckBox);
 
         IntegerSlider preySlider = new IntegerSlider(GuiParameters.preyNumber);
         IntegerSlider predatorSlider = new IntegerSlider(GuiParameters.predatorNumber);
@@ -28,6 +40,10 @@ public class OptionsPanel extends JPanel {
         FloatSlider alignmentSlider = new FloatSlider(GuiParameters.preyAlignmentWeight);
         FloatSlider maxSpeedSlider = new FloatSlider(GuiParameters.preyMaxSpeed);
         FloatSlider backgroundSpeedSlider = new FloatSlider(GuiParameters.backGroundSpeed);
+        FloatSlider preyFovRadiusSlider = new FloatSlider(GuiParameters.preyFovRadius);
+        FloatSlider preyFovAngleSlider = new FloatSlider(GuiParameters.preyFovAngleDeg);
+        FloatSlider predatorFovRadiusSlider = new FloatSlider(GuiParameters.predatorFovRadius);
+        FloatSlider predatorFovAngleSlider = new FloatSlider(GuiParameters.predatorFovAngleDeg);
         sliders.add(preySlider);
         sliders.add(predatorSlider);
         sliders.add(obstacleSlider);
@@ -36,6 +52,10 @@ public class OptionsPanel extends JPanel {
         sliders.add(alignmentSlider);
         sliders.add(maxSpeedSlider);
         sliders.add(backgroundSpeedSlider);
+        sliders.add(preyFovRadiusSlider);
+        sliders.add(preyFovAngleSlider);
+        sliders.add(predatorFovRadiusSlider);
+        sliders.add(predatorFovAngleSlider);
 
         submitButton.addActionListener(o -> GuiParameters.fileName = textField.getText() + ".csv");
 
@@ -54,23 +74,24 @@ public class OptionsPanel extends JPanel {
             GuiParameters.preyMaxAcceleration.setValue(GuiParameters.preyMaxSpeed.getValue() / 10);
         });
 
-        for (JSlider slider : sliders) {
-            add(slider);
-            add(Box.createVerticalStrut(10));
-        }
-
-        add(writeToFileCheckBox);
-        add(Box.createVerticalStrut(10));
-        add(showFovCheckBox);
-        add(Box.createVerticalStrut(10));
-        add(showVelocityCheckBox);
-        add(Box.createVerticalStrut(10));
         JPanel fileNamePanel = new JPanel();
         fileNamePanel.setLayout(new BoxLayout(fileNamePanel, BoxLayout.X_AXIS));
         textField.setPreferredSize(new Dimension(getPreferredSize().width, submitButton.getHeight()));
         fileNamePanel.add(textField);
         fileNamePanel.add(submitButton);
-        add(fileNamePanel);
+        slidersPanel.add(fileNamePanel);
+        slidersPanel.add(Box.createVerticalStrut(15));
+
+        for (JSlider slider : sliders) {
+            slidersPanel.add(slider);
+            slidersPanel.add(Box.createVerticalStrut(15));
+        }
+        JScrollPane scrollPane = new JScrollPane(slidersPanel);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        add(BorderLayout.CENTER, scrollPane);
+        add(BorderLayout.NORTH, menuBar);
+
+        slidersPanel.setPreferredSize(new Dimension(getPreferredSize().width - scrollPane.getVerticalScrollBar().getPreferredSize().width, slidersPanel.getPreferredSize().height));
     }
 
     public void setWriteToFileEnabled(boolean writeToFile) {
@@ -146,10 +167,10 @@ public class OptionsPanel extends JPanel {
         }
     }
 
-    private static class BooleanCheckbox extends JCheckBox {
+    private static class BooleanCheckbox extends JCheckBoxMenuItem {
         public BooleanCheckbox(GuiParameters.BooleanParameter parameter) {
+            super(parameter.name);
             setSelected(parameter.getValue());
-            setText(parameter.name);
             addChangeListener(o -> parameter.setValue(isSelected()));
         }
     }

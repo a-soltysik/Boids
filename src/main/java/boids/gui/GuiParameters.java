@@ -26,9 +26,14 @@ public class GuiParameters {
     public static final FloatParameter preySeparationWeight = new FloatParameter("Waga separacji", 2f, 0f, 10f, 0.1f);
     public static final FloatParameter preyCohesionWeight = new FloatParameter("Waga spójności", 1.5f, 0f, 10f, 0.1f);
     public static final FloatParameter backGroundSpeed = new FloatParameter("Szybkość tła", 0.05f, 0f, 1f, 0.01f);
+    public static final FloatParameter preyFovRadius = new FloatParameter("Promień pola widzenia ptaków", 60f, 10f, 150f, 1f);
+    public static final FloatParameter preyFovAngleDeg = new FloatParameter("Kąt pola widzenia ptaków", 340f, 10f, 360f, 1f);
+    public static final FloatParameter predatorFovRadius = new FloatParameter("Promienień pola widzenia drapieżników", 100f, 10f, 200f, 1f);
+    public static final FloatParameter predatorFovAngleDeg = new FloatParameter("Kąt pola widzenia drapieżników", 90f, 10f, 360f, 1f);
     public static final BooleanParameter writeToFile = new BooleanParameter("Czy zapisać dane do pliku?", false);
     public static final BooleanParameter showFov = new BooleanParameter("Czy wyświetlić pola widzenia?", false);
     public static final BooleanParameter showVelocity = new BooleanParameter("Czy wyświetlić wektory prędkości?", false);
+    public static final BooleanParameter antialiasing = new BooleanParameter("Czy wygładzić krawędzie?", true);
 
     private GuiParameters (){
     }
