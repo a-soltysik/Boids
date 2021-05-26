@@ -135,12 +135,12 @@ public class Predator extends Boid {
     }
 
     public static void updateParameters() {
-        maxSpeed = GuiParameters.predatorMaxSpeed;
-        maxAcceleration = GuiParameters.predatorMaxAcceleration;
+        maxSpeed = GuiParameters.predatorMaxSpeed.getValue();
+        maxAcceleration = GuiParameters.predatorMaxAcceleration.getValue();
     }
 
-    public static ArrayList<Integer> getPredatorsIndices() {
-        return predatorsIndices;
+    public static int getPredatorsNumber() {
+        return predatorsIndices.size();
     }
 
     @Override
@@ -158,7 +158,6 @@ public class Predator extends Boid {
         }
         super.update(animation, frameTime);
     }
-
 }
 
 

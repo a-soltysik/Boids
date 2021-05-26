@@ -203,17 +203,17 @@ public class Prey extends Boid {
     }
 
     public static void updateParameters() {
-        cohesionWeight = GuiParameters.preyCohesionWeight;
-        separationWeight = GuiParameters.preySeparationWeight;
-        alignmentWeight = GuiParameters.preyAlignmentWeight;
-        maxSpeed = GuiParameters.preyMaxSpeed;
-        maxAcceleration = GuiParameters.preyMaxAcceleration;
+        cohesionWeight = GuiParameters.preyCohesionWeight.getValue();
+        separationWeight = GuiParameters.preySeparationWeight.getValue();
+        alignmentWeight = GuiParameters.preyAlignmentWeight.getValue();
+        maxSpeed = GuiParameters.preyMaxSpeed.getValue();
+        maxAcceleration = GuiParameters.preyMaxAcceleration.getValue();
         escapeWeight = (separationWeight + alignmentWeight + cohesionWeight) * 4;
         avoidObstaclesWeight =(separationWeight + alignmentWeight + cohesionWeight) * 10;
     }
 
-    public static ArrayList<Integer> getPreysIndices() {
-        return preysIndices;
+    public static int getPreysNumber() {
+        return preysIndices.size();
     }
 
     @Override
@@ -233,5 +233,4 @@ public class Prey extends Boid {
         }
         super.update(animation, frameTime);
     }
-
 }

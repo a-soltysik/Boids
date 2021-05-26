@@ -155,8 +155,8 @@ public class LowPolyBackground implements Drawable {
 
     @Override
     public void update(Animation animation, double frameTime) {
-        speed = GuiParameters.backGroundSpeed;
-        if (moving) {
+        speed = GuiParameters.backGroundSpeed.getValue();
+        if (moving && speed > 0) {
             moveOffset += speed * frameTime;
             colorOffset += speed * frameTime;
             generateVertices();

@@ -41,7 +41,7 @@ public class CSVWriter {
         }
     }
 
-    public void setIndices(String header){
+    private void setIndices(String header){
         for (int i = 0; i<headers.length ; i++){
             if(headers[i].equals(header)){
                 indices.put(i,header);
@@ -58,7 +58,6 @@ public class CSVWriter {
             dataLines.add(writeable);
         }
         writeToFile(dataLines);
-
     }
 
     private void resetValues(){
