@@ -154,8 +154,8 @@ public class Prey extends Boid {
         do {
             intersects = false;
             prey = new Prey(new Vector2(
-                    Utils.randomFloat(0f, panel.getWidth()),
-                    Utils.randomFloat(0f, panel.getHeight())
+                    Utils.randomFloat(0f, panel.getDimensions().max.x),
+                    Utils.randomFloat(0f, panel.getDimensions().max.y)
             ));
             for (var i : Obstacle.obstaclesIndices) {
                 if (prey.position.isInside(((Obstacle)objects.get(i)).getBoundingBox())) {

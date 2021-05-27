@@ -26,15 +26,12 @@ public class Obstacle extends DPolygon {
         boolean intersects;
         int max_tries = 100;
         int current_tries = 0;
-        System.out.println(panel.getWidth());
-        System.out.println(panel.getHeight());
-        System.out.println(panel.getDimensions());
         do {
             intersects = false;
             current_tries++;
             var obstacle = new Obstacle(new Vector2(
-                    Utils.randomFloat(0f, panel.getWidth()),
-                    Utils.randomFloat(0f, panel.getHeight())
+                    Utils.randomFloat(0f, panel.getDimensions().max.x),
+                    Utils.randomFloat(0f, panel.getDimensions().max.y)
             ), 35f, 21);
 
             for (var i : obstaclesIndices) {
