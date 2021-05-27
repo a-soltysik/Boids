@@ -29,6 +29,7 @@ public class FOV implements Drawable {
         }
     }
 
+
     public boolean isIntersecting(Vector2 point, float radius) {
         if (Vector2.distance(position, point) > radius) {
             return false;
@@ -127,6 +128,10 @@ public class FOV implements Drawable {
 
     public void setDirection(Vector2 direction) {
         this.direction = direction;
+    }
+
+    public Vector2[] getRays() {
+        return rays;
     }
 
     @Override

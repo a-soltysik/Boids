@@ -26,6 +26,9 @@ public class Obstacle extends DPolygon {
         boolean intersects;
         int max_tries = 100;
         int current_tries = 0;
+        System.out.println(panel.getWidth());
+        System.out.println(panel.getHeight());
+        System.out.println(panel.getDimensions());
         do {
             intersects = false;
             current_tries++;

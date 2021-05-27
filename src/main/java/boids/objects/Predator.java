@@ -114,6 +114,7 @@ public class Predator extends Boid {
         predatorsIndices.add(i);
         predator.setIndex(i);
     }
+
     public static void removePredator(ArrayList<Drawable> objects) {
         if (predatorsIndices.size() > 0) {
             objects.set(predatorsIndices.get(predatorsIndices.size() - 1), null);
@@ -138,6 +139,8 @@ public class Predator extends Boid {
         maxSpeed = GuiParameters.predatorMaxSpeed.getValue();
         maxAcceleration = GuiParameters.predatorMaxAcceleration.getValue();
     }
+
+    public static ArrayList<Integer> getPredatorsIndices() { return predatorsIndices; }
 
     public static int getPredatorsNumber() {
         return predatorsIndices.size();
