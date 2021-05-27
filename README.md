@@ -1,6 +1,15 @@
 ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/72752940/119895272-defd8900-bf3d-11eb-9fe1-eba8877ab4b5.gif)
 
 
+
+
+
+
+
+
+
+
+
 Projektujemy symulacje agentową, w której będą występować trzy podstawowe rodzaje agentów: ptak, drapieżny ptak, przeszkoda. Symulacja ma przedstawić sposób poruszania się stada ptaków, ich ucieczki przed drapieżnikami oraz unikania przez nie przeszkód. Nasza symulacja jest animacją dwuwymiarową wizualizowaną na ekranie w czasie rzeczywistym.
 
 Zachowanie ptaków:
