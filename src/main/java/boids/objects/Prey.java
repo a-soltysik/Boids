@@ -219,7 +219,7 @@ public class Prey extends Boid {
     @Override
     public void update(Animation animation, double frameTime) {
         updateParameters();
-        //updateFOV();
+        fov.updateFOV(GuiParameters.preyFovAngleDeg.getValue(), GuiParameters.preyFovRadius.getValue());
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(alignment(animation.getObjects()));

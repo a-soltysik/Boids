@@ -146,7 +146,7 @@ public class Predator extends Boid {
     @Override
     public void update(Animation animation, double frameTime) {
         updateParameters();
-        //updateFOV();
+        fov.updateFOV(GuiParameters.predatorFovAngleDeg.getValue(), GuiParameters.predatorFovRadius.getValue());
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(attraction(animation.getObjects()));

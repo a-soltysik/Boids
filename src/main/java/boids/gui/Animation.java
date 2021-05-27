@@ -18,7 +18,6 @@ public class Animation {
     private int fps;
     private final int preferredFps;
     private final int TIME_SCALE = 1_000_000_000;
-    private final boolean running = true;
     private final String preyHeader = "Prey average velocity";
     private final String predatorHeader = "Predator average velocity";
     private AnimationObjects objects;
@@ -151,9 +150,9 @@ public class Animation {
                     writer.close();
                 }
                 try {
-                    writer = new CSVWriter(GuiParameters.fileName, 100, new String[]{preyHeader, predatorHeader});
+                    writer = new CSVWriter(GuiParameters.fileName, GuiParameters.dirName, 100, new String[]{preyHeader, predatorHeader});
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(null, "Nie udało się otworzyć pliku " + GuiParameters.fileName);
+                    JOptionPane.showMessageDialog(null, e.getMessage());
                     GuiParameters.writeToFile.setValue(false);
                 }
             }

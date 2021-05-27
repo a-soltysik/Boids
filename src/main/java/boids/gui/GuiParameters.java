@@ -2,6 +2,7 @@ package boids.gui;
 
 public class GuiParameters {
     public static volatile String fileName = "plik.csv";
+    public static volatile String dirName = "outData";
 
     public static final IntegerParameter preyNumber = new IntegerParameter("Liczba ptaków", 200, 0, 1000, 10);
     public static final IntegerParameter predatorNumber = new IntegerParameter("Liczba drapieżników", 0, 0, 10, 1);

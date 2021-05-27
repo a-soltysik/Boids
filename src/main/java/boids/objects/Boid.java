@@ -103,10 +103,6 @@ public abstract class Boid extends DPolygon{
         return new Vector2(position);
     }
 
-    protected void updateFOV(float radius, float angleDeg) {
-        //fov = new FOV(angleDeg, radius, ...)
-    }
-
     @Override
     public void update(Animation animation, double frameTime) {
         Vector2 newPosition = position.add(velocity.multiply(frameTime));

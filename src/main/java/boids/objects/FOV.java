@@ -1,5 +1,6 @@
 package boids.objects;
 
+import boids.Utils;
 import boids.drawables.Drawable;
 import boids.drawables.geometry.DSegment;
 import boids.gui.Animation;
@@ -11,8 +12,8 @@ import java.util.Arrays;
 
 public class FOV implements Drawable {
     private final Color color = Color.green;
-    private final float angle;
-    private final float radius;
+    private float angle;
+    private float radius;
     private Vector2[] rays;
     private Vector2 position = Vector2.ZERO;
     private Vector2 direction = Vector2.ZERO;
@@ -75,6 +76,22 @@ public class FOV implements Drawable {
     public void rotate(float angle) {
         for (int i=0; i<rays.length; i++) {
             rays[i] = rays[i].rotated(Vector2.ZERO, angle);
+        }
+    }
+
+    public void updateFOV(float angleDeg, float radius) {
+        if(!Utils.isEqual((float) Math.toRadians(angleDeg), this.angle) || !Utils.isEqual(radius, this.radius)) {
+            this.angle = (float) Math.toRadians(angleDeg);
+            this.radius = radius;
+            int raysNumber = Math.max(3, Math.round(50 * angleDeg / 360));
+            rays = new Vector2[raysNumber];
+
+            float alpha = angle / 2;
+            float angleToRotate = new Vector2(0f,-1f).directAngle(direction);
+            for (int i=0; i<rays.length; i++) {
+                rays[i] = new Vector2((float) (-Math.sin(alpha) * radius), (float) (-Math.cos(alpha) * radius)).rotated(Vector2.ZERO, angleToRotate);
+                alpha -= angle / (raysNumber - 1);
+            }
         }
     }
 
