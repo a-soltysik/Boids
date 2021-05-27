@@ -109,6 +109,7 @@ public class Vector2Test {
 
     }
 
+
     @Test
     public void rotated() {
         Vector2 a = new Vector2(1f, 0f);
