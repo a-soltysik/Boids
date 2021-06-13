@@ -26,7 +26,7 @@ public class Prey extends Boid {
 
     public Prey(Vector2 position) {
         super(10f, position,
-                new FOV(340, 60f, 50),
+                new FOV(GuiParameters.preyFovAngleDeg.getValue(), GuiParameters.preyFovRadius.getValue()),
                 Color.darkGray
         );
     }

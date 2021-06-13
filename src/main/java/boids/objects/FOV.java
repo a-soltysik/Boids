@@ -4,6 +4,7 @@ import boids.Utils;
 import boids.drawables.Drawable;
 import boids.drawables.geometry.DSegment;
 import boids.gui.Animation;
+import boids.gui.GuiParameters;
 import boids.math.Rectangle;
 import boids.math.Vector2;
 
@@ -16,11 +17,13 @@ public class FOV implements Drawable {
     private float radius;
     private Vector2[] rays;
     private Vector2 position = Vector2.ZERO;
-    private Vector2 direction = Vector2.ZERO;
+    private Vector2 direction = new Vector2(0f, -1f);
+    private final static int MIN_RAYS = 3;
 
-    public FOV(float angleDeg, float radius, int raysNumber) {
+    public FOV(float angleDeg, float radius) {
         this.angle = (float) Math.toRadians(angleDeg);
         this.radius = radius;
+        int raysNumber = Math.round(Math.max(MIN_RAYS, angleDeg / GuiParameters.raysDensity.getValue()));
         rays = new Vector2[raysNumber];
 
         float alpha = angle / 2;
@@ -83,7 +86,7 @@ public class FOV implements Drawable {
         if(!Utils.isEqual((float) Math.toRadians(angleDeg), this.angle) || !Utils.isEqual(radius, this.radius)) {
             this.angle = (float) Math.toRadians(angleDeg);
             this.radius = radius;
-            int raysNumber = Math.max(3, Math.round(50 * angleDeg / 360));
+            int raysNumber = Math.round(Math.max(MIN_RAYS, angleDeg / GuiParameters.raysDensity.getValue()));
             rays = new Vector2[raysNumber];
 
             float alpha = angle / 2;
@@ -143,8 +146,10 @@ public class FOV implements Drawable {
     }
 
     public void setDirection(Vector2 direction) {
-        this.direction = direction;
+        this.direction = direction.normalized();
     }
+
+    public Vector2 getDirection() {return direction;}
 
     @Override
     public void update(Animation animation, double frameTime) {

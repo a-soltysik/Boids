@@ -102,7 +102,8 @@ public class Vector2 {
                     "Angle between zero vectors is undefined"
             );
         }
-        float angle = Utils.fastAtan2(cross(vec), dot(vec));
+        //float angle = Utils.fastAtan2(cross(vec), dot(vec));
+        float angle = (float) Math.atan2(cross(vec), dot(vec));
         if (angle >= 0) {
             return angle;
         } else {

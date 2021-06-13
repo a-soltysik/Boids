@@ -61,7 +61,7 @@ public class OptionsPanel extends JPanel {
 
         writeToFileCheckBox.addChangeListener(o -> {
             if (writeToFileCheckBox.isSelected()) {
-                blockOptions();
+                //blockOptions();
             } else {
                 unblockOptions();
             }
@@ -122,9 +122,9 @@ public class OptionsPanel extends JPanel {
         private final GuiParameters.IntegerParameter parameter;
         public IntegerSlider(GuiParameters.IntegerParameter parameter) {
             this.parameter = parameter;
-            setValue(parameter.getValue() / parameter.tick);
             setMinimum(parameter.min);
             setMaximum(parameter.max / parameter.tick);
+            setValue(parameter.getValue() / parameter.tick);
             setCustomLabels();
             setPaintLabels(true);
             addChangeListener(o -> {
@@ -147,9 +147,9 @@ public class OptionsPanel extends JPanel {
         public FloatSlider(GuiParameters.FloatParameter parameter) {
             this.parameter = parameter;
             float scale = 1 / parameter.tick;
-            setValue(Math.round (parameter.getValue() * scale));
             setMinimum(Math.round(parameter.min * scale));
             setMaximum(Math.round(parameter.max * scale));
+            setValue(Math.round (parameter.getValue() * scale));
             setCustomLabels();
             setPaintLabels(true);
             addChangeListener(o -> {
