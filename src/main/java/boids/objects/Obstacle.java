@@ -30,8 +30,8 @@ public class Obstacle extends DPolygon {
             intersects = false;
             current_tries++;
             var obstacle = new Obstacle(new Vector2(
-                    Utils.randomFloat(0f, panel.getWidth()),
-                    Utils.randomFloat(0f, panel.getHeight())
+                    Utils.randomFloat(0f, panel.getDimensions().max.x),
+                    Utils.randomFloat(0f, panel.getDimensions().max.y)
             ), 35f, 21);
 
             for (var i : obstaclesIndices) {

@@ -12,7 +12,6 @@ public class AnimationPanel extends JPanel {
     private Rectangle dimensions;
 
     public void startAnimation(int fps) {
-        dimensions = new Rectangle(Vector2.ZERO, new Vector2(getWidth(), getHeight()));
         animation = new Animation(fps);
         animation.start(this);
     }
@@ -41,6 +40,6 @@ public class AnimationPanel extends JPanel {
     }
 
     public Rectangle getDimensions() {
-        return new Rectangle(dimensions);
+        return new Rectangle(Vector2.ZERO, new Vector2(getPreferredSize().width,getPreferredSize().height));
     }
 }
