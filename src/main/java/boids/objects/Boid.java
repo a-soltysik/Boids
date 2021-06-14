@@ -33,10 +33,7 @@ public abstract class Boid extends DPolygon{
         if (velocity.magnitude() == 0) {
             return;
         }
-        //Vector2 direction = position.subtract(getVertices()[2]);
         Vector2 direction = fov.getDirection();
-        //System.out.println("v: " + fov.getDirection());
-        //System.out.println("direction: " + position.subtract(getVertices()[2]));
         Vector2 newDirection = velocity;
 
         if (direction.isZero() || newDirection.isZero()) {

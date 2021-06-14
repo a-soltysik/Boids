@@ -59,14 +59,6 @@ public class OptionsPanel extends JPanel {
 
         submitButton.addActionListener(o -> GuiParameters.fileName = textField.getText() + ".csv");
 
-        writeToFileCheckBox.addChangeListener(o -> {
-            if (writeToFileCheckBox.isSelected()) {
-                //blockOptions();
-            } else {
-                unblockOptions();
-            }
-        });
-
         maxSpeedSlider.addChangeListener(o ->
         {
             GuiParameters.predatorMaxSpeed.setValue((GuiParameters.preyMaxSpeed.getValue() / 5) * 3);
@@ -96,26 +88,6 @@ public class OptionsPanel extends JPanel {
 
     public void setWriteToFileEnabled(boolean writeToFile) {
         writeToFileCheckBox.setEnabled(writeToFile);
-    }
-
-    private void blockOptions() {
-        if (GuiParameters.writeToFile.getValue()) {
-            for (JSlider slider : sliders) {
-                slider.setEnabled(false);
-                submitButton.setEnabled(false);
-                textField.setEnabled(false);
-            }
-        }
-    }
-
-    private void unblockOptions() {
-        if (!GuiParameters.writeToFile.getValue()) {
-            for (JSlider slider : sliders) {
-                slider.setEnabled(true);
-                submitButton.setEnabled(true);
-                textField.setEnabled(true);
-            }
-        }
     }
 
     private static class IntegerSlider extends JSlider{
