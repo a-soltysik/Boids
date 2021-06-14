@@ -33,6 +33,7 @@ public class FOV implements Drawable {
         }
     }
 
+
     public boolean isIntersecting(Vector2 point, float radius) {
         if (Vector2.distance(position, point) > radius) {
             return false;
@@ -142,14 +143,15 @@ public class FOV implements Drawable {
     }
 
     public void setPosition(Vector2 position) {
-        this.position = position;
+        this.position = new Vector2(position);
     }
 
     public void setDirection(Vector2 direction) {
-        this.direction = direction.normalized();
+        this.direction = new Vector2(direction);
     }
 
     public Vector2 getDirection() {return direction;}
+
 
     @Override
     public void update(Animation animation, double frameTime) {
