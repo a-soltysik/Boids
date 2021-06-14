@@ -2,6 +2,7 @@ package boids.gui;
 
 import boids.CSVWriter;
 import boids.drawables.Drawable;
+import boids.objects.LowPolyBackground;
 import boids.objects.Predator;
 import boids.objects.Prey;
 import boids.math.Rectangle;
@@ -181,5 +182,9 @@ public class Animation {
 
     public Rectangle getDimensions() {
         return frame.getDimensions();
+    }
+
+    public void changeBackground() {
+        objects.getList().set(0, new LowPolyBackground(frame, Math.max(1, Math.round(frame.getDimensions().max.y / 50)), GuiParameters.backGroundSpeed.getValue()));
     }
 }

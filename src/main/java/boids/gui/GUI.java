@@ -2,6 +2,8 @@ package boids.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -13,12 +15,12 @@ public class GUI {
         PauseButton button = new PauseButton();
         button.setPreferredSize(new Dimension(75, frame.getHeight()));
 
-        animationPanel.setPreferredSize(new Dimension(1000, 500));
+        animationPanel.setPreferredSize(new Dimension(1000, 563));
         frame.getContentPane().add(BorderLayout.CENTER, animationPanel);
         frame.getContentPane().add(BorderLayout.WEST, button);
         frame.getContentPane().add(BorderLayout.EAST,optionsPanel);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setResizable(false);
+        //frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {

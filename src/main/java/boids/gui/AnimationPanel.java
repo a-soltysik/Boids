@@ -5,15 +5,38 @@ import boids.math.Vector2;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 public class AnimationPanel extends JPanel {
 
     private Animation animation;
-    private Rectangle dimensions;
 
     public void startAnimation(int fps) {
         animation = new Animation(fps);
         animation.start(this);
+
+        addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                animation.changeBackground();
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+
+            }
+        });
     }
 
     @Override
@@ -40,6 +63,6 @@ public class AnimationPanel extends JPanel {
     }
 
     public Rectangle getDimensions() {
-        return new Rectangle(Vector2.ZERO, new Vector2(getPreferredSize().width,getPreferredSize().height));
+        return new Rectangle(Vector2.ZERO, new Vector2(getSize().width,getSize().height));
     }
 }
