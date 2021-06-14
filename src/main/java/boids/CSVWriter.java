@@ -7,6 +7,7 @@ import java.util.*;
 public class CSVWriter {
 
     public final String fileName;
+    public final String dirName;
     private final PrintWriter printWriter;
     private final int bufferSize;
     private final String[] headers;
@@ -15,11 +16,19 @@ public class CSVWriter {
     private final HashMap<Integer,String> indices = new HashMap<>();
     private int count=0;
 
-    public CSVWriter(String fileName, int bufferSize,String[] headers) throws IOException {
+    public CSVWriter(String fileName, String dirName, int bufferSize,String[] headers) throws IOException {
         this.fileName=fileName;
         this.bufferSize=bufferSize;
         this.headers=headers;
-        FileWriter fileWriter = new FileWriter(fileName, false);
+        this.dirName = dirName;
+        File directory = new File(dirName);
+        if (!directory.exists()) {
+            if (!directory.mkdir()) {
+                throw new IOException("Nie udało się utworzyć folderu: " + dirName);
+            }
+        }
+        File file = new File(dirName + "/" + fileName);
+        FileWriter fileWriter = new FileWriter(file.getAbsoluteFile(), false);
         printWriter = new PrintWriter(fileWriter);
         writeHeaders();
         for (String header : headers) {

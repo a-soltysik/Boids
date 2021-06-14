@@ -21,7 +21,7 @@ public class Predator extends Boid {
 
     public Predator(Vector2 position){
         super(20f,position,
-                new FOV(90, 100f, 10),
+                new FOV(GuiParameters.predatorFovAngleDeg.getValue(), GuiParameters.predatorFovRadius.getValue()),
                 Color.orange
         );
     }
@@ -101,6 +101,7 @@ public class Predator extends Boid {
                 Utils.randomFloat(0f, 40f),
                 Utils.randomFloat(0f, 40f)
         );
+
         int i;
         for (i=0; i<objects.size(); i++) {
             if (objects.get(i) == null) {
@@ -149,7 +150,7 @@ public class Predator extends Boid {
     @Override
     public void update(Animation animation, double frameTime) {
         updateParameters();
-        //updateFOV();
+        fov.updateFOV(GuiParameters.predatorFovAngleDeg.getValue(), GuiParameters.predatorFovRadius.getValue());
         acceleration = Vector2.ZERO;
         acceleration = acceleration.add(separation(animation.getObjects()));
         acceleration = acceleration.add(attraction(animation.getObjects()));

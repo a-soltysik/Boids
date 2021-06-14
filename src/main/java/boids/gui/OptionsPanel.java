@@ -59,14 +59,6 @@ public class OptionsPanel extends JPanel {
 
         submitButton.addActionListener(o -> GuiParameters.fileName = textField.getText() + ".csv");
 
-        writeToFileCheckBox.addChangeListener(o -> {
-            if (writeToFileCheckBox.isSelected()) {
-                blockOptions();
-            } else {
-                unblockOptions();
-            }
-        });
-
         maxSpeedSlider.addChangeListener(o ->
         {
             GuiParameters.predatorMaxSpeed.setValue((GuiParameters.preyMaxSpeed.getValue() / 5) * 3);
@@ -98,33 +90,13 @@ public class OptionsPanel extends JPanel {
         writeToFileCheckBox.setEnabled(writeToFile);
     }
 
-    private void blockOptions() {
-        if (GuiParameters.writeToFile.getValue()) {
-            for (JSlider slider : sliders) {
-                slider.setEnabled(false);
-                submitButton.setEnabled(false);
-                textField.setEnabled(false);
-            }
-        }
-    }
-
-    private void unblockOptions() {
-        if (!GuiParameters.writeToFile.getValue()) {
-            for (JSlider slider : sliders) {
-                slider.setEnabled(true);
-                submitButton.setEnabled(true);
-                textField.setEnabled(true);
-            }
-        }
-    }
-
     private static class IntegerSlider extends JSlider{
         private final GuiParameters.IntegerParameter parameter;
         public IntegerSlider(GuiParameters.IntegerParameter parameter) {
             this.parameter = parameter;
-            setValue(parameter.getValue() / parameter.tick);
             setMinimum(parameter.min);
             setMaximum(parameter.max / parameter.tick);
+            setValue(parameter.getValue() / parameter.tick);
             setCustomLabels();
             setPaintLabels(true);
             addChangeListener(o -> {
@@ -147,9 +119,9 @@ public class OptionsPanel extends JPanel {
         public FloatSlider(GuiParameters.FloatParameter parameter) {
             this.parameter = parameter;
             float scale = 1 / parameter.tick;
-            setValue(Math.round (parameter.getValue() * scale));
             setMinimum(Math.round(parameter.min * scale));
             setMaximum(Math.round(parameter.max * scale));
+            setValue(Math.round (parameter.getValue() * scale));
             setCustomLabels();
             setPaintLabels(true);
             addChangeListener(o -> {

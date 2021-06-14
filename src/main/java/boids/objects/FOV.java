@@ -1,8 +1,10 @@
 package boids.objects;
 
+import boids.Utils;
 import boids.drawables.Drawable;
 import boids.drawables.geometry.DSegment;
 import boids.gui.Animation;
+import boids.gui.GuiParameters;
 import boids.math.Rectangle;
 import boids.math.Vector2;
 
@@ -11,15 +13,17 @@ import java.util.Arrays;
 
 public class FOV implements Drawable {
     private final Color color = Color.green;
-    private final float angle;
-    private final float radius;
+    private float angle;
+    private float radius;
     private Vector2[] rays;
     private Vector2 position = Vector2.ZERO;
-    private Vector2 direction = Vector2.ZERO;
+    private Vector2 direction = new Vector2(0f, -1f);
+    private final static int MIN_RAYS = 3;
 
-    public FOV(float angleDeg, float radius, int raysNumber) {
+    public FOV(float angleDeg, float radius) {
         this.angle = (float) Math.toRadians(angleDeg);
         this.radius = radius;
+        int raysNumber = Math.round(Math.max(MIN_RAYS, angleDeg / GuiParameters.raysDensity.getValue()));
         rays = new Vector2[raysNumber];
 
         float alpha = angle / 2;
@@ -79,6 +83,22 @@ public class FOV implements Drawable {
         }
     }
 
+    public void updateFOV(float angleDeg, float radius) {
+        if(!Utils.isEqual((float) Math.toRadians(angleDeg), this.angle) || !Utils.isEqual(radius, this.radius)) {
+            this.angle = (float) Math.toRadians(angleDeg);
+            this.radius = radius;
+            int raysNumber = Math.round(Math.max(MIN_RAYS, angleDeg / GuiParameters.raysDensity.getValue()));
+            rays = new Vector2[raysNumber];
+
+            float alpha = angle / 2;
+            float angleToRotate = new Vector2(0f,-1f).directAngle(direction);
+            for (int i=0; i<rays.length; i++) {
+                rays[i] = new Vector2((float) (-Math.sin(alpha) * radius), (float) (-Math.cos(alpha) * radius)).rotated(Vector2.ZERO, angleToRotate);
+                alpha -= angle / (raysNumber - 1);
+            }
+        }
+    }
+
     //https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
     private boolean isIntersecting(Vector2 start1, Vector2 end1, Vector2 start2, Vector2 end2) {
         Vector2 CmP = start2.subtract(start1);
@@ -123,16 +143,15 @@ public class FOV implements Drawable {
     }
 
     public void setPosition(Vector2 position) {
-        this.position = position;
+        this.position = new Vector2(position);
     }
 
     public void setDirection(Vector2 direction) {
-        this.direction = direction;
+        this.direction = new Vector2(direction);
     }
 
-    public Vector2[] getRays() {
-        return rays;
-    }
+    public Vector2 getDirection() {return direction;}
+
 
     @Override
     public void update(Animation animation, double frameTime) {

@@ -2,6 +2,7 @@ package boids.gui;
 
 public class GuiParameters {
     public static volatile String fileName = "plik.csv";
+    public static volatile String dirName = "outData";
 
     public static final IntegerParameter preyNumber = new IntegerParameter("Liczba ptaków", 200, 0, 1000, 10);
     public static final IntegerParameter predatorNumber = new IntegerParameter("Liczba drapieżników", 0, 0, 10, 1);
@@ -18,6 +19,7 @@ public class GuiParameters {
     public static final FloatParameter preyFovAngleDeg = new FloatParameter("Kąt pola widzenia ptaków", 340f, 10f, 360f, 1f);
     public static final FloatParameter predatorFovRadius = new FloatParameter("Promienień pola widzenia drapieżników", 100f, 10f, 200f, 1f);
     public static final FloatParameter predatorFovAngleDeg = new FloatParameter("Kąt pola widzenia drapieżników", 90f, 10f, 360f, 1f);
+    public static final FloatParameter raysDensity = new FloatParameter(5f);
     public static final BooleanParameter writeToFile = new BooleanParameter("Czy zapisać dane do pliku?", false);
     public static final BooleanParameter showFov = new BooleanParameter("Czy wyświetlić pola widzenia?", false);
     public static final BooleanParameter showVelocity = new BooleanParameter("Czy wyświetlić wektory prędkości?", false);

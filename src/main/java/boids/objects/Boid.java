@@ -33,7 +33,7 @@ public abstract class Boid extends DPolygon{
         if (velocity.magnitude() == 0) {
             return;
         }
-        Vector2 direction = position.subtract(getVertices()[2]);
+        Vector2 direction = fov.getDirection();
         Vector2 newDirection = velocity;
 
         if (direction.isZero() || newDirection.isZero()) {
@@ -101,10 +101,6 @@ public abstract class Boid extends DPolygon{
 
     public Vector2 getPosition() {
         return new Vector2(position);
-    }
-
-    protected void updateFOV(float radius, float angleDeg) {
-        //fov = new FOV(angleDeg, radius, ...)
     }
 
     @Override

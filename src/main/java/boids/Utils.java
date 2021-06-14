@@ -43,12 +43,21 @@ public class Utils {
 
     //https://stackoverflow.com/questions/11930594/calculate-atan2-without-std-functions-or-c99
     public static float fastAtan(float x) {
-        final float b = 0.596227f;
+        /*final float b = 0.596227f;
         if (x >= 0)
             return (b * x + x * x) / (1 + 2 * b * x + x * x);
         else {
             x *= -1;
             return -(b * x + x * x) / (1 + 2 * b * x + x * x);
+        }*/
+        final double a = 0.6403882032;
+        if (x >= 0)
+            return (float) ((a * x + x * x + x * x * x)
+                    / (1 + (a + 1) * x + (a + 1) * x * x + x * x * x));
+        else {
+            x *= -1;
+            return (float) (-(a * x + x * x + x * x * x)
+                    / (1 + (a + 1) * x + (a + 1) * x * x + x * x * x));
         }
     }
 
